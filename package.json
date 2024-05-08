@@ -8,7 +8,8 @@
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "gh-pages": "npm run build && gh-pages -d dist"
+    "gh-pages": "npm run build && gh-pages -d dist",
+    "test": "vitest"
   },
   "dependencies": {
     "react": "^18.2.0",
