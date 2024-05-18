@@ -14,6 +14,9 @@ export default {
         "messiah-light-blue-hover": "hsl(210, 20%, 80%)",
         "messiah-light-blue-active": "hsl(210, 20%, 60%)",
         "messiah-red": "hsl(359, 50%, 43%)"
+      },
+      fontFamily: {
+        inter: ["Inter", "monospace"]
       }
     },
   },
