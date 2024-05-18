@@ -9,7 +9,13 @@ function App() {
           Messiah Meal Planner
         </h1>
       </header>
-      <ModalContainer>This is a modal dialog!</ModalContainer>
+      <ModalContainer
+        title='Modal 1'
+        confirmText='OK Great!'
+        cancelText='Dismiss'
+      >
+        This is a modal dialog!
+      </ModalContainer>
       <SectionContainer title='Section 1'>hi</SectionContainer>
     </>
   );

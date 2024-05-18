@@ -1,8 +1,10 @@
 import { useState } from 'react';
+import SectionHeader from './SectionHeader';
 
 // Prop types
 interface ModalContainerProps {
   children?: React.ReactNode;
+  title?: string | null;
   confirmText?: string;
   cancelText?: string;
   onConfirm?: () => void;
@@ -13,6 +15,7 @@ interface ModalContainerProps {
  * Renders a modal with a confirm and cancel button
  *
  * @param {JSX.Element} children - Child component(s) to display in the modal
+ * @param {string | null} title - Title of the modal
  * @param {string} confirmText - Text to display on the confirm button
  * @param {string} cancelText - Text to display on the cancel button
  * @param {() => void} onConfirm - Event handler for when the confirm button is clicked
@@ -21,6 +24,7 @@ interface ModalContainerProps {
  */
 const ModalContainer = ({
   children = <></>,
+  title = null,
   confirmText = 'Confirm',
   cancelText = 'Cancel',
   onConfirm,
@@ -45,18 +49,26 @@ const ModalContainer = ({
       <div className='h-screen w-screen bg-opacity-50 bg-slate-900 fixed top-0 left-0 flex items-center justify-center'>
         {/* The actual modal component */}
         <div className=' bg-white w-full h-full max-w-[500px] max-h-[500px] rounded-lg p-5 flex flex-col sm:w-5/6 sm:h-5/6'>
+          {
+            /* Title goes here */
+            title !== null && title !== undefined ? (
+              <SectionHeader text={title} />
+            ) : (
+              <></>
+            )
+          }
           {/* Content goes here */}
           <div className='flex-grow'>{children}</div>
           {/* Confirm and cancel buttons */}
           <div className='flex-shrink flex flex-row justify-center'>
             <button
-              className=' bg-blue-500 text-white m-2 p-2 rounded-lg flex-shrink'
+              className=' bg-blue-500 border-2 border-blue-500 text-white m-2 p-2 rounded-lg flex-shrink'
               onClick={handleConfirm}
             >
               {confirmText}
             </button>
             <button
-              className=' bg-blue-500 text-white m-2 p-2 rounded-lg flex-shrink'
+              className=' bg-white text-blue-500 border-2 border-blue-500 m-2 p-2 rounded-lg flex-shrink'
               onClick={handleCancel}
             >
               {cancelText}
