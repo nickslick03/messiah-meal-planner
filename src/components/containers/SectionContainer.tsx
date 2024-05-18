@@ -16,13 +16,11 @@ interface SectionContainerProps {
 const SectionContainer = ({
   children = <></>,
   title = ''
-}: SectionContainerProps): JSX.Element => {
-  return (
-    <section className='border-4 border-blue-500 rounded-xl p-4 m-4 flex flex-col justify-center items-center'>
-      <SectionHeader text={title} />
-      {children}
-    </section>
-  );
-};
+}: SectionContainerProps): JSX.Element => (
+  <section className='border-4 border-blue-500 rounded-xl p-4 flex flex-col justify-center items-center w-full'>
+    <SectionHeader text={title} />
+    {children}
+  </section>
+);
 
 export default SectionContainer;
