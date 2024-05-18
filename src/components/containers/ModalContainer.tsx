@@ -62,13 +62,13 @@ const ModalContainer = ({
           {/* Confirm and cancel buttons */}
           <div className='flex-shrink flex flex-row justify-center'>
             <button
-              className=' bg-blue-500 border-2 border-blue-500 text-white m-2 p-2 rounded-lg flex-shrink'
+              className='bg-messiah-blue border-2 border-messiah-blue text-white m-2 p-2 rounded-lg flex-shrink'
               onClick={handleConfirm}
             >
               {confirmText}
             </button>
             <button
-              className=' bg-white text-blue-500 border-2 border-blue-500 m-2 p-2 rounded-lg flex-shrink'
+              className=' bg-white text-messiah-blue border-2 border-messiah-blue m-2 p-2 rounded-lg flex-shrink'
               onClick={handleCancel}
             >
               {cancelText}

@@ -39,7 +39,7 @@ const TableCell = ({
   return (
     <td
       className={`${importanceStyle} ${
-        isHeader ? 'border-b-4 border-b-blue-500' : ''
+        isHeader ? 'border-b-4 border-b-messiah-blue' : ''
       } p-2 text-center`}
     >
       {data}

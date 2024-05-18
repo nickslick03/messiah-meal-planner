@@ -17,7 +17,7 @@ const SectionContainer = ({
   children = <></>,
   title = ''
 }: SectionContainerProps): JSX.Element => (
-  <section className='border-4 border-blue-500 rounded-xl p-4 flex flex-col justify-center items-center w-full'>
+  <section className='border-4 messiah-blue-500 rounded-xl p-4 flex flex-col justify-center items-center w-full'>
     <SectionHeader text={title} />
     {children}
   </section>
