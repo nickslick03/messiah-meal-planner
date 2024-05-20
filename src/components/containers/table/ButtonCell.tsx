@@ -18,10 +18,9 @@ const ButtonCell = ({
     <button
       className='bg-messiah-blue hover:bg-messiah-blue-hover active:bg-messiah-blue-active
       text-white text-lg font-bold w-8 h-8 m-2 rounded-full text-center'
-      onClick={onClick}>
-      <div>
-        {title}
-      </div>
+      onClick={onClick}
+    >
+      <div>{title}</div>
     </button>
   </td>
 );

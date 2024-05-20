@@ -6,7 +6,7 @@ import ScreenContainer from './components/containers/ScreenContainer';
 function App() {
   return (
     <ScreenContainer>
-      <header className='bg-blue-500 rounded-xl border-4 border-white shadow-md w-full mb-4 mt-4'>
+      <header className='bg-messiah-blue rounded-xl border-4 border-white shadow-md w-full mb-4 mt-4'>
         <h1 className='font-semibold text-4xl text-white text-center p-8'>
           Messiah Meal Planner
         </h1>
