@@ -76,15 +76,9 @@ function App() {
               type={'number'}
               value={balance}
               setValue={setBalance}
-              validator={(str) => {
-                console.log(str);
-                console.log(isNaN(parseFloat(str)));
-                console.log(parseFloat(str) >= 0);
-                return (
-                  (!isNaN(parseFloat(str)) && parseFloat(str) >= 0) ||
-                  str === ''
-                );
-              }}
+              validator={(str) =>
+                (!isNaN(parseFloat(str)) && parseFloat(str) >= 0) || str === ''
+              }
             />
             <Select
               label={'dining location:'}
