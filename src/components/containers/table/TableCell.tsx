@@ -1,3 +1,4 @@
+import { IMPORTANCE_CLASSES } from '../../../lib/constants';
 import {
   ImportanceIndex,
   newImportanceIndex
@@ -21,25 +22,12 @@ const TableCell = ({
   importance = newImportanceIndex(3),
   isHeader = false
 }: TableCellProps): JSX.Element => {
-  const importanceStyle =
-    importance == 1
-      ? 'font-thin'
-      : importance == 2
-      ? 'font-light'
-      : importance == 3
-      ? 'font-normal'
-      : importance == 4
-      ? 'font-medium'
-      : importance == 5
-      ? 'font-semibold'
-      : importance == 6
-      ? 'font-bold'
-      : 'font-normal';
+  const importanceStyle = IMPORTANCE_CLASSES[importance] ?? 'font-normal';
 
   return (
     <td
       className={`${importanceStyle} ${
-        isHeader ? 'border-b-4 border-b-blue-500' : ''
+        isHeader ? 'border-b-4 border-b-messiah-blue' : ''
       } p-2 text-center`}
     >
       {data}
