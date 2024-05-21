@@ -7,9 +7,12 @@ import { useEffect, useState } from 'react';
 import Select from './components/form_elements/Select';
 
 function App() {
-
-  const [startDate, setStartDate] = useState((new Date()).toISOString().substring(0, 10));
-  const [endDate, setEndDate] = useState((new Date()).toISOString().substring(0, 10));
+  const [startDate, setStartDate] = useState(
+    new Date().toISOString().substring(0, 10)
+  );
+  const [endDate, setEndDate] = useState(
+    new Date().toISOString().substring(0, 10)
+  );
   const [mealPlan, setMealPlan] = useState('false');
   const [balance, setBalance] = useState('1200');
 
@@ -44,37 +47,45 @@ function App() {
       </SectionContainer>
       <div className='mt-4'>
         <SectionContainer title='Meal Info'>
-            <form className='mt-4 flex flex-col gap-4'>
-              <Input 
-                label={'Start Date:'}
-                type={'date'}
-                value={startDate}
-                setValue={setStartDate}
-                validater={str => !isNaN(Date.parse(str))} />
-              <Input 
-                label={'End Date:'}
-                type={'date'}
-                value={endDate}
-                setValue={setEndDate}
-                validater={str => !isNaN(Date.parse(str)) && +Date.parse(str) >= +Date.parse(startDate)} />
-              <Input 
-                label={'Meal Plan:'}
-                type={'checkbox'}
-                value={mealPlan}
-                setValue={setMealPlan} />
-              <Input 
-                label={'Starting Balance:'}
-                type={'number'}
-                value={balance}
-                setValue={setBalance}
-                validater={str => !isNaN(+str) && +str > 0}/>
-              <Select 
-                label={'dining location:'}
-                list={['Lottie', 'Union', 'Falcon']}
-                setSelected={setDining}/>
-            </form>
+          <form className='mt-4 flex flex-col gap-4'>
+            <Input
+              label={'Start Date:'}
+              type={'date'}
+              value={startDate}
+              setValue={setStartDate}
+              validator={(str) => !isNaN(Date.parse(str))}
+            />
+            <Input
+              label={'End Date:'}
+              type={'date'}
+              value={endDate}
+              setValue={setEndDate}
+              validator={(str) =>
+                !isNaN(Date.parse(str)) &&
+                +Date.parse(str) >= +Date.parse(startDate)
+              }
+            />
+            <Input
+              label={'Meal Plan:'}
+              type={'checkbox'}
+              value={mealPlan}
+              setValue={setMealPlan}
+            />
+            <Input
+              label={'Starting Balance:'}
+              type={'number'}
+              value={balance}
+              setValue={setBalance}
+              validator={(str) => !isNaN(+str) && +str > 0}
+            />
+            <Select
+              label={'dining location:'}
+              list={['Lottie', 'Union', 'Falcon']}
+              setSelected={setDining}
+            />
+          </form>
         </SectionContainer>
-      </div>   
+      </div>
     </ScreenContainer>
   );
 }
