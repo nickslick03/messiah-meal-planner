@@ -42,7 +42,7 @@ const Input = ({
       {label}
       {type == 'checkbox' ? (
         <input
-          className={`${styles} w-8 h-8`}
+          className={`${styles} p-0 h-6 w-6`}
           type={type}
           value={value as string}
           onChange={(e) => setValue(e.target.checked.toString())}
@@ -52,9 +52,15 @@ const Input = ({
           className={styles}
           type={type}
           value={value as string}
-          onChange={(e) =>
-            validator(e.target.value) ? setValue(e.target.value) : ''
-          }
+          inputMode='numeric'
+          onChange={(e) => {
+            if (validator(e.target.value)) {
+              setValue(e.target.value);
+            } else {
+              const oldValue = value;
+              setValue(oldValue);
+            }
+          }}
         />
       )}
     </label>
