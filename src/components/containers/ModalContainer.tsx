@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import SectionHeader from './SectionHeader';
-import Button from '../form_elements/Button';
 
 // Prop types
 interface ModalContainerProps {
@@ -62,8 +61,18 @@ const ModalContainer = ({
           <div className='flex-grow'>{children}</div>
           {/* Confirm and cancel buttons */}
           <div className='flex-shrink flex flex-row justify-center'>
-            <Button title={confirmText} onClick={handleConfirm} />
-            <Button title={cancelText} onClick={handleCancel} frame />
+            <button
+              className='bg-messiah-blue border-2 border-messiah-blue hover:bg-messiah-blue-hover active:bg-messiah-blue-active hover:border-messiah-blue-hover active:border-messiah-blue-active text-white m-2 p-2 rounded-lg flex-shrink'
+              onClick={handleConfirm}
+            >
+              {confirmText}
+            </button>
+            <button
+              className=' bg-white text-messiah-blue hover:text-messiah-blue-hover border-2 active:text-messiah-blue-active border-messiah-blue hover:border-messiah-blue-hover active:border-messiah-blue-active m-2 p-2 rounded-lg flex-shrink'
+              onClick={handleCancel}
+            >
+              {cancelText}
+            </button>
           </div>
         </div>
       </div>
