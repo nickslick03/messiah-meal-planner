@@ -9,7 +9,13 @@ interface SelectProps {
     setSelected: React.Dispatch<React.SetStateAction<string>>;
 }
 
-
+/**
+ * Renders a select form element
+ * @param {string}label The text next to the select dropdown
+ * @param {ImportanceIndex}importance The boldness of the label text
+ * @param {string[]}list The list of options
+ * @param {React.Dispatch<React.SetStateAction<string>>}setSelected A react state setter to track the selected option
+ */
 const Select = ({
     label,
     importance = newImportanceIndex(3),

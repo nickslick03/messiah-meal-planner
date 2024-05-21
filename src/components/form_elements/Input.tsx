@@ -11,7 +11,15 @@ interface InputProps {
     setValue: React.Dispatch<React.SetStateAction<string>>;
 }
 
-
+/**
+ * Renders an input element 
+ * @param {string}label The text next to the input
+ * @param {ImportanceIndex}importance The boldness of the label text
+ * @param {React.HTMLInputTypeAttribute}type The input type
+ * @param {(value: string) => boolean}validator An optional function that only allows inputs that return true in the validator function
+ * @param {string}value The value of the input
+ * @param {string}setValue The react state setter to track the value
+ */
 const Input = ({
     label,
     importance = newImportanceIndex(3),
