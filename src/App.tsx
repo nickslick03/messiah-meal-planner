@@ -76,7 +76,7 @@ function App() {
               type={'number'}
               value={balance}
               setValue={setBalance}
-              validator={(str) => !isNaN(+str) && +str > 0}
+              validator={(str) => !isNaN(+str) && +str >= 0}
             />
             <Select
               label={'dining location:'}
