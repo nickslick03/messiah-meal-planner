@@ -4,6 +4,7 @@ import MealTable from './components/containers/table/MealTable';
 import ScreenContainer from './components/containers/ScreenContainer';
 import Input from './components/form_elements/Input';
 import { useEffect, useState } from 'react';
+import Select from './components/form_elements/Select';
 
 function App() {
 
@@ -12,8 +13,9 @@ function App() {
   const [mealPlan, setMealPlan] = useState('false');
   const [balance, setBalance] = useState('1200');
 
+  const [dining, setDining] = useState('');
 
-  useEffect(() => console.log(startDate));
+  useEffect(() => console.log(dining));
 
   return (
     <ScreenContainer>
@@ -66,6 +68,10 @@ function App() {
                 value={balance}
                 setValue={setBalance}
                 validater={str => !isNaN(+str) && +str > 0}/>
+              <Select 
+                label={'dining location:'}
+                list={['Lottie', 'Union', 'Falcon']}
+                setSelected={setDining}/>
             </form>
         </SectionContainer>
       </div>   
