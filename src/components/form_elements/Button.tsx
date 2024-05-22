@@ -16,8 +16,8 @@ const Button = ({ title, onClick, frame, style }: ButtonProps): JSX.Element => (
   <button
     className={
       (frame
-        ? ' bg-white text-messiah-blue hover:text-messiah-blue-hover border-2 active:text-messiah-blue-active border-messiah-blue hover:border-messiah-blue-hover active:border-messiah-blue-active m-2 p-2 rounded-lg flex-shrink'
-        : 'bg-messiah-blue hover:bg-messiah-blue-hover active:bg-messiah-blue-active text-white text-lg border-2 border-messiah-blue m-2 rounded-lg p-2') +
+        ? ' bg-white text-black text-lg border-2 border-messiah-light-blue hover:border-messiah-light-blue-hover active:border-messiah-light-blue-active m-2 p-2 rounded-lg flex-shrink'
+        : 'text-black bg-messiah-light-blue hover:bg-messiah-light-blue-hover active:bg-messiah-light-blue-active text-lg border-2 border-messiah-light-blue m-2 rounded-lg p-2') +
       ' ' +
       style
     }
