@@ -1,9 +1,10 @@
 import { createContext } from 'react';
 import Meal from '../types/Meal';
+import { Dispatch, SetStateAction } from 'react';
 
 interface ContextType<T> {
   value: T;
-  setValue: React.Dispatch<React.SetStateAction<T>>;
+  setValue: Dispatch<SetStateAction<T>>;
 }
 
 export const IsBreakCtx = createContext<ContextType<boolean>>({

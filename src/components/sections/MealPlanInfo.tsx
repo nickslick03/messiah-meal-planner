@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, Dispatch, SetStateAction } from 'react';
 import SectionContainer from '../containers/SectionContainer';
 import Input from '../form_elements/Input';
 import {
@@ -41,14 +41,22 @@ const MealPlanInfo = ({
           label={'Start Date:'}
           type={'date'}
           value={startDate.value}
-          setValue={startDate.setValue}
+          setValue={
+            startDate.setValue as Dispatch<
+              SetStateAction<string | number | boolean>
+            >
+          }
           validator={(str) => !isNaN(Date.parse(str))}
         />
         <Input
           label={'End Date:'}
           type={'date'}
           value={endDate.value}
-          setValue={endDate.setValue}
+          setValue={
+            endDate.setValue as Dispatch<
+              SetStateAction<string | number | boolean>
+            >
+          }
           validator={(str) =>
             !isNaN(Date.parse(str)) &&
             +Date.parse(str) >= +Date.parse(startDate.value)
@@ -58,19 +66,31 @@ const MealPlanInfo = ({
           label={'Dining Dollars Discount:'}
           type={'checkbox'}
           value={mealPlan.value}
-          setValue={mealPlan.setValue}
+          setValue={
+            mealPlan.setValue as Dispatch<
+              SetStateAction<string | number | boolean>
+            >
+          }
         />
         <Input
           label={'Account for 1-Week Break:'}
           type={'checkbox'}
           value={isBreak.value}
-          setValue={isBreak.setValue}
+          setValue={
+            isBreak.setValue as Dispatch<
+              SetStateAction<string | number | boolean>
+            >
+          }
         />
         <Input
           label={'Starting Balance: $'}
           type={'number'}
           value={balance.value === 0 ? '' : balance.value}
-          setValue={balance.setValue}
+          setValue={
+            balance.setValue as Dispatch<
+              SetStateAction<string | number | boolean>
+            >
+          }
           validator={(str) =>
             (!isNaN(parseFloat(str)) && parseFloat(str) >= 0) || str === ''
           }

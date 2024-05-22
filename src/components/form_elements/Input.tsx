@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Dispatch, SetStateAction, ChangeEvent } from 'react';
 import { IMPORTANCE_CLASSES } from '../../lib/constants';
 import {
   ImportanceIndex,
@@ -11,10 +11,7 @@ interface InputProps {
   type: React.HTMLInputTypeAttribute;
   validator?: (value: string) => boolean;
   value: string | boolean | number;
-  setValue:
-    | React.Dispatch<React.SetStateAction<string>>
-    | React.Dispatch<React.SetStateAction<boolean>>
-    | React.Dispatch<React.SetStateAction<number>>;
+  setValue: Dispatch<SetStateAction<string | boolean | number>>;
 }
 
 /**
@@ -45,24 +42,16 @@ const Input = ({
    *
    * @param {React.ChangeEvent<HTMLInputElement>} e - The change event object.
    */
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (type === 'checkbox') {
-      (setValue as React.Dispatch<React.SetStateAction<boolean>>)(
-        e.target.checked
-      );
+      setValue(e.target.checked);
     } else {
       const newValue =
-        type === 'number' ? Number(e.target.value) : e.target.value;
+        type === 'number' ? parseFloat(e.target.value) : e.target.value;
       if (validator(newValue.toString())) {
-        (setValue as React.Dispatch<React.SetStateAction<string | number>>)(
-          newValue as string | number
-        );
+        setValue(newValue as string | number);
       } else {
-        (
-          setValue as React.Dispatch<
-            React.SetStateAction<string | number | boolean>
-          >
-        )(value);
+        setValue(value);
       }
     }
   };
