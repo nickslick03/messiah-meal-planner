@@ -49,7 +49,7 @@ const Input = ({
       const newValue =
         type === 'number' ? parseFloat(e.target.value) : e.target.value;
       if (validator(newValue.toString())) {
-        setValue(newValue as string | number);
+        setValue(newValue);
       } else {
         setValue(value);
       }
