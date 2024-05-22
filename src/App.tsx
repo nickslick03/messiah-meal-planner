@@ -15,12 +15,13 @@ import Meal from './types/Meal';
 function App() {
   const [isBreak, setIsBreak] = useState(false);
   const [mealPlan, setMealPlan] = useState(false);
-  const [balance, setBalance] = useState('');
+  const [balance, setBalance] = useState(0);
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [userSelectedMeals, setUserSelectedMeals] = useState<Meal[][]>(
     new Array(7).fill([])
   );
+  const [areDetailsEntered, setAreDetailsEntered] = useState(false);
 
   return (
     <IsBreakCtx.Provider value={{ value: isBreak, setValue: setIsBreak }}>
@@ -44,8 +45,16 @@ function App() {
                       Messiah Meal Planner
                     </h1>
                   </header>
-                  <MealPlanInfo />
-                  <AvailableMeals />
+                  <MealPlanInfo onEnterDetails={setAreDetailsEntered} />
+                  {areDetailsEntered ? (
+                    <AvailableMeals />
+                  ) : (
+                    <div className='flex flex-col items-center'>
+                      <p className='text-gray-400'>
+                        Enter meal plan details to continue planning.
+                      </p>
+                    </div>
+                  )}
                 </ScreenContainer>
               </UserSelectedMealsCtx.Provider>
             </EndDateCtx.Provider>

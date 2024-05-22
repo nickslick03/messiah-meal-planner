@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import SectionContainer from '../containers/SectionContainer';
 import Input from '../form_elements/Input';
 import {
@@ -14,7 +14,11 @@ import {
  *
  * @return {JSX.Element} The rendered MealPlanInfo component.
  */
-const MealPlanInfo = () => {
+const MealPlanInfo = ({
+  onEnterDetails
+}: {
+  onEnterDetails: (details: boolean) => void;
+}): JSX.Element => {
   // Load all necessary contexts
   const startDate = useContext(StartDateCtx);
   const endDate = useContext(EndDateCtx);
@@ -22,9 +26,17 @@ const MealPlanInfo = () => {
   const isBreak = useContext(IsBreakCtx);
   const balance = useContext(BalanceCtx);
 
+  useEffect(() => {
+    if (startDate && endDate && balance) {
+      onEnterDetails(true);
+    } else {
+      onEnterDetails(false);
+    }
+  }, [startDate, endDate, mealPlan, isBreak, balance, onEnterDetails]);
+
   return (
     <SectionContainer title='Meal Plan Info'>
-      <form className='mt-4 flex flex-col gap-4'>
+      <div className='mt-4 flex flex-col gap-4'>
         <Input
           label={'Start Date:'}
           type={'date'}
@@ -57,13 +69,13 @@ const MealPlanInfo = () => {
         <Input
           label={'Starting Balance: $'}
           type={'number'}
-          value={balance.value}
+          value={balance.value === 0 ? '' : balance.value}
           setValue={balance.setValue}
           validator={(str) =>
             (!isNaN(parseFloat(str)) && parseFloat(str) >= 0) || str === ''
           }
         />
-      </form>
+      </div>
     </SectionContainer>
   );
 };
