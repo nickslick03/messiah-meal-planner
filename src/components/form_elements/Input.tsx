@@ -1,4 +1,9 @@
-import React, { Dispatch, SetStateAction, ChangeEvent } from 'react';
+import {
+  Dispatch,
+  SetStateAction,
+  ChangeEvent,
+  HTMLInputTypeAttribute
+} from 'react';
 import { IMPORTANCE_CLASSES } from '../../lib/constants';
 import {
   ImportanceIndex,
@@ -8,7 +13,7 @@ import {
 interface InputProps {
   label: string;
   importance?: ImportanceIndex;
-  type: React.HTMLInputTypeAttribute;
+  type: HTMLInputTypeAttribute;
   validator?: (value: string) => boolean;
   value: string | boolean | number;
   setValue: Dispatch<SetStateAction<string | boolean | number>>;

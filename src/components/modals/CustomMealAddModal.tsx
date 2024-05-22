@@ -1,6 +1,6 @@
 import Select from '../form_elements/Select';
 import Input from '../form_elements/Input';
-import { useState } from 'react';
+import { useState, Dispatch, SetStateAction } from 'react';
 import Button from '../form_elements/Button';
 
 /**
@@ -28,12 +28,21 @@ const CustomMealAddModal = () => {
         list={['Lottie', 'Union', 'Falcon', 'Vending']}
         setSelected={setLocation}
       />
-      <Input label='Meal Name:' type='text' value={name} setValue={setName} />
+      <Input
+        label='Meal Name:'
+        type='text'
+        value={name}
+        setValue={
+          setName as Dispatch<SetStateAction<string | boolean | number>>
+        }
+      />
       <Input
         label='Price:'
         type='number'
         value={price}
-        setValue={setPrice}
+        setValue={
+          setPrice as Dispatch<SetStateAction<string | boolean | number>>
+        }
         validator={(str) =>
           (!isNaN(parseFloat(str)) && parseFloat(str) >= 0) || str === ''
         }
