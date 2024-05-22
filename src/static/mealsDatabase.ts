@@ -1,8 +1,4 @@
-interface Meal {
-  location: string;
-  name: string;
-  price: number;
-}
+import Meal from '../types/Meal';
 
 const meals: Array<Array<Meal>> = [
   [
