@@ -4,5 +4,5 @@ export const IMPORTANCE_CLASSES = [
   'font-normal',
   'font-medium',
   'font-semibold',
-  'font-bold text-messiah-blue'
+  'font-bold text-messiah-blue underline'
 ] as const;

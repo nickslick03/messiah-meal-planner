@@ -6,13 +6,13 @@ import CustomMealAddModal from '../modals/CustomMealAddModal';
 import { IoAdd } from 'react-icons/io5';
 import { GiMeal } from 'react-icons/gi';
 import { FaSortAmountDown, FaSortAmountUp } from 'react-icons/fa';
-import SortingModal, {
-  DEFAULT_COLUMN,
-  DEFAULT_DIRECTION
-} from '../modals/SortingModal';
+import SortingModal, { DEFAULT_DIRECTION } from '../modals/SortingModal';
 
 // List of dining locations
 const locations = ['Lottie', 'Union', 'Falcon', 'Vending'];
+
+// Default column
+const DEFAULT_COLUMN = 'Location';
 
 /**
  * Renders the Available Meals section with a table of meals to add and a button

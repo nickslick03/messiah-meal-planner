@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import ModalContainer from '../containers/ModalContainer';
 import Select from '../form_elements/Select';
 import Button from '../form_elements/Button';
@@ -10,7 +10,7 @@ interface SortingModalProps {
   onCancel: () => void;
 }
 
-export const DEFAULT_COLUMN = 'Location';
+export const DEFAULT_COLUMN = 'Select Column...';
 export const DEFAULT_DIRECTION = true;
 
 const SortingModal = ({
@@ -21,6 +21,12 @@ const SortingModal = ({
   const [sortColumn, setSortColumn] = useState(DEFAULT_COLUMN);
   const [sortDirection, setSortDirection] = useState(DEFAULT_DIRECTION);
 
+  // Function to check if the form is incomplete
+  const isIncomplete = useMemo(
+    () => sortColumn === DEFAULT_COLUMN,
+    [sortColumn]
+  );
+
   return visible ? (
     <ModalContainer
       title='Sort Options'
@@ -29,12 +35,12 @@ const SortingModal = ({
         onConfirm(sortColumn, sortDirection);
       }}
       onCancel={onCancel}
-      confirmDisabled={false}
+      confirmDisabled={isIncomplete}
     >
       <form className='flex flex-col mt-4 gap-4'>
         <Select
           label='Sort By'
-          list={['Location', 'Name', 'Price']}
+          list={['Select Column...', 'Location', 'Name', 'Price']}
           setSelected={setSortColumn}
         />
         <Button
