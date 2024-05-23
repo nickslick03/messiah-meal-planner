@@ -16,8 +16,8 @@ const ButtonCell = ({
 }: ButtonCellProps): JSX.Element => (
   <td className='text-center'>
     <button
-      className='bg-messiah-blue hover:bg-messiah-blue-hover active:bg-messiah-blue-active
-      text-white text-lg font-bold w-8 h-8 m-2 rounded-full text-center'
+      className='bg-messiah-light-blue hover:bg-messiah-light-blue-hover active:bg-messiah-light-blue-active
+      text-black text-lg font-bold w-8 h-8 m-2 rounded-full text-center'
       onClick={onClick}
     >
       <div>{title}</div>

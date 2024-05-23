@@ -10,6 +10,7 @@ interface ModalContainerProps {
   cancelText?: string;
   onConfirm?: () => void;
   onCancel?: () => void;
+  confirmDisabled?: boolean;
 }
 
 /**
@@ -21,6 +22,7 @@ interface ModalContainerProps {
  * @param {string} cancelText - Text to display on the cancel button
  * @param {() => void} onConfirm - Event handler for when the confirm button is clicked
  * @param {() => void} onCancel - Event handler for when the cancel button is clicked
+ * @param {boolean} confirmDisabled - boolean for whether the confirm button is disabled
  * @returns {JSX.Element} JSX for rendering a modal
  */
 const ModalContainer = ({
@@ -29,7 +31,8 @@ const ModalContainer = ({
   confirmText = 'Confirm',
   cancelText = 'Cancel',
   onConfirm,
-  onCancel
+  onCancel,
+  confirmDisabled = true
 }: ModalContainerProps): JSX.Element => {
   // Keep track of whether or not the modal is visible
   const [isVisible, setIsVisible] = useState(true);
@@ -62,7 +65,7 @@ const ModalContainer = ({
           <div className='flex-grow'>{children}</div>
           {/* Confirm and cancel buttons */}
           <div className='flex-shrink flex flex-row justify-center'>
-            <Button title={confirmText} onClick={handleConfirm} />
+            <Button title={confirmText} onClick={handleConfirm} disabled={confirmDisabled} />
             <Button title={cancelText} onClick={handleCancel} frame />
           </div>
         </div>

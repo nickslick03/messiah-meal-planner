@@ -2,6 +2,7 @@ import Meal from '../../../types/Meal';
 import { newImportanceIndex } from '../../../types/ImportanceIndex';
 import TableRow from './TableRow';
 import TableCell from './TableCell';
+import { Fragment } from 'react';
 
 interface MealTableProps {
   data: Array<Meal>;
@@ -37,7 +38,7 @@ const MealTable = ({
                 isHeader={true}
               />
             ) : (
-              <></>
+              <Fragment key={index}></Fragment>
             )
           )}
         </tr>
