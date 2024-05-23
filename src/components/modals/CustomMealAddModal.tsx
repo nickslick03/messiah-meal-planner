@@ -1,6 +1,6 @@
 import Select from '../form_elements/Select';
 import Input from '../form_elements/Input';
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useMemo } from 'react';
 import { useState } from 'react';
 import ModalContainer from '../containers/ModalContainer';
 
@@ -36,6 +36,8 @@ const CustomMealAddModal = ({
   const [price, setPrice] = useState(DEFAULT_PRICE);
   const [name, setName] = useState(DEFAULT_NAME);
 
+  const isIncomplete = useMemo(() => price === 0 || price as unknown as string === '' || name === '', [price, name]);
+
   return visible ? (
     <ModalContainer
       title='Add Custom Meal'
@@ -52,6 +54,7 @@ const CustomMealAddModal = ({
         setPrice(DEFAULT_PRICE);
         setName(DEFAULT_NAME);
       }}
+      confirmDisabled={isIncomplete}
     >
       <form className='flex flex-col mt-4 gap-4'>
         <Select label='Location:' list={locations} setSelected={setLocation} />
