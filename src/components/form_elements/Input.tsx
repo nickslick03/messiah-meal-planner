@@ -51,8 +51,10 @@ const Input = ({
     if (type === 'checkbox') {
       setValue(e.target.checked);
     } else {
-      const newValue =
+      let newValue =
         type === 'number' ? parseFloat(e.target.value) : e.target.value;
+      if (typeof newValue === 'number' && isNaN(newValue)) newValue = ''; // Allows blank values for number types
+      
       if (validator(newValue.toString())) {
         setValue(newValue);
       } else {
