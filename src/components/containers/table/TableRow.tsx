@@ -25,10 +25,10 @@ const TableRow = ({
 }: TableRowProps): JSX.Element => (
   <tr>
     <TableCell data={data.location} importance={newImportanceIndex(1)} />
-    <TableCell data={data.name} importance={newImportanceIndex(3)} />
+    <TableCell data={data.name} importance={newImportanceIndex(2)} />
     <TableCell
       data={formatCurrency(data.price)}
-      importance={newImportanceIndex(3)}
+      importance={newImportanceIndex(2)}
     />
     {buttonIcon && buttonOnClick ? (
       <ButtonCell icon={buttonIcon} onClick={buttonOnClick} />

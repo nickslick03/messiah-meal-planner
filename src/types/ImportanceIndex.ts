@@ -11,7 +11,7 @@ export type ImportanceIndex = Brand<number, 'ImportanceIndex'>;
  * @throws {Error} If the given value is not a valid importance index
  */
 export const newImportanceIndex = (value: number): ImportanceIndex => {
-  if (![1, 2, 3, 4, 5, 6].includes(value))
+  if (![0, 1, 2, 3, 4, 5].includes(value))
     throw new Error(`Number ${value} is not a valid importance index`);
   return value as ImportanceIndex;
 };

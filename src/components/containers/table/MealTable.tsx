@@ -8,6 +8,7 @@ interface MealTableProps {
   data: Array<Meal>;
   buttonIcon?: JSX.Element;
   buttonTitle?: string;
+  sortedBy?: string;
   buttonOnClick?: () => void;
 }
 
@@ -17,6 +18,7 @@ interface MealTableProps {
  * @param {Array<Meal>} data - The array of meal objects to be displayed in the table
  * @param {string} buttonTitle - The title of the optional button column
  * @param {JSX.Element} buttonIcon - The icon for the optional button
+ * @param {string} sortedBy - The column to sort the table by
  * @param {() => void} buttonOnClick - The click event handler for the optional button
  * @return {JSX.Element} The rendered table component
  */
@@ -24,9 +26,13 @@ const MealTable = ({
   data,
   buttonIcon,
   buttonTitle,
+  sortedBy,
   buttonOnClick
 }: MealTableProps): JSX.Element => {
   const headers = ['Location', 'Name', 'Price', buttonTitle ?? null];
+  if (sortedBy === undefined) {
+    sortedBy = headers[0] as string;
+  }
   return (
     <table className='w-full'>
       {/* Table header */}
@@ -37,7 +43,7 @@ const MealTable = ({
               <TableCell
                 key={index}
                 data={header}
-                importance={newImportanceIndex(5)}
+                importance={newImportanceIndex(header === sortedBy ? 5 : 4)}
                 isHeader={true}
               />
             ) : (

@@ -39,7 +39,6 @@ const AvailableMeals = () => {
       <div className='absolute top-0 right-0'>
         <Button
           icon={sortDirection ? <FaSortAmountUp /> : <FaSortAmountDown />}
-          title={sortColumn}
           onClick={() => {
             setIsSorting(true);
           }}
@@ -77,6 +76,7 @@ const AvailableMeals = () => {
         ]}
         buttonTitle='Add'
         buttonIcon={<IoAdd />}
+        sortedBy={sortColumn}
         buttonOnClick={() => {}}
       />
       <Button
