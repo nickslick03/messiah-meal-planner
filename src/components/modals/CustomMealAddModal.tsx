@@ -1,33 +1,38 @@
 import Select from '../form_elements/Select';
 import Input from '../form_elements/Input';
-import { useState, Dispatch, SetStateAction } from 'react';
-import Button from '../form_elements/Button';
+import { Dispatch, SetStateAction } from 'react';
+
+interface CustomMealAddModalProps {
+  locations: string[];
+  setLocation: Dispatch<SetStateAction<string>>;
+  price: number;
+  setPrice: Dispatch<SetStateAction<number>>;
+  name: string;
+  setName: Dispatch<SetStateAction<string>>;
+}
 
 /**
  * Renders a modal component for adding a custom meal.
  *
- * @return {JSX.Element} The rendered CustomMealAddModal component.
+ * @param {Dispatch<SetStateAction<string>>} setLocation - The function to set the location of the meal.
+ * @param {Dispatch<SetStateAction<number>>} setPrice - The function to set the price of the meal.
+ * @param {Dispatch<SetStateAction<string>>} setName - The function to set the name of the meal.
+ * @param {string} name - The name of the meal.
+ * @param {number} price - The price of the meal.
+ * @param {string[]} locations - All possible meal locations.
+ * @returns {JSX.Element} The rendered CustomMealAddModal component.
  */
-const CustomMealAddModal = () => {
-  // Define state for each input
-  const [location, setLocation] = useState('');
-  const [price, setPrice] = useState('');
-  const [name, setName] = useState('');
-
-  // TODO: Push this to the meal queue context
-  const handleClick = () => {
-    console.log(name);
-    console.log(price);
-    console.log(location);
-  };
-
+const CustomMealAddModal = ({
+  locations,
+  setLocation,
+  price,
+  setPrice,
+  name,
+  setName
+}: CustomMealAddModalProps) => {
   return (
     <form className='flex flex-col mt-4 gap-4'>
-      <Select
-        label='Location:'
-        list={['Lottie', 'Union', 'Falcon', 'Vending']}
-        setSelected={setLocation}
-      />
+      <Select label='Location:' list={locations} setSelected={setLocation} />
       <Input
         label='Meal Name:'
         type='text'
@@ -47,7 +52,6 @@ const CustomMealAddModal = () => {
           (!isNaN(parseFloat(str)) && parseFloat(str) >= 0) || str === ''
         }
       />
-      <Button title='Add' onClick={handleClick} />
     </form>
   );
 };
