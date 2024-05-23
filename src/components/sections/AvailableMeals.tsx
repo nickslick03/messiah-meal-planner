@@ -1,4 +1,3 @@
-import ModalContainer from '../containers/ModalContainer';
 import SectionContainer from '../containers/SectionContainer';
 import MealTable from '../containers/table/MealTable';
 import Button from '../form_elements/Button';
@@ -17,11 +16,6 @@ const locations = ['Lottie', 'Union', 'Falcon', 'Vending'];
 const AvailableMeals = () => {
   // State variable to determine whether or not the custom meal modal should be open
   const [isAddingCustomMeal, setIsAddingCustomMeal] = useState(false);
-
-  // State variables for use in adding a custom meal
-  const [cLocation, setCLocation] = useState(locations[0]);
-  const [cPrice, setCPrice] = useState(0);
-  const [cName, setCName] = useState('');
 
   return (
     <SectionContainer title='Available Meals'>
@@ -59,31 +53,17 @@ const AvailableMeals = () => {
         buttonOnClick={() => {}}
       />
       <Button title='Custom Meal' onClick={() => setIsAddingCustomMeal(true)} />
-      {isAddingCustomMeal ? (
-        <ModalContainer
-          title='Add Custom Meal'
-          confirmText='Add'
-          onConfirm={() => {
-            // TODO: Add logic to add custom meal and probably separate this function out
-            console.log(cLocation);
-            console.log(cPrice);
-            console.log(cName);
-            setIsAddingCustomMeal(false);
-          }}
-          onCancel={() => setIsAddingCustomMeal(false)}
-        >
-          <CustomMealAddModal
-            locations={locations}
-            setLocation={setCLocation}
-            price={cPrice}
-            setPrice={setCPrice}
-            name={cName}
-            setName={setCName}
-          />
-        </ModalContainer>
-      ) : (
-        <></>
-      )}
+      <CustomMealAddModal
+        onConfirm={(location, name, price) => {
+          console.log(location);
+          console.log(name);
+          console.log(price);
+          setIsAddingCustomMeal(false);
+        }}
+        onCancel={() => setIsAddingCustomMeal(false)}
+        locations={locations}
+        visible={isAddingCustomMeal}
+      />
     </SectionContainer>
   );
 };
