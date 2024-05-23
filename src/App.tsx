@@ -9,7 +9,7 @@ import {
   UserSelectedMealsCtx,
   IsBreakCtx
 } from './static/context';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Meal from './types/Meal';
 
 function App() {
@@ -22,6 +22,8 @@ function App() {
     new Array(7).fill([])
   );
   const [areDetailsEntered, setAreDetailsEntered] = useState(false);
+
+  useEffect(() => console.log(areDetailsEntered));
 
   return (
     <IsBreakCtx.Provider value={{ value: isBreak, setValue: setIsBreak }}>
@@ -51,7 +53,7 @@ function App() {
                   ) : (
                     <div className='flex flex-col items-center'>
                       <p className='text-gray-400'>
-                        Enter meal plan details to continue planning.
+                        Enter meal plan Info to continue planning.
                       </p>
                     </div>
                   )}
