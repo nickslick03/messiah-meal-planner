@@ -53,7 +53,7 @@ function App() {
                   ) : (
                     <div className='flex flex-col items-center'>
                       <p className='text-gray-400'>
-                        Enter meal plan Info to continue planning.
+                        Enter meal plan info to continue planning.
                       </p>
                     </div>
                   )}
