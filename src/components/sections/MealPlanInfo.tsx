@@ -27,7 +27,7 @@ const MealPlanInfo = ({
   const balance = useContext(BalanceCtx);
 
   useEffect(() => {
-    if (startDate && endDate && balance) {
+    if (startDate.value && endDate.value && balance.value) {
       onEnterDetails(true);
     } else {
       onEnterDetails(false);
@@ -46,7 +46,10 @@ const MealPlanInfo = ({
               SetStateAction<string | number | boolean>
             >
           }
-          validator={(str) => !isNaN(Date.parse(str))}
+          validator={(str) => 
+            !isNaN(Date.parse(str)) &&
+            (endDate.value === '' || +Date.parse(str) <= +Date.parse(endDate.value))
+          }
         />
         <Input
           label={'End Date:'}
@@ -59,7 +62,7 @@ const MealPlanInfo = ({
           }
           validator={(str) =>
             !isNaN(Date.parse(str)) &&
-            +Date.parse(str) >= +Date.parse(startDate.value)
+            (startDate.value === '' || +Date.parse(str) >= +Date.parse(startDate.value))
           }
         />
         <Input
