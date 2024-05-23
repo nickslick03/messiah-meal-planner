@@ -5,6 +5,8 @@ import { useState } from 'react';
 import CustomMealAddModal from '../modals/CustomMealAddModal';
 import { IoAdd } from 'react-icons/io5';
 import { GiMeal } from 'react-icons/gi';
+import { FaSortAmountDown, FaSortAmountUp } from 'react-icons/fa';
+import SortingModal from '../modals/SortingModal';
 
 // List of dining locations
 const locations = ['Lottie', 'Union', 'Falcon', 'Vending'];
@@ -19,8 +21,27 @@ const AvailableMeals = () => {
   // State variable to determine whether or not the custom meal modal should be open
   const [isAddingCustomMeal, setIsAddingCustomMeal] = useState(false);
 
+  // State variable to determine whether or not the sorting modal should be open
+  const [isSorting, setIsSorting] = useState(false);
+
+  // State variable to store sort direction
+  // true = ascending, false = descending
+  const [sortDirection, setSortDirection] = useState(true);
+
+  // State variable to store sort column
+  const [sortColumn, setSortColumn] = useState('Location');
+
   return (
     <SectionContainer title='Available Meals'>
+      <div className='absolute top-0 right-0'>
+        <Button
+          icon={sortDirection ? <FaSortAmountUp /> : <FaSortAmountDown />}
+          title={sortColumn}
+          onClick={() => {
+            setIsSorting(true);
+          }}
+        />
+      </div>
       <MealTable
         // Temporary AI-generated data, will be replaced with real data later on...apparently
         // my extension really likes fries:)
@@ -70,6 +91,15 @@ const AvailableMeals = () => {
         onCancel={() => setIsAddingCustomMeal(false)}
         locations={locations}
         visible={isAddingCustomMeal}
+      />
+      <SortingModal
+        onConfirm={(sortColumn: string, sortDirection: boolean) => {
+          setSortColumn(sortColumn);
+          setSortDirection(sortDirection);
+          setIsSorting(false);
+        }}
+        onCancel={() => setIsSorting(false)}
+        visible={isSorting}
       />
     </SectionContainer>
   );

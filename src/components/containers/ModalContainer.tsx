@@ -65,7 +65,11 @@ const ModalContainer = ({
           <div className='flex-grow'>{children}</div>
           {/* Confirm and cancel buttons */}
           <div className='flex-shrink flex flex-row justify-center'>
-            <Button title={confirmText} onClick={handleConfirm} disabled={confirmDisabled} />
+            <Button
+              title={confirmText}
+              onClick={handleConfirm}
+              disabled={confirmDisabled}
+            />
             <Button title={cancelText} onClick={handleCancel} frame />
           </div>
         </div>

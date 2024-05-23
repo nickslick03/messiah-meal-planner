@@ -1,7 +1,7 @@
 interface ButtonProps {
   title?: string;
   icon?: JSX.Element;
-  onClick: () => void;
+  onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
   frame?: boolean;
   style?: string;
   disabled?: boolean;
@@ -28,7 +28,7 @@ const Button = ({
     className={
       (frame
         ? 'bg-white text-black text-lg border-2 border-messiah-light-blue hover:border-messiah-light-blue-hover active:border-messiah-light-blue-active m-2 p-2 rounded-lg flex-shrink'
-        : 'text-black bg-messiah-light-blue hover:bg-messiah-light-blue-hover active:bg-messiah-light-blue-active text-lg border-2 border-messiah-light-blue m-2 rounded-lg p-2') +
+        : 'text-black bg-messiah-light-blue hover:bg-messiah-light-blue-hover active:bg-messiah-light-blue-active text-lg border-2 border-messiah-light-blue m-2 rounded-lg p-2 ') +
       (disabled ? 'opacity-30 pointer-events-none select-none' : ' ') +
       style
     }
