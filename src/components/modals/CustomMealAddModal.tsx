@@ -15,6 +15,9 @@ interface CustomMealAddModalProps {
  * Renders a modal component for adding a custom meal.
  *
  * @param {string[]} locations - All possible meal locations.
+ * @param {boolean} visible - Whether or not the modal is visible.
+ * @param {(location: string, name: string, price: number) => void} onConfirm - Event handler for when the confirm button is clicked.
+ * @param {() => void} onCancel - Event handler for when the cancel button is clicked.
  * @returns {JSX.Element} The rendered CustomMealAddModal component.
  */
 const CustomMealAddModal = ({
