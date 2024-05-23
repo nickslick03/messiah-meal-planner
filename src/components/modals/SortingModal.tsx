@@ -10,8 +10,8 @@ interface SortingModalProps {
   onCancel: () => void;
 }
 
-const DEFAULT_COLUMN = 'Location';
-const DEFAULT_DIRECTION = true;
+export const DEFAULT_COLUMN = 'Location';
+export const DEFAULT_DIRECTION = true;
 
 const SortingModal = ({
   visible = false,

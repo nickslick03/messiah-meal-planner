@@ -6,7 +6,10 @@ import CustomMealAddModal from '../modals/CustomMealAddModal';
 import { IoAdd } from 'react-icons/io5';
 import { GiMeal } from 'react-icons/gi';
 import { FaSortAmountDown, FaSortAmountUp } from 'react-icons/fa';
-import SortingModal from '../modals/SortingModal';
+import SortingModal, {
+  DEFAULT_COLUMN,
+  DEFAULT_DIRECTION
+} from '../modals/SortingModal';
 
 // List of dining locations
 const locations = ['Lottie', 'Union', 'Falcon', 'Vending'];
@@ -26,10 +29,10 @@ const AvailableMeals = () => {
 
   // State variable to store sort direction
   // true = ascending, false = descending
-  const [sortDirection, setSortDirection] = useState(true);
+  const [sortDirection, setSortDirection] = useState(DEFAULT_DIRECTION);
 
   // State variable to store sort column
-  const [sortColumn, setSortColumn] = useState('Location');
+  const [sortColumn, setSortColumn] = useState(DEFAULT_COLUMN);
 
   return (
     <SectionContainer title='Available Meals'>
