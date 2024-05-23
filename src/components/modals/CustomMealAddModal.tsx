@@ -36,7 +36,18 @@ const CustomMealAddModal = ({
   const [price, setPrice] = useState(DEFAULT_PRICE);
   const [name, setName] = useState(DEFAULT_NAME);
 
-  const isIncomplete = useMemo(() => price === 0 || price as unknown as string === '' || name === '', [price, name]);
+  // Reset modal state
+  const resetState = () => {
+    setLocation(DEFAULT_LOCATION);
+    setPrice(DEFAULT_PRICE);
+    setName(DEFAULT_NAME);
+  };
+
+  // Function to check if the form is incomplete
+  const isIncomplete = useMemo(
+    () => price === 0 || (price as unknown as string) === '' || name === '',
+    [price, name]
+  );
 
   return visible ? (
     <ModalContainer
@@ -44,15 +55,11 @@ const CustomMealAddModal = ({
       confirmText='Add'
       onConfirm={() => {
         onConfirm(location, name, price);
-        setLocation(DEFAULT_LOCATION);
-        setPrice(DEFAULT_PRICE);
-        setName(DEFAULT_NAME);
+        resetState();
       }}
       onCancel={() => {
         onCancel();
-        setLocation(DEFAULT_LOCATION);
-        setPrice(DEFAULT_PRICE);
-        setName(DEFAULT_NAME);
+        resetState();
       }}
       confirmDisabled={isIncomplete}
     >

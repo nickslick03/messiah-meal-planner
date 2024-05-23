@@ -1,5 +1,5 @@
 import React from 'react';
-import { IMPORTANCE_CLASSES } from '../../lib/constants';
+import { IMPORTANCE_CLASSES } from '../../static/constants';
 import {
   ImportanceIndex,
   newImportanceIndex

@@ -4,7 +4,7 @@ import {
   ChangeEvent,
   HTMLInputTypeAttribute
 } from 'react';
-import { IMPORTANCE_CLASSES } from '../../lib/constants';
+import { IMPORTANCE_CLASSES } from '../../static/constants';
 import {
   ImportanceIndex,
   newImportanceIndex
@@ -54,7 +54,7 @@ const Input = ({
       let newValue =
         type === 'number' ? parseFloat(e.target.value) : e.target.value;
       if (typeof newValue === 'number' && isNaN(newValue)) newValue = ''; // Allows blank values for number types
-      
+
       if (validator(newValue.toString())) {
         setValue(newValue);
       } else {
