@@ -6,6 +6,7 @@ import { Fragment } from 'react';
 
 interface MealTableProps {
   data: Array<Meal>;
+  buttonIcon?: JSX.Element;
   buttonTitle?: string;
   buttonOnClick?: () => void;
 }
@@ -14,12 +15,14 @@ interface MealTableProps {
  * Renders a table component for displaying meal data with an optional button
  *
  * @param {Array<Meal>} data - The array of meal objects to be displayed in the table
- * @param {string} buttonTitle - The title of the optional button
+ * @param {string} buttonTitle - The title of the optional button column
+ * @param {JSX.Element} buttonIcon - The icon for the optional button
  * @param {() => void} buttonOnClick - The click event handler for the optional button
  * @return {JSX.Element} The rendered table component
  */
 const MealTable = ({
   data,
+  buttonIcon,
   buttonTitle,
   buttonOnClick
 }: MealTableProps): JSX.Element => {
@@ -49,7 +52,7 @@ const MealTable = ({
           <TableRow
             key={index}
             data={row}
-            buttonTitle={buttonTitle}
+            buttonIcon={buttonIcon}
             buttonOnClick={buttonOnClick}
           />
         ))}

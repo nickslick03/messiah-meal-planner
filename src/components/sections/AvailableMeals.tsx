@@ -3,6 +3,8 @@ import MealTable from '../containers/table/MealTable';
 import Button from '../form_elements/Button';
 import { useState } from 'react';
 import CustomMealAddModal from '../modals/CustomMealAddModal';
+import { IoAdd } from 'react-icons/io5';
+import { GiMeal } from 'react-icons/gi';
 
 // List of dining locations
 const locations = ['Lottie', 'Union', 'Falcon', 'Vending'];
@@ -49,10 +51,15 @@ const AvailableMeals = () => {
             price: 12.99
           }
         ]}
-        buttonTitle='+'
+        buttonTitle='Add'
+        buttonIcon={<IoAdd />}
         buttonOnClick={() => {}}
       />
-      <Button title='Custom Meal' onClick={() => setIsAddingCustomMeal(true)} />
+      <Button
+        title='Custom Meal'
+        icon={<GiMeal />}
+        onClick={() => setIsAddingCustomMeal(true)}
+      />
       <CustomMealAddModal
         onConfirm={(location, name, price) => {
           console.log(location);

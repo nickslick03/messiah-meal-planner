@@ -6,7 +6,7 @@ import formatCurrency from '../../../lib/formatCurrency';
 
 interface TableRowProps {
   data: Meal;
-  buttonTitle?: string;
+  buttonIcon?: JSX.Element;
   buttonOnClick?: () => void;
 }
 
@@ -14,13 +14,13 @@ interface TableRowProps {
  * Renders a table row with data and an optional button
  *
  * @param {Meal} data - The data for the table row
- * @param {string} buttonTitle - The title for the button
+ * @param {JSX.Element} buttonIcon - The icon for the button
  * @param {() => void} buttonOnClick - The click event handler for the button
  * @return {JSX.Element} The rendered table row.
  */
 const TableRow = ({
   data,
-  buttonTitle,
+  buttonIcon,
   buttonOnClick
 }: TableRowProps): JSX.Element => (
   <tr>
@@ -30,8 +30,8 @@ const TableRow = ({
       data={formatCurrency(data.price)}
       importance={newImportanceIndex(3)}
     />
-    {buttonTitle && buttonOnClick ? (
-      <ButtonCell title={buttonTitle} onClick={buttonOnClick} />
+    {buttonIcon && buttonOnClick ? (
+      <ButtonCell icon={buttonIcon} onClick={buttonOnClick} />
     ) : (
       <></>
     )}
