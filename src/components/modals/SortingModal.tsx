@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import ModalContainer from '../containers/ModalContainer';
 import Select from '../form_elements/Select';
 import Button from '../form_elements/Button';
@@ -12,9 +12,6 @@ interface SortingModalProps {
   onCancel: () => void;
 }
 
-export const DEFAULT_COLUMN = 'Select Column...';
-export const DEFAULT_DIRECTION = true;
-
 const SortingModal = ({
   visible = false,
   onConfirm,
@@ -23,11 +20,14 @@ const SortingModal = ({
   sortDirection
 }: SortingModalProps): JSX.Element => {
   const [selectedSortColumn, setSelectedSortColumn] = useState(sortColumn);
-  const [selectedSortDirection, setSelectedSortDirection] = useState(sortDirection);
+  const [selectedSortDirection, setSelectedSortDirection] =
+    useState(sortDirection);
 
   // Function to check if the form is incomplete
   const isIncomplete = useMemo(
-    () => selectedSortColumn === sortColumn && selectedSortDirection === sortDirection,
+    () =>
+      selectedSortColumn === sortColumn &&
+      selectedSortDirection === sortDirection,
     [selectedSortColumn, sortColumn, selectedSortDirection, sortDirection]
   );
 
@@ -57,7 +57,9 @@ const SortingModal = ({
             e.preventDefault();
             setSelectedSortDirection(!selectedSortDirection);
           }}
-          icon={selectedSortDirection ? <FaSortAmountUp /> : <FaSortAmountDown />}
+          icon={
+            selectedSortDirection ? <FaSortAmountUp /> : <FaSortAmountDown />
+          }
           title={selectedSortDirection ? 'Ascending' : 'Descending'}
         />
       </form>

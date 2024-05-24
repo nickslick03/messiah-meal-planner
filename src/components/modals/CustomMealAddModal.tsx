@@ -71,6 +71,7 @@ const CustomMealAddModal = ({
         <Select
           label='Location:'
           list={['Select Location...', ...locations]}
+          value={location}
           setSelected={setLocation}
         />
         <Input
