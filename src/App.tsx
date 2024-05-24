@@ -9,7 +9,7 @@ import {
   UserSelectedMealsCtx,
   IsBreakCtx
 } from './static/context';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Meal from './types/Meal';
 
 function App() {
@@ -22,8 +22,6 @@ function App() {
     new Array(7).fill([])
   );
   const [areDetailsEntered, setAreDetailsEntered] = useState(false);
-
-  useEffect(() => console.log(areDetailsEntered));
 
   return (
     <IsBreakCtx.Provider value={{ value: isBreak, setValue: setIsBreak }}>
