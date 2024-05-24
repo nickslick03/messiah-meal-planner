@@ -1,17 +1,17 @@
 interface ButtonCellProps {
-  title: string;
+  icon: JSX.Element;
   onClick: () => void;
 }
 
 /**
  * Renders a table cell with a button that triggers the provided onClick function when clicked
  *
- * @param {string} title - The text to display on the button
+ * @param {JSX.Element} icon - The component for the icon to display on the button
  * @param {() => void} onClick - The function to be called when the button is clicked
  * @returns {JSX.Element} The rendered table cell with a button
  */
 const ButtonCell = ({
-  title,
+  icon,
   onClick = () => {}
 }: ButtonCellProps): JSX.Element => (
   <td className='text-center'>
@@ -20,7 +20,7 @@ const ButtonCell = ({
       text-black text-lg font-bold w-8 h-8 m-2 rounded-full text-center'
       onClick={onClick}
     >
-      <div>{title}</div>
+      <div className='flex justify-center items-center'>{icon}</div>
     </button>
   </td>
 );

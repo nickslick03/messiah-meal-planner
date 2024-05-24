@@ -27,7 +27,7 @@ const CustomMealAddModal = ({
   onCancel
 }: CustomMealAddModalProps) => {
   // Default values
-  const DEFAULT_LOCATION = locations[0];
+  const DEFAULT_LOCATION = 'Select Location...';
   const DEFAULT_PRICE = 0;
   const DEFAULT_NAME = '';
 
@@ -45,8 +45,12 @@ const CustomMealAddModal = ({
 
   // Function to check if the form is incomplete
   const isIncomplete = useMemo(
-    () => price === 0 || (price as unknown as string) === '' || name === '',
-    [price, name]
+    () =>
+      price === 0 ||
+      (price as unknown as string) === '' ||
+      name === '' ||
+      location === 'Select Location...',
+    [price, name, location]
   );
 
   return visible ? (
@@ -64,7 +68,12 @@ const CustomMealAddModal = ({
       confirmDisabled={isIncomplete}
     >
       <form className='flex flex-col mt-4 gap-4'>
-        <Select label='Location:' list={locations} setSelected={setLocation} />
+        <Select
+          label='Location:'
+          list={['Select Location...', ...locations]}
+          value={location}
+          setSelected={setLocation}
+        />
         <Input
           label='Meal Name:'
           type='text'
