@@ -1,10 +1,12 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import ModalContainer from '../containers/ModalContainer';
 import Select from '../form_elements/Select';
 import Button from '../form_elements/Button';
 import { FaSortAmountDown, FaSortAmountUp } from 'react-icons/fa';
 
 interface SortingModalProps {
+  sortColumn: string;
+  sortDirection: boolean;
   visible: boolean;
   onConfirm: (sortColumn: string, sortDirection: boolean) => void;
   onCancel: () => void;
@@ -16,15 +18,17 @@ export const DEFAULT_DIRECTION = true;
 const SortingModal = ({
   visible = false,
   onConfirm,
-  onCancel
+  onCancel,
+  sortColumn,
+  sortDirection
 }: SortingModalProps): JSX.Element => {
-  const [sortColumn, setSortColumn] = useState(DEFAULT_COLUMN);
-  const [sortDirection, setSortDirection] = useState(DEFAULT_DIRECTION);
+  const [selectedSortColumn, setSelectedSortColumn] = useState(sortColumn);
+  const [selectedSortDirection, setSelectedSortDirection] = useState(sortDirection);
 
   // Function to check if the form is incomplete
   const isIncomplete = useMemo(
-    () => sortColumn === DEFAULT_COLUMN,
-    [sortColumn]
+    () => selectedSortColumn === sortColumn && selectedSortDirection === sortDirection,
+    [selectedSortColumn, sortColumn, selectedSortDirection, sortDirection]
   );
 
   return visible ? (
@@ -32,24 +36,29 @@ const SortingModal = ({
       title='Sort Options'
       confirmText='Sort'
       onConfirm={() => {
-        onConfirm(sortColumn, sortDirection);
+        onConfirm(selectedSortColumn, selectedSortDirection);
       }}
-      onCancel={onCancel}
+      onCancel={() => {
+        setSelectedSortColumn(sortColumn);
+        setSelectedSortDirection(sortDirection);
+        onCancel();
+      }}
       confirmDisabled={isIncomplete}
     >
       <form className='flex flex-col mt-4 gap-4'>
         <Select
           label='Sort By'
-          list={['Select Column...', 'Location', 'Name', 'Price']}
-          setSelected={setSortColumn}
+          list={['Location', 'Name', 'Price']}
+          value={selectedSortColumn}
+          setSelected={setSelectedSortColumn}
         />
         <Button
           onClick={(e) => {
             e.preventDefault();
-            setSortDirection(!sortDirection);
+            setSelectedSortDirection(!selectedSortDirection);
           }}
-          icon={sortDirection ? <FaSortAmountUp /> : <FaSortAmountDown />}
-          title={sortDirection ? 'Ascending' : 'Descending'}
+          icon={selectedSortDirection ? <FaSortAmountUp /> : <FaSortAmountDown />}
+          title={selectedSortDirection ? 'Ascending' : 'Descending'}
         />
       </form>
     </ModalContainer>

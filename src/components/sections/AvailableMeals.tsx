@@ -96,9 +96,11 @@ const AvailableMeals = () => {
         visible={isAddingCustomMeal}
       />
       <SortingModal
-        onConfirm={(sortColumn: string, sortDirection: boolean) => {
-          setSortColumn(sortColumn);
-          setSortDirection(sortDirection);
+        sortColumn={sortColumn}
+        sortDirection={sortDirection}
+        onConfirm={(newSortColumn: string, newSortDirection: boolean) => {
+          setSortColumn(newSortColumn);
+          setSortDirection(newSortDirection);
           setIsSorting(false);
         }}
         onCancel={() => setIsSorting(false)}
