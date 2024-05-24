@@ -9,20 +9,23 @@ interface SelectProps {
   label: string;
   importance?: ImportanceIndex;
   list: string[];
+  value: string;
   setSelected: React.Dispatch<React.SetStateAction<string>>;
 }
 
 /**
  * Renders a select form element
- * @param {string}label The text next to the select dropdown
- * @param {ImportanceIndex}importance The boldness of the label text
- * @param {string[]}list The list of options
- * @param {React.Dispatch<React.SetStateAction<string>>}setSelected A react state setter to track the selected option
+ * @param {string} label The text next to the select dropdown
+ * @param {ImportanceIndex} importance The boldness of the label text
+ * @param {string[]} list The list of options
+ * @param {string} value The value of the selected column
+ * @param {React.Dispatch<React.SetStateAction<string>>} setSelected A react state setter to track the selected option
  */
 const Select = ({
   label,
   importance = newImportanceIndex(3),
   list = [],
+  value,
   setSelected
 }: SelectProps): JSX.Element => {
   const importanceStyle = IMPORTANCE_CLASSES[importance] ?? 'font-normal';
@@ -31,9 +34,9 @@ const Select = ({
     <label className={`${importanceStyle} flex flex-wrap w-full gap-2`}>
       {label}
       <select
+        value={value}
         className='border border-black rounded focus:outline focus:outline-2 focus:outline-messiah-blue'
-        onChange={(e) => setSelected(e.target.value)}
-      >
+        onChange={(e) => setSelected(e.target.value)}>
         {list.map((opt, i) => (
           <option key={i}>{opt}</option>
         ))}
