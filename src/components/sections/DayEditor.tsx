@@ -13,10 +13,11 @@ const DayEditor = () => {
 
     const UserSelectedMeals = useContext(UserSelectedMealsCtx);
 
-    const [weekday, setWeekday] = useState("Monday");
+    const [weekdayIndex, setWeekdayIndex] = useState(0);
+    const weekday = useMemo(() => WEEKDAYS[weekdayIndex], [weekdayIndex]);
     const dayMealList = useMemo(
-        () => UserSelectedMeals.value[(WEEKDAYS).indexOf(weekday as typeof WEEKDAYS[number])], 
-        [UserSelectedMeals, weekday]);
+        () => UserSelectedMeals.value[weekdayIndex], 
+        [UserSelectedMeals, weekdayIndex]);
 
     return (
         <MealContainer
@@ -26,8 +27,9 @@ const DayEditor = () => {
                         label=""
                         importance={newImportanceIndex(4)}
                         list={WEEKDAYS}
-                        value={weekday}
-                        setSelected={setWeekday}
+                        value={WEEKDAYS[weekdayIndex]}
+                        setSelected={(newWeekday) => 
+                            setWeekdayIndex(WEEKDAYS.indexOf(newWeekday as typeof WEEKDAYS[number]))}
                         isTitle={true}/> 
                 </div>
             }
@@ -39,6 +41,10 @@ const DayEditor = () => {
                 {
                     title: "Weekly Total",
                     value: "$100.00"
+                },
+                {
+                    title: `Number of ${weekday}(s)`,
+                    value: "10"
                 },
                 {
                     title: "Grand Total",
