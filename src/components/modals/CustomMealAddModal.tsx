@@ -3,9 +3,9 @@ import Input from '../form_elements/Input';
 import { Dispatch, SetStateAction, useMemo } from 'react';
 import { useState } from 'react';
 import ModalContainer from '../containers/ModalContainer';
+import { DINING_LOCATIONS } from '../../static/constants';
 
 interface CustomMealAddModalProps {
-  locations: string[];
   visible: boolean;
   onConfirm: (location: string, name: string, price: number) => void;
   onCancel: () => void;
@@ -14,14 +14,12 @@ interface CustomMealAddModalProps {
 /**
  * Renders a modal component for adding a custom meal.
  *
- * @param {string[]} locations - All possible meal locations.
  * @param {boolean} visible - Whether or not the modal is visible.
  * @param {(location: string, name: string, price: number) => void} onConfirm - Event handler for when the confirm button is clicked.
  * @param {() => void} onCancel - Event handler for when the cancel button is clicked.
  * @returns {JSX.Element} The rendered CustomMealAddModal component.
  */
 const CustomMealAddModal = ({
-  locations,
   visible,
   onConfirm,
   onCancel
@@ -70,7 +68,7 @@ const CustomMealAddModal = ({
       <form className='flex flex-col mt-4 gap-4'>
         <Select
           label='Location:'
-          list={['Select Location...', ...locations]}
+          list={['Select Location...', ...DINING_LOCATIONS]}
           value={location}
           setSelected={setLocation}
         />

@@ -1,13 +1,11 @@
 import { useContext, useMemo, useState } from "react";
-import SectionContainer from "../containers/SectionContainer";
-import { WEEKDAYS } from "../../static/constants";
+import { FILLER_MEALS, WEEKDAYS } from "../../static/constants";
 import Select from "../form_elements/Select";
 import { newImportanceIndex } from "../../types/ImportanceIndex";
-import MealTable from "../containers/table/MealTable";
-import { IoRemove } from "react-icons/io5";
 import DotLeader from "../other/DotLeader";
 import { UserSelectedMealsCtx } from "../../static/context";
 import Divider from "../other/Divider";
+import MealContainer from "../containers/MealContainer";
 
 
 
@@ -21,50 +19,21 @@ const DayEditor = () => {
         [UserSelectedMeals, weekday]);
 
     return (
-        <SectionContainer>
-            <div>
-                <Select 
-                    label=""
-                    importance={newImportanceIndex(4)}
-                    list={WEEKDAYS}
-                    value={weekday}
-                    setSelected={setWeekday}
-                    isTitle={true}/>     
-            </div>
-            <MealTable
-                // Temporary AI-generated data, will be replaced with real data later on...apparently
-                // my extension really likes fries:)
-                data={[
-                {
-                    location: 'Home',
-                    name: 'Cheeseburger and Fries',
-                    price: 12.99
-                },
-                {
-                    location: 'Work',
-                    name: 'Hamburger and Fries',
-                    price: 10.99
-                },
-                {
-                    location: 'School',
-                    name: 'Pizza and Fries',
-                    price: 11.99
-                },
-                {
-                    location: 'Home',
-                    name: 'Salad and Fries',
-                    price: 9.99
-                },
-                {
-                    location: 'Work',
-                    name: 'Pasta and Fries',
-                    price: 12.99
-                }
-                ]}
-                buttonTitle='Remove'
-                buttonIcon={<IoRemove />}
-                buttonOnClick={() => {}}
-            />
+        <MealContainer
+            title={
+                <div>
+                    <Select 
+                        label=""
+                        importance={newImportanceIndex(4)}
+                        list={WEEKDAYS}
+                        value={weekday}
+                        setSelected={setWeekday}
+                        isTitle={true}/> 
+                </div>
+            }
+            addOrRemove="remove"
+            meals={FILLER_MEALS}
+            buttonOnClick={(meal) => console.log(`removed ${meal.name} from ${weekday}`)}>
             <Divider />
             <DotLeader info={[
                 {
@@ -76,7 +45,7 @@ const DayEditor = () => {
                     value: "$1000.00"
                 }
                 ]}/>
-        </SectionContainer>
+        </MealContainer>
     );
 };
 

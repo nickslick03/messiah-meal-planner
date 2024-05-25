@@ -1,10 +1,8 @@
-import { IoRemove } from "react-icons/io5";
-import SectionContainer from "../containers/SectionContainer"
-import MealTable from "../containers/table/MealTable";
-import { WEEKDAY_ABBREVIATIONS } from "../../static/constants";
+import { FILLER_MEALS, WEEKDAY_ABBREVIATIONS } from "../../static/constants";
 import Input from "../form_elements/Input";
 import Button from "../form_elements/Button";
-import { useEffect, useReducer } from "react";
+import { useReducer } from "react";
+import MealContainer from "../containers/MealContainer";
 
 const MealQueue = (
 
@@ -23,44 +21,12 @@ const MealQueue = (
         }, 
         []);
 
-    useEffect(() => console.log(selectedDays));
-
     return (
-        <SectionContainer title={"Meal Queue"}>
-            <MealTable
-                // Temporary AI-generated data, will be replaced with real data later on...apparently
-                // my extension really likes fries:)
-                data={[
-                {
-                    location: 'Home',
-                    name: 'Cheeseburger and Fries',
-                    price: 12.99
-                },
-                {
-                    location: 'Work',
-                    name: 'Hamburger and Fries',
-                    price: 10.99
-                },
-                {
-                    location: 'School',
-                    name: 'Pizza and Fries',
-                    price: 11.99
-                },
-                {
-                    location: 'Home',
-                    name: 'Salad and Fries',
-                    price: 9.99
-                },
-                {
-                    location: 'Work',
-                    name: 'Pasta and Fries',
-                    price: 12.99
-                }
-                ]}
-                buttonTitle='Remove'
-                buttonIcon={<IoRemove />}
-                buttonOnClick={() => {}}
-            />
+        <MealContainer 
+            title='Meal Queue'
+            meals={FILLER_MEALS}
+            addOrRemove="Remove"
+            buttonOnClick={(meal) => {console.log(`removed meal ${meal.name} from queue`)}}>
             <div className="mb-4"/>
             <div className="flex justify-center flex-wrap gap-6">
                 {WEEKDAY_ABBREVIATIONS.map((day, i) => 
@@ -83,9 +49,7 @@ const MealQueue = (
                     title="Clear Meal Queue"
                     onClick={() => {}}/>
             </div>
-        </SectionContainer>
-        
-        
+        </MealContainer>
     );
 };
 

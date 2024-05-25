@@ -7,6 +7,14 @@ export const IMPORTANCE_CLASSES = [
   'font-bold text-messiah-blue underline'
 ] as const;
 
+export const DINING_LOCATIONS = [
+  'Lottie', 
+  'Union', 
+  'Falcon', 
+  'Vending'
+] as const;
+
+
 export const WEEKDAYS = [
   'Monday',
   'Tuesday',
@@ -26,3 +34,32 @@ export const WEEKDAY_ABBREVIATIONS = [
   'Sat',
   'Sun'
 ] as const;
+
+
+export const FILLER_MEALS = [
+  {
+    location: 'Home',
+    name: 'Cheeseburger and Fries',
+    price: 12.99
+  },
+  {
+    location: 'Work',
+    name: 'Hamburger and Fries',
+    price: 10.99
+  },
+  {
+    location: 'School',
+    name: 'Pizza and Fries',
+    price: 11.99
+  },
+  {
+    location: 'Home',
+    name: 'Salad and Fries',
+    price: 9.99
+  },
+  {
+    location: 'Work',
+    name: 'Pasta and Fries',
+    price: 12.99
+  }
+];
