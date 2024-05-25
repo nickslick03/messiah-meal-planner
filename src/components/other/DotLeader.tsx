@@ -21,10 +21,10 @@ const DotLeader = ({
                 title,
                 titleImportance = newImportanceIndex(3),
                 value
-            }) => {
+            }, i) => {
                 const importance = IMPORTANCE_CLASSES[titleImportance];
                 return (
-                    <div className="flex gap-1">
+                    <div className="flex gap-1" key={i}>
                         <div className={`${importance}`}>
                             {title}
                         </div>

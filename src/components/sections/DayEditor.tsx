@@ -7,6 +7,7 @@ import MealTable from "../containers/table/MealTable";
 import { IoRemove } from "react-icons/io5";
 import DotLeader from "../other/DotLeader";
 import { UserSelectedMealsCtx } from "../../static/context";
+import Divider from "../other/Divider";
 
 
 
@@ -64,7 +65,7 @@ const DayEditor = () => {
                 buttonIcon={<IoRemove />}
                 buttonOnClick={() => {}}
             />
-            <div className="border-t-messiah-blue border-t-4 h-full w-full mb-4"></div>
+            <Divider />
             <DotLeader info={[
                 {
                     title: "Weekly Total",

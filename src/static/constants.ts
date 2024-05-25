@@ -16,3 +16,13 @@ export const WEEKDAYS = [
   'Saturday',
   'Sunday'
 ] as const;
+
+export const WEEKDAY_ABBREVIATIONS = [
+  'Mon',
+  'Tues',
+  'Wed',
+  'Thur',
+  'Fri',
+  'Sat',
+  'Sun'
+] as const;
