@@ -57,7 +57,7 @@ const MealQueue = (
                     price: 12.99
                 }
                 ]}
-                buttonTitle='Add'
+                buttonTitle='Remove'
                 buttonIcon={<IoRemove />}
                 buttonOnClick={() => {}}
             />
