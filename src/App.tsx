@@ -11,6 +11,7 @@ import {
 } from './static/context';
 import { useState } from 'react';
 import Meal from './types/Meal';
+import DayEditor from './components/sections/DayEditor';
 
 function App() {
   const [isBreak, setIsBreak] = useState(false);
@@ -47,7 +48,10 @@ function App() {
                   </header>
                   <MealPlanInfo onEnterDetails={setAreDetailsEntered} />
                   {areDetailsEntered ? (
-                    <AvailableMeals />
+                    <>
+                      <AvailableMeals />
+                      <DayEditor />
+                    </>
                   ) : (
                     <div className='flex flex-col items-center'>
                       <p className='text-gray-400'>
