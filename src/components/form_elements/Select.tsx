@@ -38,7 +38,7 @@ const Select = ({
       {label}
       <select
         value={value}
-        className={`${isTitle ? 'text-2xl' : 'border border-black'} rounded focus:outline focus:outline-2 focus:outline-messiah-blue`}
+        className={`${isTitle ? 'text-2xl' : ''} border border-black rounded focus:outline focus:outline-2 focus:outline-messiah-blue`}
         onChange={(e) => setSelected(e.target.value)}>
         {list.map((opt, i) => (
           <option key={i} className={`${isTitle ? 'text-center text-base' : ''}`}>{opt}</option>
