@@ -7,11 +7,23 @@ import { UserSelectedMealsCtx } from '../../static/context';
 import Divider from '../other/Divider';
 import MealContainer from '../containers/MealContainer';
 
+/**
+ * Renders a meal table for meals added to given days an an option to remove meals from that day.
+ * Also includes a results summary.
+ *
+ * @return {JSX.Element} The rendered DayEditor component.
+ */
 const DayEditor = () => {
+  // Load context of meals the user has selected
   const UserSelectedMeals = useContext(UserSelectedMealsCtx);
 
+  // State variable to track which day the user is editing
   const [weekdayIndex, setWeekdayIndex] = useState(0);
+
+  // Get the day of the week the user is editing
   const weekday = useMemo(() => WEEKDAYS[weekdayIndex], [weekdayIndex]);
+
+  // Get the list of selected meals for the given day
   const dayMealList = useMemo(
     () => UserSelectedMeals.value[weekdayIndex],
     [UserSelectedMeals, weekdayIndex]
