@@ -11,6 +11,10 @@ interface DotLeaderProps {
     }[];
 }
 
+/**
+ * Renders a list of data formatted into a series of leaders.
+ * @param {DotLeaderProps["info"]} info The info to be rendered in the dot leader
+ */
 const DotLeader = ({
     info
 }: DotLeaderProps) => {

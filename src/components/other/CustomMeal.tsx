@@ -3,6 +3,9 @@ import { GiMeal } from "react-icons/gi";
 import Button from "../form_elements/Button";
 import CustomMealAddModal from "../modals/CustomMealAddModal";
 
+/**
+ * Renders a Custom Meal button and Modal.
+ */
 const CustomMeal = () => {
 
     // State variable to determine whether or not the custom meal modal should be open

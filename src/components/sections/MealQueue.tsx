@@ -4,9 +4,10 @@ import Button from "../form_elements/Button";
 import { useReducer } from "react";
 import MealContainer from "../containers/MealContainer";
 
-const MealQueue = (
-
-) => {
+/**
+ * Renders the Meal Queue section, where meals in the queue can be added to different days of the week.
+ */
+const MealQueue = () => {
 
     const [selectedDays, selectedDaysDispatch] = useReducer(
         (state: number[], action: { index: number, type: "add" | "remove"}) => {

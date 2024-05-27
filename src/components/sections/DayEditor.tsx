@@ -8,7 +8,9 @@ import Divider from "../other/Divider";
 import MealContainer from "../containers/MealContainer";
 
 
-
+/**
+ * Renders the a section displaying the meals in each day of week and the total.
+ */
 const DayEditor = () => {
 
     const UserSelectedMeals = useContext(UserSelectedMealsCtx);
