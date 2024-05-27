@@ -10,11 +10,12 @@ import CustomMeal from '../other/CustomMeal';
  */
 const AvailableMeals = () => {
   return (
-    <MealContainer 
+    <MealContainer
       title='Available Meals'
-      addOrRemove='add'
+      addOrRemove='Add'
       meals={FILLER_MEALS}
-      buttonOnClick={(meal) => console.log(`added meal ${meal.name}`)}>
+      buttonOnClick={(meal) => console.log(`added meal ${meal.name}`)}
+    >
       <CustomMeal />
     </MealContainer>
   );
