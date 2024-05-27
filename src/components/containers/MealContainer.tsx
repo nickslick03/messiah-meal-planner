@@ -8,12 +8,12 @@ import SortingModal from '../modals/SortingModal';
 import Meal from '../../types/Meal';
 
 interface MealContainerProps {
-    title?: React.ReactNode;
-    addOrRemove?: string;
-    customMeal?: boolean;
-    children?: React.ReactNode;
-    meals: Meal[];
-    buttonOnClick: (meal: Meal) => unknown;
+  title?: React.ReactNode;
+  addOrRemove?: string;
+  customMeal?: boolean;
+  children?: React.ReactNode;
+  meals: Meal[];
+  buttonOnClick: (meal: Meal) => unknown;
 }
 
 // Default column
@@ -30,13 +30,12 @@ const DEFAULT_DIRECTION = true;
  * @return {JSX.Element} The Available Meals section component.
  */
 const MealContainer = ({
-    title,
-    addOrRemove = 'add',
-    children = '',
-    meals,
-    buttonOnClick,
+  title,
+  addOrRemove = 'Add',
+  children = '',
+  meals,
+  buttonOnClick
 }: MealContainerProps) => {
-
   // State variable to determine whether or not the sorting modal should be open
   const [isSorting, setIsSorting] = useState(false);
 
@@ -63,7 +62,7 @@ const MealContainer = ({
         // my extension really likes fries:)
         data={meals}
         buttonTitle={addOrRemove}
-        buttonIcon={addOrRemove === 'add' ? <IoAdd /> : <IoRemove />}
+        buttonIcon={addOrRemove === 'Add' ? <IoAdd /> : <IoRemove />}
         sortedBy={sortColumn}
         buttonOnClick={buttonOnClick}
       />

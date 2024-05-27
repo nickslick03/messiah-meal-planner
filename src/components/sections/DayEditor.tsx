@@ -47,7 +47,7 @@ const DayEditor = () => {
           />
         </div>
       }
-      addOrRemove='Remove'
+      addOrRemove='Del'
       meals={FILLER_MEALS}
       buttonOnClick={(meal) =>
         console.log(`removed ${meal.name} from ${weekday}`)
