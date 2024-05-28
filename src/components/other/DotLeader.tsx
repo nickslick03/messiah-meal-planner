@@ -4,7 +4,7 @@ import {
   newImportanceIndex
 } from '../../types/ImportanceIndex';
 
-const DOTS = '.'.repeat(Math.ceil(window.innerWidth / 12));
+const DOTS = '.'.repeat(200);
 
 interface DotLeaderProps {
   info: {
