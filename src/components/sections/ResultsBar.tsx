@@ -4,7 +4,6 @@ import {
   useRef,
   useState,
   useEffect,
-  useCallback
 } from 'react';
 import { BalanceCtx } from '../../static/context';
 import formatCurrency from '../../lib/formatCurrency';
@@ -29,56 +28,26 @@ const ResultsBar = () => {
   // Check if balance is under $1000
   const isUnderBalance = useMemo(() => balance.value >= 1000, [balance]);
 
-  // Handle bottom corner rounding
-  const [isBottomRounded, setIsBottomRounded] = useState(false);
-
   // Ref to the container of this element, for handling the bottom corner rounding
   const ref = useRef<HTMLDivElement>(null);
 
-  // Stores the previous scroll position
-  const previousScrollY = useRef(0);
+  // Indicates whether the user is at the bottom of the page
+  const [isAtBottom, setIsAtBottom] = useState(false);
 
-  /**
-   * Handles the scroll event and updates the state of `isBottomRounded` based on whether or not
-   * the sticky div is at the bottom of the screen
-   */
-  const handleScroll = useCallback(() => {
-    const stickyDiv = ref.current;
-    if (stickyDiv) {
-      const rect = stickyDiv.getBoundingClientRect();
-
-      const isAtBottom = window.innerHeight - rect.bottom < 1;
-      const currentScrollY = window.scrollY;
-
-      // Only update state if the scroll position has changed significantly to avoid rapid toggling
-      if (Math.abs(previousScrollY.current - currentScrollY) > 5) {
-        setIsBottomRounded(!isAtBottom);
-        previousScrollY.current = currentScrollY;
-      }
-    }
-  }, []);
-
-  // Add scroll and resize listeners
   useEffect(() => {
-    const onScroll = () => requestAnimationFrame(handleScroll);
-
-    window.addEventListener('scroll', onScroll);
-    window.addEventListener('resize', onScroll);
-
-    handleScroll();
-
-    return () => {
-      window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', onScroll);
-    };
-  }, [handleScroll]);
+    (new IntersectionObserver(
+      ([e]) => setIsAtBottom(e.intersectionRatio === 1),
+      { threshold: [1] }
+    )).observe(ref.current!);
+  }, []);
 
   return (
     <div
+      id={'resultsBar'}
       ref={ref}
-      className={`sticky w-full bottom-0 p-2 bg-messiah-light-blue drop-shadow-dark 
+      className={`sticky w-full bottom-[-1px] p-2 bg-messiah-light-blue drop-shadow-dark 
       rounded-t-xl flex gap-6 justify-around text-center ${
-        isBottomRounded ? 'rounded-bl-xl rounded-br-xl' : ''
+        isAtBottom ? 'rounded-bl-xl rounded-br-xl' : ''
       }`}>
       <div className='hidden sm:block'>
         <span className='font-bold'>Starting Balance: </span>
