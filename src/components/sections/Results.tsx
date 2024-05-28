@@ -43,7 +43,7 @@ const Results = () => {
         } text-xl font-bold mt-4`}
       >
         {isUnderBalance
-          ? `You have $${difference} left!`
+          ? `You have an extra $${difference}!`
           : `You have overspent by $${difference}.`}
       </div>
     </SectionContainer>

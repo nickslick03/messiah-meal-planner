@@ -76,27 +76,21 @@ const ResultsBar = () => {
   return (
     <div
       ref={ref}
-      className={`sticky w-full bottom-0 p-2 bg-messiah-light-blue drop-shadow-dark rounded-tl-xl rounded-tr-xl flex gap-6 justify-around text-center ${
+      className={`sticky w-full bottom-0 p-2 bg-messiah-light-blue drop-shadow-dark 
+      rounded-t-xl flex gap-6 justify-around text-center ${
         isBottomRounded ? 'rounded-bl-xl rounded-br-xl' : ''
-      }`}
-    >
-      {window.innerWidth > 640 ? (
-        <div>
-          <span className='font-bold'>Starting Balance: </span>
-          <span className='text-messiah-green'>{balCurrency}</span>
-        </div>
-      ) : (
-        <></>
-      )}
+      }`}>
+      <div className='hidden sm:block'>
+        <span className='font-bold'>Starting Balance: </span>
+        <span className='text-messiah-green'>{balCurrency}</span>
+      </div>
       <div>
         <span className='font-bold'>Grand Total: </span>
         <span className='text-messiah-red'>{formatCurrency(1000)}</span>
       </div>
       <div>
-        <span className='font-bold'>$ Over/Under: </span>
-        <span
-          className={isUnderBalance ? 'text-messiah-green' : 'text-messiah-red'}
-        >
+        <span className='font-bold'>$ {isUnderBalance ? 'Extra' : 'Short'}: </span>
+        <span className={isUnderBalance ? 'text-messiah-green' : 'text-messiah-red'}>
           {formatCurrency(1000)}
         </span>
       </div>
