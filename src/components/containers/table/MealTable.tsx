@@ -9,7 +9,7 @@ interface MealTableProps {
   buttonIcon?: JSX.Element;
   buttonTitle?: string;
   sortedBy?: string;
-  buttonOnClick?: () => void;
+  buttonOnClick: (meal: Meal) => void;
 }
 
 /**
@@ -19,7 +19,7 @@ interface MealTableProps {
  * @param {string} buttonTitle - The title of the optional button column
  * @param {JSX.Element} buttonIcon - The icon for the optional button
  * @param {string} sortedBy - The column to sort the table by
- * @param {() => void} buttonOnClick - The click event handler for the optional button
+ * @param {(Meal) => void} buttonOnClick - The click event handler for the optional button
  * @return {JSX.Element} The rendered table component
  */
 const MealTable = ({
@@ -59,7 +59,7 @@ const MealTable = ({
             key={index}
             data={row}
             buttonIcon={buttonIcon}
-            buttonOnClick={buttonOnClick}
+            buttonOnClick={() => buttonOnClick(row)}
           />
         ))}
       </tbody>

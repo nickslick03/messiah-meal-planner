@@ -65,7 +65,7 @@ const Input = ({
 
   return (
     <label
-      className={`${importanceStyle} flex flex-row flex-wrap w-full gap-2 items-center`}
+      className={`${importanceStyle} w-fit flex flex-row flex-wrap gap-2 items-center`}
     >
       {label}
       {type === 'checkbox' ? (

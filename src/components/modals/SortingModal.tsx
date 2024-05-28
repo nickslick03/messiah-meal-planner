@@ -12,12 +12,20 @@ interface SortingModalProps {
   onCancel: () => void;
 }
 
+/**
+ * Renders a modal that sorts a Meal Table component
+ * @param {string} sortColumn The name of column to sort by
+ * @param {string} sortDirection The direction to sort by (Ascending or Descending)
+ * @param {boolean} visible Determines whether the modal is visible
+ * @param {(string, boolean) => void} onConfirm callback function that runs when the confirm button is clicked
+ * @param {() => void} onCancel callback function that runs when the cancel button is clicked
+ */
 const SortingModal = ({
+  sortColumn,
+  sortDirection,
   visible = false,
   onConfirm,
-  onCancel,
-  sortColumn,
-  sortDirection
+  onCancel
 }: SortingModalProps): JSX.Element => {
   const [selectedSortColumn, setSelectedSortColumn] = useState(sortColumn);
   const [selectedSortDirection, setSelectedSortDirection] =
