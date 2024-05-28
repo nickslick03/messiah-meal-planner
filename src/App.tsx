@@ -13,6 +13,7 @@ import { useState } from 'react';
 import Meal from './types/Meal';
 import DayEditor from './components/sections/DayEditor';
 import MealQueue from './components/sections/MealQueue';
+import Results from './components/sections/Results';
 
 function App() {
   const [isBreak, setIsBreak] = useState(false);
@@ -53,6 +54,7 @@ function App() {
                       <AvailableMeals />
                       <MealQueue />
                       <DayEditor />
+                      <Results />
                     </>
                   ) : (
                     <div className='flex flex-col items-center'>
