@@ -58,7 +58,8 @@ const DayEditor = () => {
         info={[
           {
             title: 'Weekly Total',
-            value: '$100.00'
+            value: '$100.00',
+            resultsStyle: 'text-messiah-red'
           },
           {
             title: `Number of ${weekday}(s)`,
@@ -66,7 +67,8 @@ const DayEditor = () => {
           },
           {
             title: 'Grand Total',
-            value: '$1000.00'
+            value: '$1000.00',
+            resultsStyle: 'text-messiah-red'
           }
         ]}
       />
