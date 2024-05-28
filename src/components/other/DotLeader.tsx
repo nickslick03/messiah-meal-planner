@@ -11,6 +11,7 @@ interface DotLeaderProps {
     title: string;
     titleImportance?: ImportanceIndex;
     value: string | number;
+    resultsStyle?: string;
   }[];
 }
 
@@ -22,7 +23,15 @@ const DotLeader = ({ info }: DotLeaderProps) => {
   return (
     <div className='w-full flex flex-col gap-4'>
       {info.map(
-        ({ title, titleImportance = newImportanceIndex(3), value }, i) => {
+        (
+          {
+            title,
+            titleImportance = newImportanceIndex(3),
+            value,
+            resultsStyle
+          },
+          i
+        ) => {
           const importance = IMPORTANCE_CLASSES[titleImportance];
           return (
             <div className='flex gap-1' key={i}>
@@ -30,7 +39,7 @@ const DotLeader = ({ info }: DotLeaderProps) => {
               <div className='flex-1 flex justify-center overflow-hidden'>
                 <div className='tracking-widest font-light'>{DOTS}</div>
               </div>
-              <div>{value}</div>
+              <div className={resultsStyle}>{value}</div>
             </div>
           );
         }
