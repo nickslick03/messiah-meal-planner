@@ -3,12 +3,14 @@ import SectionContainer from "../containers/SectionContainer"
 import DotLeader from "../other/DotLeader";
 import { BalanceCtx } from "../../static/context";
 
-
+/**
+ * Renders the results of the meal planning.
+ */
 const Results = () => {
 
     const balance = useContext(BalanceCtx);
 
-    const isOver = useMemo(() => balance.value >= 1000, [balance]);
+    const isUnderBalance = useMemo(() => balance.value >= 1000, [balance]);
     const difference = useMemo(() => {
         const b = balance.value || 0;
         return Math.abs(b - 1000).toFixed(2);
@@ -30,13 +32,13 @@ const Results = () => {
                     value: `$${(balance.value || 0).toFixed(2)}`
                 }
             ]}/>
-        <div className={`${isOver ? 'text-messiah-green' : 'text-messiah-red'} text-xl font-bold mt-4`}>
-            {isOver 
+        <div className={`${isUnderBalance ? 'text-messiah-green' : 'text-messiah-red'} text-xl font-bold mt-4`}>
+            {isUnderBalance 
             ? `You have $${difference} left!` 
             : `You have overspent by $${difference}.`}
         </div>
         </SectionContainer>
-    )
+    );
 };
 
 export default Results;

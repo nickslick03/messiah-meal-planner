@@ -14,6 +14,7 @@ import Meal from './types/Meal';
 import DayEditor from './components/sections/DayEditor';
 import MealQueue from './components/sections/MealQueue';
 import Results from './components/sections/Results';
+import ResultsBar from './components/sections/ResultsBar';
 
 function App() {
   const [isBreak, setIsBreak] = useState(false);
@@ -55,6 +56,7 @@ function App() {
                       <MealQueue />
                       <DayEditor />
                       <Results />
+                      <ResultsBar />
                     </>
                   ) : (
                     <div className='flex flex-col items-center'>

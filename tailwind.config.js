@@ -18,6 +18,9 @@ export default {
       },
       fontFamily: {
         inter: ["Inter", "monospace"]
+      },
+      dropShadow: {
+        "dark": "0 2px 3px rgb(0 0 0 / 0.3)"
       }
     },
   },

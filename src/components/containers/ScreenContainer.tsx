@@ -12,7 +12,7 @@ interface ScreenContainerProps {
 const ScreenContainer = ({
   children = <></>
 }: ScreenContainerProps): JSX.Element => (
-  <section className='w-full md:w-3/5 p-4 md:p-0 mx-auto flex flex-col mb-4 mt-4 font-inter'>
+  <section className='relative w-full md:w-3/5 p-4 md:p-0 mx-auto flex flex-col mb-4 mt-4 font-inter'>
     {children}
   </section>
 );
