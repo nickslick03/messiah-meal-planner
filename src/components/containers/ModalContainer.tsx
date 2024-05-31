@@ -47,12 +47,12 @@ const ModalContainer = ({
   const handleConfirm = onConfirm || toggleVisible;
   const handleCancel = onCancel || toggleVisible;
 
-  return isVisible ? (
-    <div>
+  return (
+    <div className={isVisible ? '' : 'hidden'}>
       {/* Fullscreen translucent black div to disable everything and focus attention on the modal */}
       <div className='h-screen w-screen bg-opacity-50 bg-slate-900 fixed top-0 left-0 flex items-center justify-center z-10'>
         {/* The actual modal component */}
-        <div className=' bg-white w-full h-full max-w-[500px] max-h-[500px] rounded-lg p-5 flex flex-col sm:w-5/6 sm:h-5/6'>
+        <div className='text-center  bg-white w-full h-full max-w-[500px] max-h-[500px] rounded-lg p-5 mx-4 flex flex-col sm:w-5/6 sm:h-5/6'>
           {
             /* Title goes here */
             title !== null && title !== undefined ? (
@@ -62,7 +62,7 @@ const ModalContainer = ({
             )
           }
           {/* Content goes here */}
-          <div className='flex-grow'>{children}</div>
+          <div className='flex-grow flex justify-center mt-4'>{children}</div>
           {/* Confirm and cancel buttons */}
           <div className='flex-shrink flex flex-row justify-center'>
             <Button
@@ -75,9 +75,7 @@ const ModalContainer = ({
         </div>
       </div>
     </div>
-  ) : (
-    <></>
-  );
+  )
 };
 
 export default ModalContainer;

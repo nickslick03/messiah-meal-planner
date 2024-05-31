@@ -57,7 +57,7 @@ const DayEditor = () => {
       <DotLeader
         info={[
           {
-            title: 'Weekly Total',
+            title: `Total for One ${weekday}`,
             value: '$100.00',
             resultsStyle: 'text-messiah-red'
           },
@@ -66,7 +66,7 @@ const DayEditor = () => {
             value: '10'
           },
           {
-            title: 'Grand Total',
+            title: `Total of All ${weekday}s`,
             value: '$1000.00',
             resultsStyle: 'text-messiah-red'
           }

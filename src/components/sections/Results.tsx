@@ -40,11 +40,11 @@ const Results = () => {
       <div
         className={`${
           isUnderBalance ? 'text-messiah-green' : 'text-messiah-red'
-        } text-xl font-bold mt-4`}
+        } text-xl font-bold mt-4 text-center`}
       >
         {isUnderBalance
           ? `You have an extra $${difference}!`
-          : `You have overspent by $${difference}.`}
+          : `You have overplanned by $${difference}.`}
       </div>
     </SectionContainer>
   );
