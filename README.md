@@ -3,7 +3,7 @@ By Caleb Rice and Nicholas Epps
 
 Are you unsure of how to spend your dining dollars At Messiah? Do you always end up way above or way under budget? Use this website to set a balanced dining plan!
 
-## Commaands
+## Commands
 `npm run dev`
 Spins up a dev server.
 

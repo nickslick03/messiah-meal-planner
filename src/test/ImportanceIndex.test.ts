@@ -8,15 +8,15 @@ describe('ImportanceIndex', () => {
     expect(newImportanceIndex(3)).toBe(3);
     expect(newImportanceIndex(4)).toBe(4);
     expect(newImportanceIndex(5)).toBe(5);
-    expect(newImportanceIndex(6)).toBe(6);
+    expect(newImportanceIndex(0)).toBe(0);
   });
 
   it('should throw an error if the given value is not a valid importance index', () => {
-    expect(() => newImportanceIndex(0)).toThrowError(
-      'Number 0 is not a valid importance index'
+    expect(() => newImportanceIndex(-1)).toThrowError(
+      'Number -1 is not a valid importance index'
     );
-    expect(() => newImportanceIndex(7)).toThrowError(
-      'Number 7 is not a valid importance index'
+    expect(() => newImportanceIndex(6)).toThrowError(
+      'Number 6 is not a valid importance index'
     );
     expect(() => newImportanceIndex(1.5)).toThrowError(
       'Number 1.5 is not a valid importance index'
@@ -29,13 +29,13 @@ describe('ImportanceIndex', () => {
     const importanceIndex3: ImportanceIndex = newImportanceIndex(3);
     const importanceIndex4: ImportanceIndex = newImportanceIndex(4);
     const importanceIndex5: ImportanceIndex = newImportanceIndex(5);
-    const importanceIndex6: ImportanceIndex = newImportanceIndex(6);
+    const importanceIndex6: ImportanceIndex = newImportanceIndex(0);
 
     expect(importanceIndex1).toBe(1);
     expect(importanceIndex2).toBe(2);
     expect(importanceIndex3).toBe(3);
     expect(importanceIndex4).toBe(4);
     expect(importanceIndex5).toBe(5);
-    expect(importanceIndex6).toBe(6);
+    expect(importanceIndex6).toBe(0);
   });
 });

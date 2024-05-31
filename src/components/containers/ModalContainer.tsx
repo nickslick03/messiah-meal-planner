@@ -10,6 +10,7 @@ interface ModalContainerProps {
   cancelText?: string;
   onConfirm?: () => void;
   onCancel?: () => void;
+  confirmDisabled?: boolean;
 }
 
 /**
@@ -21,6 +22,7 @@ interface ModalContainerProps {
  * @param {string} cancelText - Text to display on the cancel button
  * @param {() => void} onConfirm - Event handler for when the confirm button is clicked
  * @param {() => void} onCancel - Event handler for when the cancel button is clicked
+ * @param {boolean} confirmDisabled - boolean for whether the confirm button is disabled
  * @returns {JSX.Element} JSX for rendering a modal
  */
 const ModalContainer = ({
@@ -29,7 +31,8 @@ const ModalContainer = ({
   confirmText = 'Confirm',
   cancelText = 'Cancel',
   onConfirm,
-  onCancel
+  onCancel,
+  confirmDisabled = true
 }: ModalContainerProps): JSX.Element => {
   // Keep track of whether or not the modal is visible
   const [isVisible, setIsVisible] = useState(true);
@@ -47,7 +50,7 @@ const ModalContainer = ({
   return isVisible ? (
     <div>
       {/* Fullscreen translucent black div to disable everything and focus attention on the modal */}
-      <div className='h-screen w-screen bg-opacity-50 bg-slate-900 fixed top-0 left-0 flex items-center justify-center'>
+      <div className='h-screen w-screen bg-opacity-50 bg-slate-900 fixed top-0 left-0 flex items-center justify-center z-10'>
         {/* The actual modal component */}
         <div className=' bg-white w-full h-full max-w-[500px] max-h-[500px] rounded-lg p-5 flex flex-col sm:w-5/6 sm:h-5/6'>
           {
@@ -62,7 +65,11 @@ const ModalContainer = ({
           <div className='flex-grow'>{children}</div>
           {/* Confirm and cancel buttons */}
           <div className='flex-shrink flex flex-row justify-center'>
-            <Button title={confirmText} onClick={handleConfirm} />
+            <Button
+              title={confirmText}
+              onClick={handleConfirm}
+              disabled={confirmDisabled}
+            />
             <Button title={cancelText} onClick={handleCancel} frame />
           </div>
         </div>

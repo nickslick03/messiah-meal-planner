@@ -15,10 +15,10 @@ interface SectionContainerProps {
  */
 const SectionContainer = ({
   children = <></>,
-  title = ''
+  title
 }: SectionContainerProps): JSX.Element => (
-  <section className='border-4 border-messiah-blue rounded-xl p-4 flex flex-col justify-center items-center w-full shadow-md'>
-    <SectionHeader text={title} />
+  <section className='relative border-4 border-messiah-blue rounded-xl p-4 flex flex-col justify-center items-center w-full shadow-md mb-4'>
+    {title === undefined ? '' :<SectionHeader text={title} />}
     {children}
   </section>
 );
