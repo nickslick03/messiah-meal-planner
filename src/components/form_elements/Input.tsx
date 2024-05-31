@@ -2,7 +2,8 @@ import {
   Dispatch,
   SetStateAction,
   ChangeEvent,
-  HTMLInputTypeAttribute
+  HTMLInputTypeAttribute,
+  useMemo
 } from 'react';
 import { IMPORTANCE_CLASSES } from '../../static/constants';
 import {
@@ -40,7 +41,14 @@ const Input = ({
 }: InputProps): JSX.Element => {
   const importanceStyle = IMPORTANCE_CLASSES[importance] ?? 'font-normal';
   const styles =
-    'border border-black rounded focus:outline focus:outline-2 focus:outline-messiah-blue';
+    `border border-black rounded focus:outline focus:outline-2 focus:outline-messiah-blue 
+    ${type === 'number' 
+      ? 'w-16 text-right px-1'
+      : type === 'text'
+      ? 'w-40 px-1'
+      : ''}`;
+
+  const title = useMemo(() => label[label.length -1].match(/[\s:]/) ? label.substring(0, label.length -1) : label, [label]);
 
   /**
    * Handles the change event of an input element.
@@ -74,6 +82,7 @@ const Input = ({
           type={type}
           checked={value as boolean}
           onChange={handleChange}
+          title={title}
         />
       ) : (
         <input
@@ -82,6 +91,7 @@ const Input = ({
           value={value as string | number}
           inputMode={type === 'number' ? 'numeric' : undefined}
           onChange={handleChange}
+          title={title}
         />
       )}
     </label>

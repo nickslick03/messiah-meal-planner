@@ -34,7 +34,7 @@ const MealTable = ({
     sortedBy = headers[0] as string;
   }
   return (
-    <table className='w-full'>
+    <table className='w-full [&_tr>td:nth-child(-n+2)]:text-left [&_tr>td:nth-child(n+3)]:text-right'>
       {/* Table header */}
       <thead>
         <tr>
