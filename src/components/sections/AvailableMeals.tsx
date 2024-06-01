@@ -1,4 +1,4 @@
-import { FILLER_MEALS } from '../../static/constants';
+import meals from '../../static/mealsDatabase';
 import Meal from '../../types/Meal';
 import MealContainer from '../containers/MealContainer';
 import CustomMeal from '../other/CustomMeal';
@@ -29,7 +29,7 @@ const AvailableMeals = () => {
     <MealContainer
       title='Available Meals'
       addOrRemove='Add'
-      meals={FILLER_MEALS}
+      meals={meals}
       buttonOnClick={addToQueue}
     >
       <CustomMeal />
