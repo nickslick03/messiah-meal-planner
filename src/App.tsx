@@ -7,7 +7,8 @@ import {
   StartDateCtx,
   EndDateCtx,
   UserSelectedMealsCtx,
-  IsBreakCtx
+  IsBreakCtx,
+  MealQueueCtx
 } from './static/context';
 import { useState } from 'react';
 import Meal from './types/Meal';
@@ -15,15 +16,22 @@ import DayEditor from './components/sections/DayEditor';
 import MealQueue from './components/sections/MealQueue';
 import Results from './components/sections/Results';
 import ResultsBar from './components/sections/ResultsBar';
+import { UserSelectedMealsObject } from './types/userSelectedMealsObject';
+import usePersistentState from './hooks/usePersistentState';
 
 function App() {
-  const [isBreak, setIsBreak] = useState(false);
-  const [mealPlan, setMealPlan] = useState(false);
-  const [balance, setBalance] = useState(0);
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
-  const [userSelectedMeals, setUserSelectedMeals] = useState<Meal[][]>(
-    new Array(7).fill([])
+  const [isBreak, setIsBreak] = usePersistentState('isBreak', false);
+  const [mealPlan, setMealPlan] = usePersistentState('isDD', false);
+  const [balance, setBalance] = usePersistentState('startingBalance', 0);
+  const [startDate, setStartDate] = usePersistentState('startDate', '');
+  const [endDate, setEndDate] = usePersistentState('endDate', '');
+  const [userSelectedMeals, setUserSelectedMeals] = usePersistentState(
+    'userSelectedMeals',
+    new UserSelectedMealsObject()
+  );
+  const [mealQueue, setMealQueue] = usePersistentState<Array<Meal>>(
+    'mealQueue',
+    new Array<Meal>().fill({} as Meal)
   );
   const [areDetailsEntered, setAreDetailsEntered] = useState(false);
 
@@ -43,29 +51,33 @@ function App() {
                   setValue: setUserSelectedMeals
                 }}
               >
-                <ScreenContainer>
-                  <header className='bg-messiah-blue rounded-xl border-4 border-white shadow-md w-full mb-4'>
-                    <h1 className='font-semibold text-4xl text-white text-center p-8'>
-                      Messiah Meal Planner
-                    </h1>
-                  </header>
-                  <MealPlanInfo onEnterDetails={setAreDetailsEntered} />
-                  {areDetailsEntered ? (
-                    <>
-                      <AvailableMeals />
-                      <MealQueue />
-                      <DayEditor />
-                      <Results />
-                      <ResultsBar />
-                    </>
-                  ) : (
-                    <div className='flex flex-col items-center'>
-                      <p className='text-gray-400'>
-                        Enter meal plan info to continue planning.
-                      </p>
-                    </div>
-                  )}
-                </ScreenContainer>
+                <MealQueueCtx.Provider
+                  value={{ value: mealQueue, setValue: setMealQueue }}
+                >
+                  <ScreenContainer>
+                    <header className='bg-messiah-blue rounded-xl border-4 border-white shadow-md w-full mb-4'>
+                      <h1 className='font-semibold text-4xl text-white text-center p-8'>
+                        Messiah Meal Planner
+                      </h1>
+                    </header>
+                    <MealPlanInfo onEnterDetails={setAreDetailsEntered} />
+                    {areDetailsEntered ? (
+                      <>
+                        <AvailableMeals />
+                        <MealQueue />
+                        <DayEditor />
+                        <Results />
+                        <ResultsBar />
+                      </>
+                    ) : (
+                      <div className='flex flex-col items-center'>
+                        <p className='text-gray-400'>
+                          Enter meal plan info to continue planning.
+                        </p>
+                      </div>
+                    )}
+                  </ScreenContainer>
+                </MealQueueCtx.Provider>
               </UserSelectedMealsCtx.Provider>
             </EndDateCtx.Provider>
           </StartDateCtx.Provider>
