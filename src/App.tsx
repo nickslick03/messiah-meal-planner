@@ -17,17 +17,20 @@ import MealQueue from './components/sections/MealQueue';
 import Results from './components/sections/Results';
 import ResultsBar from './components/sections/ResultsBar';
 import { UserSelectedMealsObject } from './types/userSelectedMealsObject';
+import usePersistentState from './hooks/usePersistentState';
 
 function App() {
-  const [isBreak, setIsBreak] = useState(false);
-  const [mealPlan, setMealPlan] = useState(false);
-  const [balance, setBalance] = useState(0);
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
-  const [userSelectedMeals, setUserSelectedMeals] = useState(
+  const [isBreak, setIsBreak] = usePersistentState('isBreak', false);
+  const [mealPlan, setMealPlan] = usePersistentState('isDD', false);
+  const [balance, setBalance] = usePersistentState('startingBalance', 0);
+  const [startDate, setStartDate] = usePersistentState('startDate', '');
+  const [endDate, setEndDate] = usePersistentState('endDate', '');
+  const [userSelectedMeals, setUserSelectedMeals] = usePersistentState(
+    'userSelectedMeals',
     new UserSelectedMealsObject()
   );
-  const [mealQueue, setMealQueue] = useState<Array<Meal>>(
+  const [mealQueue, setMealQueue] = usePersistentState<Array<Meal>>(
+    'mealQueue',
     new Array<Meal>().fill({} as Meal)
   );
   const [areDetailsEntered, setAreDetailsEntered] = useState(false);
