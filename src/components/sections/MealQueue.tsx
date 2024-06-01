@@ -1,7 +1,7 @@
 import { WEEKDAY_ABBREVIATIONS } from '../../static/constants';
 import Input from '../form_elements/Input';
 import Button from '../form_elements/Button';
-import { useReducer, useContext } from 'react';
+import { useReducer, useContext, useMemo } from 'react';
 import { MealQueueCtx, UserSelectedMealsCtx } from '../../static/context';
 import MealContainer from '../containers/MealContainer';
 import Meal from '../../types/Meal';
@@ -58,6 +58,14 @@ const MealQueue = () => {
     []
   );
 
+  // Memos to control whether buttons can be clicked
+  const isAddMealsButtonDisabled = useMemo(() =>
+    mealQueue.value.length == 0 || selectedDays.length == 0,
+    [mealQueue, selectedDays]);
+  const isClearMealsButtonDisabled = useMemo(() =>
+    mealQueue.value.length == 0,
+    [mealQueue]);
+
   return (
     <MealContainer
       title='Meal Queue'
@@ -83,8 +91,14 @@ const MealQueue = () => {
         ))}
       </div>
       <div className='flex gap-2 mt-4'>
-        <Button title='Add Meals to Selected Days' onClick={onAddMeals} />
-        <Button title='Clear Meal Queue' onClick={() => {}} />
+        <Button 
+          title='Add Meals to Selected Days' 
+          onClick={onAddMeals}
+          disabled={isAddMealsButtonDisabled} />
+        <Button 
+          title='Clear Meal Queue' 
+          onClick={() => {}}
+          disabled={isClearMealsButtonDisabled} />
       </div>
     </MealContainer>
   );
