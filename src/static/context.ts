@@ -1,6 +1,10 @@
 import { createContext } from 'react';
 import Meal from '../types/Meal';
 import { Dispatch, SetStateAction } from 'react';
+import {
+  UserSelectedMealsObjectType,
+  UserSelectedMealsObject
+} from '../types/userSelectedMealsObject';
 
 interface ContextType<T> {
   value: T;
@@ -27,8 +31,10 @@ export const EndDateCtx = createContext<ContextType<string>>({
   value: '',
   setValue: () => {}
 });
-export const UserSelectedMealsCtx = createContext<ContextType<Meal[][]>>({
-  value: new Array(7).fill([]),
+export const UserSelectedMealsCtx = createContext<
+  ContextType<UserSelectedMealsObjectType>
+>({
+  value: new UserSelectedMealsObject(),
   setValue: () => {}
 });
 export const MealQueueCtx = createContext<ContextType<Meal[]>>({
