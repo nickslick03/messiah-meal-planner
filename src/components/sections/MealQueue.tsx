@@ -40,17 +40,29 @@ const MealQueue = () => {
       ) as UserSelectedMealsObjectType
     );
 
+    selectedDaysDispatch({ index: 0, type: 'clear' });
+  };
+
+  /**
+   * Clears the meal queue.
+   */
+  const clearMealQueue = () => {
     mealQueue.setValue([]);
   };
 
   // State variable to track which days the user has selected
   const [selectedDays, selectedDaysDispatch] = useReducer(
-    (state: number[], action: { index: number; type: 'add' | 'remove' }) => {
+    (
+      state: number[],
+      action: { index: number; type: 'add' | 'remove' | 'clear' }
+    ) => {
       switch (action.type) {
         case 'add':
           return state.concat(action.index);
         case 'remove':
           return state.filter((num) => num !== action.index);
+        case 'clear':
+          return [];
         default:
           throw new Error(`Action type ${action.type} invalid`);
       }
@@ -59,12 +71,14 @@ const MealQueue = () => {
   );
 
   // Memos to control whether buttons can be clicked
-  const isAddMealsButtonDisabled = useMemo(() =>
-    mealQueue.value.length == 0 || selectedDays.length == 0,
-    [mealQueue, selectedDays]);
-  const isClearMealsButtonDisabled = useMemo(() =>
-    mealQueue.value.length == 0,
-    [mealQueue]);
+  const isAddMealsButtonDisabled = useMemo(
+    () => mealQueue.value.length == 0 || selectedDays.length == 0,
+    [mealQueue, selectedDays]
+  );
+  const isClearMealsButtonDisabled = useMemo(
+    () => mealQueue.value.length == 0,
+    [mealQueue]
+  );
 
   return (
     <MealContainer
@@ -91,14 +105,16 @@ const MealQueue = () => {
         ))}
       </div>
       <div className='flex gap-2 mt-4'>
-        <Button 
-          title='Add Meals to Selected Days' 
+        <Button
+          title='Add Meals to Selected Days'
           onClick={onAddMeals}
-          disabled={isAddMealsButtonDisabled} />
-        <Button 
-          title='Clear Meal Queue' 
-          onClick={() => {}}
-          disabled={isClearMealsButtonDisabled} />
+          disabled={isAddMealsButtonDisabled}
+        />
+        <Button
+          title='Clear Meal Queue'
+          onClick={clearMealQueue}
+          disabled={isClearMealsButtonDisabled}
+        />
       </div>
     </MealContainer>
   );

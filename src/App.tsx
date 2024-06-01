@@ -31,7 +31,7 @@ function App() {
   );
   const [mealQueue, setMealQueue] = usePersistentState<Array<Meal>>(
     'mealQueue',
-    new Array<Meal>().fill({} as Meal)
+    []
   );
   const [areDetailsEntered, setAreDetailsEntered] = useState(false);
 
