@@ -2,14 +2,17 @@ import Meal from '../../../types/Meal';
 import { newImportanceIndex } from '../../../types/ImportanceIndex';
 import TableRow from './TableRow';
 import TableCell from './TableCell';
-import { Fragment, useState } from 'react';
 import Notification from '../../other/Notification';
+import { Fragment, useMemo, useState } from 'react';
+import sortMeals from '../../../lib/sortMeals';
+import SortBy from '../../../types/SortBy';
 
 interface MealTableProps {
   data: Array<Meal>;
   buttonIcon?: JSX.Element;
   buttonTitle?: string;
   sortedBy?: string;
+  sortDirection?: boolean;
   buttonOnClick: (meal: Meal) => void;
   createNotification: ((name: string) => string);
 }
@@ -21,6 +24,7 @@ interface MealTableProps {
  * @param {string} buttonTitle - The title of the optional button column
  * @param {JSX.Element} buttonIcon - The icon for the optional button
  * @param {string} sortedBy - The column to sort the table by
+ * @param {boolean} sortDirection - The direction to sort the table in, true = ascending, false = descending
  * @param {(Meal) => void} buttonOnClick - The click event handler for the optional button
  * @param {(string) => string} notificationMessage - A function that takes in the meal name and returns the notification message when the meal button is clicked.
  * @return {JSX.Element} The rendered table component
@@ -32,6 +36,7 @@ const MealTable = ({
   sortedBy,
   buttonOnClick,
   createNotification,
+  sortDirection,
 }: MealTableProps): JSX.Element => {
   const headers = ['Location', 'Name', 'Price', buttonTitle ?? null];
   if (sortedBy === undefined) {
@@ -45,6 +50,12 @@ const MealTable = ({
     buttonOnClick(row);
     setMessage({text: createNotification(row.name)});
   }
+
+  // Sort data
+  const sortedData = useMemo(
+    () => sortMeals(data, sortedBy as SortBy, sortDirection ?? false),
+    [data, sortedBy, sortDirection]
+  );
 
   return (
     <>
@@ -69,7 +80,7 @@ const MealTable = ({
         </thead>
         {/* Table body */}
         <tbody>
-          {data.map((row, index) => (
+          {sortedData.map((row, index) => (
             <TableRow
               key={index}
               data={row}
