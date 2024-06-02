@@ -86,7 +86,7 @@ const MealQueue = () => {
       meals={mealQueue.value}
       addOrRemove='Del'
       buttonOnClick={removeMealFromQueue}
-    >
+      createNotification={(name) => `Removed ${name} from meal queue`}>
       <div className='mb-4' />
       <div className='flex justify-center flex-wrap gap-6'>
         {WEEKDAY_ABBREVIATIONS.map((day, i) => (

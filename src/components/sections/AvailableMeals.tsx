@@ -5,8 +5,6 @@ import CustomMeal from '../other/CustomMeal';
 import { MealQueueCtx } from '../../static/context';
 import { useContext } from 'react';
 import { v4 as uuid } from 'uuid';
-import Notification from '../other/Notification';
-
 /**
  * Renders the Available Meals section with a table of meals to add and a button
  * to add a custom meal. Displays the add custommeal modal when the button is clicked.
@@ -31,9 +29,9 @@ const AvailableMeals = () => {
       title='Available Meals'
       addOrRemove='Add'
       meals={meals}
-      buttonOnClick={addToQueue}>
+      buttonOnClick={addToQueue}
+      createNotification={(name) => `Added ${name} to meal queue`}>
       <CustomMeal />
-      <Notification text='added meal to queue'/>
     </MealContainer>
   );
 };
