@@ -6,6 +6,7 @@ import { MealQueueCtx, UserSelectedMealsCtx } from '../../static/context';
 import MealContainer from '../containers/MealContainer';
 import Meal from '../../types/Meal';
 import { UserSelectedMealsObjectType } from '../../types/userSelectedMealsObject';
+import { v4 as uuid } from 'uuid';
 import Notification from '../other/Notification';
 
 /**
@@ -38,7 +39,12 @@ const MealQueue = () => {
         Object.entries(userSelectedMeals.value).map(
           ([key, value], index: number) =>
             selectedDays.includes(index)
-              ? [key, value.concat(mealQueue.value)]
+              ? [
+                  key,
+                  value.concat(
+                    mealQueue.value.map((m) => ({ ...m, id: uuid() }))
+                  )
+                ]
               : [key, value]
         )
       ) as UserSelectedMealsObjectType
