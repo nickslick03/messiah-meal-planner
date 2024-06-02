@@ -21,6 +21,22 @@ export default {
       },
       dropShadow: {
         "dark": "0 2px 3px rgb(0 0 0 / 0.3)"
+      },
+      keyframes: {
+        topNotify: {
+          '0%': {
+            transform: 'translateY(-100%)'
+          },
+          '20%, 60%': {
+            transform: 'translateY(0%)'
+          },
+          '100%': {
+            transform: 'translateY(-100%)'
+          }
+        }
+      },
+      animation: {
+        'topNotify': 'topNotify 2.5s ease'
       }
     },
   },

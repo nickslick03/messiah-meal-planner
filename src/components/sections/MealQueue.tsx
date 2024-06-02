@@ -1,11 +1,12 @@
-import { WEEKDAY_ABBREVIATIONS } from '../../static/constants';
+import { WEEKDAYS, WEEKDAY_ABBREVIATIONS } from '../../static/constants';
 import Input from '../form_elements/Input';
 import Button from '../form_elements/Button';
-import { useReducer, useContext, useMemo } from 'react';
+import { useReducer, useContext, useMemo, useState } from 'react';
 import { MealQueueCtx, UserSelectedMealsCtx } from '../../static/context';
 import MealContainer from '../containers/MealContainer';
 import Meal from '../../types/Meal';
 import { UserSelectedMealsObjectType } from '../../types/userSelectedMealsObject';
+import Notification from '../other/Notification';
 
 /**
  * Renders the Meal Queue section, where meals in the queue can be added to different days of the week.
@@ -14,6 +15,9 @@ const MealQueue = () => {
   // Load all necessary contexts
   const mealQueue = useContext(MealQueueCtx);
   const userSelectedMeals = useContext(UserSelectedMealsCtx);
+
+  // notification text
+  const [message, setMessage] = useState({text: ''});
 
   /**
    * Removes a meal from the meal queue.
@@ -39,7 +43,17 @@ const MealQueue = () => {
         )
       ) as UserSelectedMealsObjectType
     );
-
+    const numOfMeals = mealQueue.value.length;
+    const weekdaysStr = selectedDays.map((day, i) => 
+      WEEKDAYS[day] + (
+        i === selectedDays.length - 1
+        ? ''
+        : i === selectedDays.length - 2
+        ? ' and '
+        : ', '
+      )
+    ).join('');
+    setMessage({text: `Added ${numOfMeals} meal${numOfMeals > 1 ? 's' : ''} to ${weekdaysStr}`});
     selectedDaysDispatch({ index: 0, type: 'clear' });
   };
 
@@ -48,6 +62,7 @@ const MealQueue = () => {
    */
   const clearMealQueue = () => {
     mealQueue.setValue([]);
+    setMessage({text: 'Cleared meal queue'});
   };
 
   // State variable to track which days the user has selected
@@ -86,7 +101,7 @@ const MealQueue = () => {
       meals={mealQueue.value}
       addOrRemove='Del'
       buttonOnClick={removeMealFromQueue}
-    >
+      createNotification={(name) => `Removed ${name} from meal queue`}>
       <div className='mb-4' />
       <div className='flex justify-center flex-wrap gap-6'>
         {WEEKDAY_ABBREVIATIONS.map((day, i) => (
@@ -116,6 +131,7 @@ const MealQueue = () => {
           disabled={isClearMealsButtonDisabled}
         />
       </div>
+    <Notification message={message}/>
     </MealContainer>
   );
 };
