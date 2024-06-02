@@ -58,12 +58,11 @@ const MealContainer = ({
         />
       </div>
       <MealTable
-        // Temporary AI-generated data, will be replaced with real data later on...apparently
-        // my extension really likes fries:)
         data={meals}
         buttonTitle={addOrRemove}
         buttonIcon={addOrRemove === 'Add' ? <IoAdd /> : <IoRemove />}
         sortedBy={sortColumn}
+        sortDirection={sortDirection}
         buttonOnClick={buttonOnClick}
       />
       <SortingModal

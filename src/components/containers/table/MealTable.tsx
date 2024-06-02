@@ -2,13 +2,16 @@ import Meal from '../../../types/Meal';
 import { newImportanceIndex } from '../../../types/ImportanceIndex';
 import TableRow from './TableRow';
 import TableCell from './TableCell';
-import { Fragment } from 'react';
+import { Fragment, useMemo } from 'react';
+import sortMeals from '../../../lib/sortMeals';
+import SortBy from '../../../types/SortBy';
 
 interface MealTableProps {
   data: Array<Meal>;
   buttonIcon?: JSX.Element;
   buttonTitle?: string;
   sortedBy?: string;
+  sortDirection?: boolean;
   buttonOnClick: (meal: Meal) => void;
 }
 
@@ -19,6 +22,7 @@ interface MealTableProps {
  * @param {string} buttonTitle - The title of the optional button column
  * @param {JSX.Element} buttonIcon - The icon for the optional button
  * @param {string} sortedBy - The column to sort the table by
+ * @param {boolean} sortDirection - The direction to sort the table in, true = ascending, false = descending
  * @param {(Meal) => void} buttonOnClick - The click event handler for the optional button
  * @return {JSX.Element} The rendered table component
  */
@@ -27,12 +31,20 @@ const MealTable = ({
   buttonIcon,
   buttonTitle,
   sortedBy,
+  sortDirection,
   buttonOnClick
 }: MealTableProps): JSX.Element => {
   const headers = ['Location', 'Name', 'Price', buttonTitle ?? null];
   if (sortedBy === undefined) {
     sortedBy = headers[0] as string;
   }
+
+  // Sort data
+  const sortedData = useMemo(
+    () => sortMeals(data, sortedBy as SortBy, sortDirection ?? false),
+    [data, sortedBy, sortDirection]
+  );
+
   return data.length > 0 ? (
     <div className='overflow-y-scroll flex-grow max-h-[400px] w-full'>
       <table className='w-full [&_tr>td:nth-child(-n+2)]:text-left [&_tr>td:nth-child(n+3)]:text-right'>
@@ -55,7 +67,7 @@ const MealTable = ({
         </thead>
         {/* Table body */}
         <tbody>
-          {data.map((row, index) => (
+          {sortedData.map((row, index) => (
             <TableRow
               key={index}
               data={row}
