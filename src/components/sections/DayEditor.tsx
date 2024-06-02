@@ -1,11 +1,12 @@
 import { useContext, useMemo, useState } from 'react';
-import { FILLER_MEALS, WEEKDAYS } from '../../static/constants';
+import { WEEKDAYS } from '../../static/constants';
 import Select from '../form_elements/Select';
 import { newImportanceIndex } from '../../types/ImportanceIndex';
 import DotLeader from '../other/DotLeader';
 import { UserSelectedMealsCtx } from '../../static/context';
 import Divider from '../other/Divider';
 import MealContainer from '../containers/MealContainer';
+import Meal from '../../types/Meal';
 
 /**
  * Renders a meal table for meals added to given days an an option to remove meals from that day.
@@ -15,7 +16,7 @@ import MealContainer from '../containers/MealContainer';
  */
 const DayEditor = () => {
   // Load context of meals the user has selected
-  const UserSelectedMeals = useContext(UserSelectedMealsCtx);
+  const userSelectedMeals = useContext(UserSelectedMealsCtx);
 
   // State variable to track which day the user is editing
   const [weekdayIndex, setWeekdayIndex] = useState(0);
@@ -25,9 +26,22 @@ const DayEditor = () => {
 
   // Get the list of selected meals for the given day
   const dayMealList = useMemo(
-    () => UserSelectedMeals.value[weekdayIndex],
-    [UserSelectedMeals, weekdayIndex]
+    () => userSelectedMeals.value[WEEKDAYS[weekdayIndex]] ?? [],
+    [userSelectedMeals, weekdayIndex]
   );
+
+  /**
+   * Removes a meal from the currently selected day.
+   * @param meal - The meal to be removed
+   */
+  const removeMeal = (meal: Meal) => {
+    userSelectedMeals.setValue({
+      ...userSelectedMeals.value,
+      [WEEKDAYS[weekdayIndex]]: userSelectedMeals.value[
+        WEEKDAYS[weekdayIndex]
+      ].filter((m) => m !== meal)
+    });
+  };
 
   return (
     <MealContainer
@@ -48,10 +62,8 @@ const DayEditor = () => {
         </div>
       }
       addOrRemove='Del'
-      meals={FILLER_MEALS}
-      buttonOnClick={(meal) =>
-        console.log(`removed ${meal.name} from ${weekday}`)
-      }
+      meals={dayMealList}
+      buttonOnClick={removeMeal}
     >
       <Divider />
       <DotLeader
