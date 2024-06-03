@@ -2,7 +2,7 @@ import meals from '../../static/mealsDatabase';
 import Meal from '../../types/Meal';
 import MealContainer from '../containers/MealContainer';
 import CustomMeal from '../other/CustomMeal';
-import { CustomMealsCtx, MealQueueCtx } from '../../static/context';
+import { MealQueueCtx } from '../../static/context';
 import { useContext } from 'react';
 import { v4 as uuid } from 'uuid';
 /**
@@ -12,9 +12,8 @@ import { v4 as uuid } from 'uuid';
  * @return {JSX.Element} The Available Meals section component.
  */
 const AvailableMeals = () => {
-  // Load all necessary contexts
+  // Load meal queue context
   const mealQueue = useContext(MealQueueCtx);
-  const customMeals = useContext(CustomMealsCtx);
 
   /**
    * Adds a meal to the queue.
@@ -29,11 +28,9 @@ const AvailableMeals = () => {
     <MealContainer
       title='Available Meals'
       addOrRemove='Add'
-      meals={[...meals, ...customMeals.value]}
+      meals={meals}
       buttonOnClick={addToQueue}
       createNotification={(name) => `Added ${name} to meal queue`}>
-      includeCustomEditor={true}
-    >
       <CustomMeal />
     </MealContainer>
   );

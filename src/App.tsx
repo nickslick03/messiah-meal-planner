@@ -8,8 +8,7 @@ import {
   EndDateCtx,
   UserSelectedMealsCtx,
   IsBreakCtx,
-  MealQueueCtx,
-  CustomMealsCtx
+  MealQueueCtx
 } from './static/context';
 import { useState } from 'react';
 import Meal from './types/Meal';
@@ -34,10 +33,6 @@ function App() {
     'mealQueue',
     []
   );
-  const [customMeals, setCustomMeals] = usePersistentState<Array<Meal>>(
-    'customMeals',
-    []
-  );
   const [areDetailsEntered, setAreDetailsEntered] = useState(false);
 
   return (
@@ -59,33 +54,29 @@ function App() {
                 <MealQueueCtx.Provider
                   value={{ value: mealQueue, setValue: setMealQueue }}
                 >
-                  <CustomMealsCtx.Provider
-                    value={{ value: customMeals, setValue: setCustomMeals }}
-                  >
-                    <ScreenContainer>
-                      <header className='bg-messiah-blue rounded-xl border-4 border-white shadow-md w-full mb-4'>
-                        <h1 className='font-semibold text-4xl text-white text-center p-8'>
-                          Messiah Meal Planner
-                        </h1>
-                      </header>
-                      <MealPlanInfo onEnterDetails={setAreDetailsEntered} />
-                      {areDetailsEntered ? (
-                        <>
-                          <AvailableMeals />
-                          <MealQueue />
-                          <DayEditor />
-                          <Results />
-                          <ResultsBar />
-                        </>
-                      ) : (
-                        <div className='flex flex-col items-center'>
-                          <p className='text-gray-400'>
-                            Enter meal plan info to continue planning.
-                          </p>
-                        </div>
-                      )}
-                    </ScreenContainer>
-                  </CustomMealsCtx.Provider>
+                  <ScreenContainer>
+                    <header className='bg-messiah-blue rounded-xl border-4 border-white shadow-md w-full mb-4'>
+                      <h1 className='font-semibold text-4xl text-white text-center p-8'>
+                        Messiah Meal Planner
+                      </h1>
+                    </header>
+                    <MealPlanInfo onEnterDetails={setAreDetailsEntered} />
+                    {areDetailsEntered ? (
+                      <>
+                        <AvailableMeals />
+                        <MealQueue />
+                        <DayEditor />
+                        <Results />
+                        <ResultsBar />
+                      </>
+                    ) : (
+                      <div className='flex flex-col items-center'>
+                        <p className='text-gray-400'>
+                          Enter meal plan info to continue planning.
+                        </p>
+                      </div>
+                    )}
+                  </ScreenContainer>
                 </MealQueueCtx.Provider>
               </UserSelectedMealsCtx.Provider>
             </EndDateCtx.Provider>
