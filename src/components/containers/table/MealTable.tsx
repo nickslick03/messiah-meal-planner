@@ -14,7 +14,8 @@ interface MealTableProps {
   sortedBy?: string;
   sortDirection?: boolean;
   buttonOnClick: (meal: Meal) => void;
-  createNotification: ((name: string) => string);
+  createNotification: (name: string) => string;
+  includeCustomEditor?: boolean;
 }
 
 /**
@@ -27,6 +28,7 @@ interface MealTableProps {
  * @param {boolean} sortDirection - The direction to sort the table in, true = ascending, false = descending
  * @param {(Meal) => void} buttonOnClick - The click event handler for the optional button
  * @param {(string) => string} notificationMessage - A function that takes in the meal name and returns the notification message when the meal button is clicked.
+ * @param {boolean} includeCustomEditor - Whether or not to include the custom meal editor
  * @return {JSX.Element} The rendered table component
  */
 const MealTable = ({
@@ -37,6 +39,7 @@ const MealTable = ({
   buttonOnClick,
   createNotification,
   sortDirection,
+  includeCustomEditor
 }: MealTableProps): JSX.Element => {
   const headers = ['Location', 'Name', 'Price', buttonTitle ?? null];
   if (sortedBy === undefined) {
@@ -44,12 +47,12 @@ const MealTable = ({
   }
 
   // The notification message
-  const [message, setMessage] = useState({text: ''});
+  const [message, setMessage] = useState({ text: '' });
 
   const handleButtonClick = (row: Meal) => {
     buttonOnClick(row);
-    setMessage({text: createNotification(row.name)});
-  }
+    setMessage({ text: createNotification(row.name) });
+  };
 
   // Sort data
   const sortedData = useMemo(
@@ -59,40 +62,47 @@ const MealTable = ({
 
   return (
     <>
-    <div className={`overflow-y-scroll flex-grow max-h-[400px] w-full ${data.length > 0 ? '' : 'hidden'}`}>
-      <table className='w-full [&_tr>td:nth-child(-n+2)]:text-left [&_tr>td:nth-child(n+3)]:text-right'>
-        {/* Table header */}
-        <thead>
-          <tr>
-            {headers.map((header, index) =>
-              header !== null ? (
-                <TableCell
-                  key={index}
-                  data={header}
-                  importance={newImportanceIndex(header === sortedBy ? 5 : 4)}
-                  isHeader={true}
-                />
-              ) : (
-                <Fragment key={index}></Fragment>
-              )
-            )}
-          </tr>
-        </thead>
-        {/* Table body */}
-        <tbody>
-          {sortedData.map((row, index) => (
-            <TableRow
-              key={index}
-              data={row}
-              buttonIcon={buttonIcon}
-              buttonOnClick={() => handleButtonClick(row)}
-            />
-          ))}
-        </tbody>
-      </table>
-    </div>
-    <p className={`p-6 text-gray-400 ${data.length > 0 ? 'hidden' : ''}`}>No meals to display.</p>
-    <Notification message={message}/>
+      <div
+        className={`overflow-y-scroll flex-grow max-h-[400px] w-full ${
+          data.length > 0 ? '' : 'hidden'
+        }`}
+      >
+        <table className='w-full [&_tr>td:nth-child(-n+2)]:text-left [&_tr>td:nth-child(n+3)]:text-right'>
+          {/* Table header */}
+          <thead>
+            <tr>
+              {headers.map((header, index) =>
+                header !== null ? (
+                  <TableCell
+                    key={index}
+                    data={header}
+                    importance={newImportanceIndex(header === sortedBy ? 5 : 4)}
+                    isHeader={true}
+                  />
+                ) : (
+                  <Fragment key={index}></Fragment>
+                )
+              )}
+            </tr>
+          </thead>
+          {/* Table body */}
+          <tbody>
+            {sortedData.map((row, index) => (
+              <TableRow
+                key={index}
+                data={row}
+                buttonIcon={buttonIcon}
+                buttonOnClick={() => handleButtonClick(row)}
+                includeCustomEditor={includeCustomEditor}
+              />
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p className={`p-6 text-gray-400 ${data.length > 0 ? 'hidden' : ''}`}>
+        No meals to display.
+      </p>
+      <Notification message={message} />
     </>
   );
 };

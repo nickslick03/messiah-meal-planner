@@ -12,6 +12,7 @@ interface MealContainerProps {
   addOrRemove?: string;
   customMeal?: boolean;
   children?: React.ReactNode;
+  includeCustomEditor?: boolean;
   meals: Meal[];
   buttonOnClick: (meal: Meal) => unknown;
   createNotification: (name: string) => string;
@@ -29,6 +30,7 @@ const DEFAULT_DIRECTION = true;
  * @param {Meal[]} meals The list of meals to display
  * @param {(index: Meal) => unkown} buttonOnClick Handle the add or remove button click
  * @param {(string) => string} notificationMessage - A function that takes in the meal name and returns the notification message when the meal button is clicked.
+ * @param {boolean} includeCustomEditor Whether or not to include the custom meal editor
  * @return {JSX.Element} The Available Meals section component.
  */
 const MealContainer = ({
@@ -38,6 +40,7 @@ const MealContainer = ({
   meals,
   buttonOnClick,
   createNotification,
+  includeCustomEditor
 }: MealContainerProps) => {
   // State variable to determine whether or not the sorting modal should be open
   const [isSorting, setIsSorting] = useState(false);
@@ -68,6 +71,7 @@ const MealContainer = ({
         sortDirection={sortDirection}
         buttonOnClick={buttonOnClick}
         createNotification={createNotification}
+        includeCustomEditor={includeCustomEditor}
       />
       <SortingModal
         sortColumn={sortColumn}
