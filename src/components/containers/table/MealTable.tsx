@@ -15,7 +15,7 @@ interface MealTableProps {
   sortDirection?: boolean;
   buttonOnClick: (meal: Meal) => void;
   createNotification: (name: string) => string;
-  includeCustomEditor?: boolean;
+  onCustomClick?: (data: Meal) => void;
 }
 
 /**
@@ -28,7 +28,7 @@ interface MealTableProps {
  * @param {boolean} sortDirection - The direction to sort the table in, true = ascending, false = descending
  * @param {(Meal) => void} buttonOnClick - The click event handler for the optional button
  * @param {(string) => string} notificationMessage - A function that takes in the meal name and returns the notification message when the meal button is clicked.
- * @param {boolean} includeCustomEditor - Whether or not to include the custom meal editor
+ * @param {() => void} onCustomClick - The click event handler for editing a custom meal
  * @return {JSX.Element} The rendered table component
  */
 const MealTable = ({
@@ -39,7 +39,7 @@ const MealTable = ({
   buttonOnClick,
   createNotification,
   sortDirection,
-  includeCustomEditor
+  onCustomClick
 }: MealTableProps): JSX.Element => {
   const headers = ['Location', 'Name', 'Price', buttonTitle ?? null];
   if (sortedBy === undefined) {
@@ -93,7 +93,7 @@ const MealTable = ({
                 data={row}
                 buttonIcon={buttonIcon}
                 buttonOnClick={() => handleButtonClick(row)}
-                includeCustomEditor={includeCustomEditor}
+                onCustomClick={onCustomClick}
               />
             ))}
           </tbody>

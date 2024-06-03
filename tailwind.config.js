@@ -19,8 +19,7 @@ export default {
         inter: ['Inter', 'monospace']
       },
       dropShadow: {
-<<<<<<< HEAD
-        "dark": "0 2px 3px rgb(0 0 0 / 0.3)"
+        dark: '0 2px 3px rgb(0 0 0 / 0.3)'
       },
       keyframes: {
         topNotify: {
@@ -36,10 +35,7 @@ export default {
         }
       },
       animation: {
-        'topNotify': 'topNotify 2.5s ease'
-=======
-        dark: '0 2px 3px rgb(0 0 0 / 0.3)'
->>>>>>> 2f4ed60 (Added custom meal editor.)
+        topNotify: 'topNotify 2.5s ease'
       }
     }
   },
