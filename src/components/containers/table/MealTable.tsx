@@ -10,6 +10,7 @@ interface MealTableProps {
   buttonTitle?: string;
   sortedBy?: string;
   buttonOnClick: (meal: Meal) => void;
+  includeCustomEditor?: boolean;
 }
 
 /**
@@ -20,6 +21,7 @@ interface MealTableProps {
  * @param {JSX.Element} buttonIcon - The icon for the optional button
  * @param {string} sortedBy - The column to sort the table by
  * @param {(Meal) => void} buttonOnClick - The click event handler for the optional button
+ * @param {boolean} includeCustomEditor - Whether or not to include the custom meal editor
  * @return {JSX.Element} The rendered table component
  */
 const MealTable = ({
@@ -27,7 +29,8 @@ const MealTable = ({
   buttonIcon,
   buttonTitle,
   sortedBy,
-  buttonOnClick
+  buttonOnClick,
+  includeCustomEditor
 }: MealTableProps): JSX.Element => {
   const headers = ['Location', 'Name', 'Price', buttonTitle ?? null];
   if (sortedBy === undefined) {
@@ -61,6 +64,7 @@ const MealTable = ({
               data={row}
               buttonIcon={buttonIcon}
               buttonOnClick={() => buttonOnClick(row)}
+              includeCustomEditor={includeCustomEditor}
             />
           ))}
         </tbody>
