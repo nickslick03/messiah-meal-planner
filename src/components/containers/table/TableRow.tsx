@@ -44,8 +44,8 @@ const TableRow = ({
           data={data.name}
           isCustom={data.isCustom}
           importance={newImportanceIndex(2)}
-          onCustomClick={() =>
-            onCustomClick !== undefined ? onCustomClick(data) : null
+          onCustomClick={
+            onCustomClick !== undefined ? () => onCustomClick(data) : undefined
           }
         />
         <TableCell

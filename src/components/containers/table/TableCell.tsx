@@ -27,7 +27,7 @@ const TableCell = ({
   importance = newImportanceIndex(3),
   isHeader = false,
   isCustom = false,
-  onCustomClick = () => {}
+  onCustomClick
 }: TableCellProps): JSX.Element => {
   const importanceStyle = IMPORTANCE_CLASSES[importance] ?? 'font-normal';
 
@@ -37,7 +37,7 @@ const TableCell = ({
         isHeader ? 'border-b-4 border-b-messiah-blue' : ''
       } p-2 text-center`}
     >
-      {isCustom ? (
+      {isCustom && onCustomClick !== undefined ? (
         <button
           className='bg-transparent border-none font-inter underline text-messiah-blue hover:text-messiah-blue-hover p-0 m-0'
           type='button'
