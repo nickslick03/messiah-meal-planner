@@ -8,6 +8,8 @@ import Meal from '../../types/Meal';
 import { UserSelectedMealsObjectType } from '../../types/userSelectedMealsObject';
 import { v4 as uuid } from 'uuid';
 import Notification from '../other/Notification';
+import meals from '../../static/mealsDatabase';
+import { CustomMealsCtx } from '../../static/context';
 
 /**
  * Renders the Meal Queue section, where meals in the queue can be added to different days of the week.
@@ -16,9 +18,21 @@ const MealQueue = () => {
   // Load all necessary contexts
   const mealQueue = useContext(MealQueueCtx);
   const userSelectedMeals = useContext(UserSelectedMealsCtx);
+  const customMeals = useContext(CustomMealsCtx);
 
   // notification text
-  const [message, setMessage] = useState({text: ''});
+  const [message, setMessage] = useState({ text: '' });
+
+  // Dereference the meal queue
+  const mealQueueValue = useMemo(
+    () =>
+      mealQueue.value
+        .map((mr) =>
+          [...meals, ...customMeals.value].find((m) => m.id === mr.mealId)
+        )
+        .filter((m) => m !== undefined) as Meal[],
+    [mealQueue, customMeals]
+  );
 
   /**
    * Removes a meal from the meal queue.
@@ -26,7 +40,7 @@ const MealQueue = () => {
    * @param {Meal} meal - The meal to be removed from the queue.
    */
   const removeMealFromQueue = (meal: Meal) => {
-    mealQueue.setValue(mealQueue.value.filter((m) => m !== meal));
+    mealQueue.setValue(mealQueue.value.filter((m) => m.mealId !== meal.id));
   };
 
   /**
@@ -50,16 +64,22 @@ const MealQueue = () => {
       ) as UserSelectedMealsObjectType
     );
     const numOfMeals = mealQueue.value.length;
-    const weekdaysStr = selectedDays.map((day, i) => 
-      WEEKDAYS[day] + (
-        i === selectedDays.length - 1
-        ? ''
-        : i === selectedDays.length - 2
-        ? ' and '
-        : ', '
+    const weekdaysStr = selectedDays
+      .map(
+        (day, i) =>
+          WEEKDAYS[day] +
+          (i === selectedDays.length - 1
+            ? ''
+            : i === selectedDays.length - 2
+            ? ' and '
+            : ', ')
       )
-    ).join('');
-    setMessage({text: `Added ${numOfMeals} meal${numOfMeals > 1 ? 's' : ''} to ${weekdaysStr}`});
+      .join('');
+    setMessage({
+      text: `Added ${numOfMeals} meal${
+        numOfMeals > 1 ? 's' : ''
+      } to ${weekdaysStr}`
+    });
     selectedDaysDispatch({ index: 0, type: 'clear' });
   };
 
@@ -68,7 +88,7 @@ const MealQueue = () => {
    */
   const clearMealQueue = () => {
     mealQueue.setValue([]);
-    setMessage({text: 'Cleared meal queue'});
+    setMessage({ text: 'Cleared meal queue' });
   };
 
   // State variable to track which days the user has selected
@@ -104,10 +124,11 @@ const MealQueue = () => {
   return (
     <MealContainer
       title='Meal Queue'
-      meals={mealQueue.value}
+      meals={mealQueueValue}
       addOrRemove='Del'
       buttonOnClick={removeMealFromQueue}
-      createNotification={(name) => `Removed ${name} from meal queue`}>
+      createNotification={(name) => `Removed ${name} from meal queue`}
+    >
       <div className='mb-4' />
       <div className='flex justify-center flex-wrap gap-6'>
         {WEEKDAY_ABBREVIATIONS.map((day, i) => (
@@ -137,7 +158,7 @@ const MealQueue = () => {
           disabled={isClearMealsButtonDisabled}
         />
       </div>
-    <Notification message={message}/>
+      <Notification message={message} />
     </MealContainer>
   );
 };

@@ -13,6 +13,7 @@ import {
 } from './static/context';
 import { useState } from 'react';
 import Meal from './types/Meal';
+import MealReference from './types/MealReference';
 import DayEditor from './components/sections/DayEditor';
 import MealQueue from './components/sections/MealQueue';
 import Results from './components/sections/Results';
@@ -30,7 +31,7 @@ function App() {
     'userSelectedMeals',
     new UserSelectedMealsObject()
   );
-  const [mealQueue, setMealQueue] = usePersistentState<Array<Meal>>(
+  const [mealQueue, setMealQueue] = usePersistentState<Array<MealReference>>(
     'mealQueue',
     []
   );

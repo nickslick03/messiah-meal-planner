@@ -6,6 +6,7 @@ import { CustomMealsCtx, MealQueueCtx } from '../../static/context';
 import { useContext, useEffect, useState } from 'react';
 import { v4 as uuid } from 'uuid';
 import CustomMealAddModal from '../modals/CustomMealAddModal';
+
 /**
  * Renders the Available Meals section with a table of meals to add and a button
  * to add a custom meal. Displays the add custommeal modal when the button is clicked.
@@ -59,7 +60,10 @@ const AvailableMeals = () => {
    * @param {Meal} meal - The meal to be added to the queue.
    */
   const addToQueue = (meal: Meal) => {
-    mealQueue.setValue([...mealQueue.value, { id: uuid(), ...meal }]);
+    mealQueue.setValue([
+      ...mealQueue.value,
+      { id: uuid(), mealId: meal.id ?? '' }
+    ]);
   };
 
   return (
@@ -101,7 +105,7 @@ const AvailableMeals = () => {
           <></>
         )
       }
-      <CustomMeal setNewCustomMealID={setNewCustomMealID}/>
+      <CustomMeal setNewCustomMealID={setNewCustomMealID} />
     </MealContainer>
   );
 };
