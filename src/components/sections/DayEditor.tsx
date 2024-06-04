@@ -39,7 +39,7 @@ const DayEditor = () => {
             ] as [string, Meal[]]
         )
       ),
-    [userSelectedMeals]
+    [userSelectedMeals, customMeals]
   );
 
   // State variable to track which day the user is editing
