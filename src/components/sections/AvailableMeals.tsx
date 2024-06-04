@@ -23,6 +23,8 @@ const AvailableMeals = () => {
   // State variable to track the current custom meal editing data
   const [currentCustomData, setCurrentCustomData] = useState<Meal>();
 
+  const [newCustomMealID, setNewCustomMealID] = useState<string>();
+
   /**
    * Updates a custom meal in the customMeals context with the provided location, name, and price.
    *
@@ -73,6 +75,7 @@ const AvailableMeals = () => {
         if (currentCustomData === data) setIsEditingCustomMeal(true);
         else setCurrentCustomData(data);
       }}
+      newCustomMealID={newCustomMealID}
     >
       {
         // This cannot work with only the 'visible' property because otherwise it will not re-render
@@ -98,7 +101,7 @@ const AvailableMeals = () => {
           <></>
         )
       }
-      <CustomMeal />
+      <CustomMeal setNewCustomMealID={setNewCustomMealID}/>
     </MealContainer>
   );
 };

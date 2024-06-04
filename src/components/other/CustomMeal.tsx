@@ -1,14 +1,22 @@
-import { useState, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { GiMeal } from 'react-icons/gi';
 import Button from '../form_elements/Button';
 import CustomMealAddModal from '../modals/CustomMealAddModal';
 import { CustomMealsCtx } from '../../static/context';
 import { v4 as uuid } from 'uuid';
+import Meal from '../../types/Meal';
+
+interface CustomMealProps {
+  setNewCustomMealID: React.Dispatch<React.SetStateAction<string | undefined>>;
+}
 
 /**
  * Renders a Custom Meal button and Modal.
+ * @param {React.SetStateAction<Meal | undefined>} setNewCustomMeal Setter for newly added custom meals
  */
-const CustomMeal = () => {
+const CustomMeal = ({
+  setNewCustomMealID
+}: CustomMealProps) => {
   // State variable to determine whether or not the custom meal modal should be open
   const [isAddingCustomMeal, setIsAddingCustomMeal] = useState(false);
 
@@ -24,11 +32,13 @@ const CustomMeal = () => {
       />
       <CustomMealAddModal
         onConfirm={(location, name, price) => {
+          const newCustomMeal = { location, name, price, isCustom: true, id: uuid() };
           customMeals.setValue([
             ...customMeals.value,
-            { location, name, price, isCustom: true, id: uuid() }
+            newCustomMeal
           ]);
           setIsAddingCustomMeal(false);
+          setNewCustomMealID(newCustomMeal.id);
         }}
         onCancel={() => setIsAddingCustomMeal(false)}
         visible={isAddingCustomMeal}

@@ -16,6 +16,7 @@ interface MealTableProps {
   buttonOnClick: (meal: Meal) => void;
   createNotification: (name: string) => string;
   onCustomClick?: (data: Meal) => void;
+  newCustomMealID?: string;
 }
 
 /**
@@ -29,6 +30,7 @@ interface MealTableProps {
  * @param {(Meal) => void} buttonOnClick - The click event handler for the optional button
  * @param {(string) => string} notificationMessage - A function that takes in the meal name and returns the notification message when the meal button is clicked.
  * @param {() => void} onCustomClick - The click event handler for editing a custom meal
+ * @param {string | undefined} newCustomMealID - The ID of the newly added custom meal to scroll to
  * @return {JSX.Element} The rendered table component
  */
 const MealTable = ({
@@ -39,7 +41,8 @@ const MealTable = ({
   buttonOnClick,
   createNotification,
   sortDirection,
-  onCustomClick
+  onCustomClick,
+  newCustomMealID,
 }: MealTableProps): JSX.Element => {
   const headers = ['Location', 'Name', 'Price', buttonTitle ?? null];
   if (sortedBy === undefined) {
@@ -94,6 +97,7 @@ const MealTable = ({
                 buttonIcon={buttonIcon}
                 buttonOnClick={() => handleButtonClick(row)}
                 onCustomClick={onCustomClick}
+                newCustomMealID={newCustomMealID}
               />
             ))}
           </tbody>

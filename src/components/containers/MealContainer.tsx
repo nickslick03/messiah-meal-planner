@@ -16,6 +16,7 @@ interface MealContainerProps {
   buttonOnClick: (meal: Meal) => unknown;
   createNotification: (name: string) => string;
   onCustomClick?: (data: Meal) => void;
+  newCustomMealID?: string;
 }
 
 // Default column
@@ -31,6 +32,7 @@ const DEFAULT_DIRECTION = true;
  * @param {(index: Meal) => unkown} buttonOnClick Handle the add or remove button click
  * @param {(string) => string} notificationMessage - A function that takes in the meal name and returns the notification message when the meal button is clicked.
  * @param {() => void} onCustomClick - The click event handler for editing a custom meal
+ * @param {string | undefined} newCustomMealID - The ID of the newly added custom meal to scroll to
  * @return {JSX.Element} The Available Meals section component.
  */
 const MealContainer = ({
@@ -40,7 +42,8 @@ const MealContainer = ({
   meals,
   buttonOnClick,
   createNotification,
-  onCustomClick
+  onCustomClick,
+  newCustomMealID
 }: MealContainerProps) => {
   // State variable to determine whether or not the sorting modal should be open
   const [isSorting, setIsSorting] = useState(false);
@@ -72,6 +75,7 @@ const MealContainer = ({
         buttonOnClick={buttonOnClick}
         createNotification={createNotification}
         onCustomClick={onCustomClick}
+        newCustomMealID={newCustomMealID}
       />
       <SortingModal
         sortColumn={sortColumn}
