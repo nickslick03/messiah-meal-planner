@@ -11,15 +11,19 @@ import {
   MealQueueCtx,
   CustomMealsCtx
 } from './static/context';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Meal from './types/Meal';
 import MealReference from './types/MealReference';
 import DayEditor from './components/sections/DayEditor';
 import MealQueue from './components/sections/MealQueue';
 import Results from './components/sections/Results';
 import ResultsBar from './components/sections/ResultsBar';
-import { UserSelectedMealsObject } from './types/userSelectedMealsObject';
+import {
+  UserSelectedMealsObject,
+  UserSelectedMealsObjectType
+} from './types/userSelectedMealsObject';
 import usePersistentState from './hooks/usePersistentState';
+import meals from './static/mealsDatabase';
 
 function App() {
   const [isBreak, setIsBreak] = usePersistentState('isBreak', false);
@@ -40,6 +44,32 @@ function App() {
     []
   );
   const [areDetailsEntered, setAreDetailsEntered] = useState(false);
+
+  // Remove dangling meal references from mealQueue and userSelectedMeals
+  useEffect(() => {
+    const newMealQueue = mealQueue.filter((mr) =>
+      [...meals, ...customMeals].find((m) => m.id === mr.mealId)
+    );
+    if (newMealQueue.length !== mealQueue.length) {
+      setMealQueue(newMealQueue);
+    }
+  }, [mealQueue, customMeals, setMealQueue]);
+  useEffect(() => {
+    const newUserSelectedMeals = Object.fromEntries(
+      Object.entries(userSelectedMeals).map(([key, value]) => [
+        key,
+        value.filter((mr: MealReference) =>
+          [...meals, ...customMeals].find((m) => m.id === mr.mealId)
+        )
+      ])
+    ) as UserSelectedMealsObjectType;
+    if (
+      Object.keys(newUserSelectedMeals).length !==
+      Object.keys(userSelectedMeals).length
+    ) {
+      setUserSelectedMeals(newUserSelectedMeals);
+    }
+  }, [userSelectedMeals, customMeals, setUserSelectedMeals]);
 
   return (
     <IsBreakCtx.Provider value={{ value: isBreak, setValue: setIsBreak }}>
