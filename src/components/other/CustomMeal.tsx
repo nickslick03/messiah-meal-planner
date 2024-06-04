@@ -4,7 +4,6 @@ import Button from '../form_elements/Button';
 import CustomMealAddModal from '../modals/CustomMealAddModal';
 import { CustomMealsCtx } from '../../static/context';
 import { v4 as uuid } from 'uuid';
-import Meal from '../../types/Meal';
 
 interface CustomMealProps {
   setNewCustomMealID: React.Dispatch<React.SetStateAction<string | undefined>>;
