@@ -7,6 +7,8 @@ import { UserSelectedMealsCtx } from '../../static/context';
 import Divider from '../other/Divider';
 import MealContainer from '../containers/MealContainer';
 import Meal from '../../types/Meal';
+import meals from '../../static/mealsDatabase';
+import { CustomMealsCtx } from '../../static/context';
 
 /**
  * Renders a meal table for meals added to given days an an option to remove meals from that day.
@@ -15,8 +17,37 @@ import Meal from '../../types/Meal';
  * @return {JSX.Element} The rendered DayEditor component.
  */
 const DayEditor = () => {
-  // Load context of meals the user has selected
+  // Load all necessary contexts
   const userSelectedMeals = useContext(UserSelectedMealsCtx);
+  const customMeals = useContext(CustomMealsCtx);
+
+  // Dereference the userSelectedMeals context
+  const userSelectedMealsValue = useMemo(
+    () =>
+      Object.fromEntries(
+        Object.entries(userSelectedMeals.value).map(
+          ([key, value]) =>
+            [
+              key,
+              value
+                .map(
+                  (mr) =>
+                    ({
+                      // Load meal data
+                      ...[...meals, ...customMeals.value].find(
+                        (m) => m.id === mr.id
+                      ),
+
+                      // Assign the instance id
+                      instanceId: mr.instanceId
+                    } as Meal)
+                )
+                .filter((m) => m !== undefined)
+            ] as [string, Meal[]]
+        )
+      ),
+    [userSelectedMeals, customMeals]
+  );
 
   // State variable to track which day the user is editing
   const [weekdayIndex, setWeekdayIndex] = useState(0);
@@ -26,8 +57,8 @@ const DayEditor = () => {
 
   // Get the list of selected meals for the given day
   const dayMealList = useMemo(
-    () => userSelectedMeals.value[WEEKDAYS[weekdayIndex]] ?? [],
-    [userSelectedMeals, weekdayIndex]
+    () => userSelectedMealsValue[WEEKDAYS[weekdayIndex]] ?? [],
+    [userSelectedMealsValue, weekdayIndex]
   );
 
   /**
@@ -39,7 +70,7 @@ const DayEditor = () => {
       ...userSelectedMeals.value,
       [WEEKDAYS[weekdayIndex]]: userSelectedMeals.value[
         WEEKDAYS[weekdayIndex]
-      ].filter((m) => m !== meal)
+      ].filter((m) => m.instanceId !== meal.instanceId)
     });
   };
 
@@ -64,7 +95,8 @@ const DayEditor = () => {
       addOrRemove='Del'
       meals={dayMealList}
       buttonOnClick={removeMeal}
-      createNotification={(name) => `Removed ${name} from ${weekday}`}>
+      createNotification={(name) => `Removed ${name} from ${weekday}`}
+    >
       <Divider />
       <DotLeader
         info={[

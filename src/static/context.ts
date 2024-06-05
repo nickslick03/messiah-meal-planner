@@ -1,5 +1,6 @@
 import { createContext } from 'react';
 import Meal from '../types/Meal';
+import MealReference from '../types/MealReference';
 import { Dispatch, SetStateAction } from 'react';
 import {
   UserSelectedMealsObjectType,
@@ -43,7 +44,7 @@ export const UserSelectedMealsCtx = createContext<
   setValue: () => {}
 });
 
-export const MealQueueCtx = createContext<ContextType<Meal[]>>({
+export const MealQueueCtx = createContext<ContextType<MealReference[]>>({
   value: [],
   setValue: () => {}
 });
