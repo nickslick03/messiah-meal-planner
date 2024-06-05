@@ -27,8 +27,15 @@ const MealQueue = () => {
   const mealQueueValue = useMemo(
     () =>
       mealQueue.value
-        .map((mr) =>
-          [...meals, ...customMeals.value].find((m) => m.id === mr.mealId)
+        .map(
+          (mr) =>
+            ({
+              // Load meal data
+              ...[...meals, ...customMeals.value].find((m) => m.id === mr.id),
+
+              // Assign instanceId
+              instanceId: mr.instanceId
+            } as Meal)
         )
         .filter((m) => m !== undefined) as Meal[],
     [mealQueue, customMeals]
@@ -40,7 +47,9 @@ const MealQueue = () => {
    * @param {Meal} meal - The meal to be removed from the queue.
    */
   const removeMealFromQueue = (meal: Meal) => {
-    mealQueue.setValue(mealQueue.value.filter((m) => m.mealId !== meal.id));
+    mealQueue.setValue(
+      mealQueue.value.filter((m) => m.instanceId !== meal.instanceId)
+    );
   };
 
   /**
@@ -56,7 +65,7 @@ const MealQueue = () => {
               ? [
                   key,
                   value.concat(
-                    mealQueue.value.map((m) => ({ ...m, id: uuid() }))
+                    mealQueue.value.map((m) => ({ ...m, instanceId: uuid() }))
                   )
                 ]
               : [key, value]

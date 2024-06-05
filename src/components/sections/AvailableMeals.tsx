@@ -62,7 +62,7 @@ const AvailableMeals = () => {
   const addToQueue = (meal: Meal) => {
     mealQueue.setValue([
       ...mealQueue.value,
-      { id: uuid(), mealId: meal.id ?? '' }
+      { instanceId: uuid(), id: meal.id ?? '' }
     ]);
   };
 

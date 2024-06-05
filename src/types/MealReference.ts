@@ -1,6 +1,6 @@
 interface MealReference {
   id: string;
-  mealId: string;
+  instanceId: string;
 }
 
 export default MealReference;

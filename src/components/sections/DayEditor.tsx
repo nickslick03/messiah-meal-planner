@@ -30,10 +30,17 @@ const DayEditor = () => {
             [
               key,
               value
-                .map((mr) =>
-                  [...meals, ...customMeals.value].find(
-                    (m) => m.id === mr.mealId
-                  )
+                .map(
+                  (mr) =>
+                    ({
+                      // Load meal data
+                      ...[...meals, ...customMeals.value].find(
+                        (m) => m.id === mr.id
+                      ),
+
+                      // Assign the instance id
+                      instanceId: mr.instanceId
+                    } as Meal)
                 )
                 .filter((m) => m !== undefined)
             ] as [string, Meal[]]
@@ -63,7 +70,7 @@ const DayEditor = () => {
       ...userSelectedMeals.value,
       [WEEKDAYS[weekdayIndex]]: userSelectedMeals.value[
         WEEKDAYS[weekdayIndex]
-      ].filter((m) => m.mealId !== meal.id)
+      ].filter((m) => m.instanceId !== meal.instanceId)
     });
   };
 

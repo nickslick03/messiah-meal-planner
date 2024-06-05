@@ -48,7 +48,7 @@ function App() {
   // Remove dangling meal references from mealQueue and userSelectedMeals
   useEffect(() => {
     const newMealQueue = mealQueue.filter((mr) =>
-      [...meals, ...customMeals].find((m) => m.id === mr.mealId)
+      [...meals, ...customMeals].find((m) => m.id === mr.id)
     );
     if (newMealQueue.length !== mealQueue.length) {
       setMealQueue(newMealQueue);
@@ -59,7 +59,7 @@ function App() {
       Object.entries(userSelectedMeals).map(([key, value]) => [
         key,
         value.filter((mr: MealReference) =>
-          [...meals, ...customMeals].find((m) => m.id === mr.mealId)
+          [...meals, ...customMeals].find((m) => m.id === mr.id)
         )
       ])
     ) as UserSelectedMealsObjectType;
