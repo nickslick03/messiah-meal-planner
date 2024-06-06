@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { applyDiscount, getMealTotal } from "../lib/calculationEngine";
+import { applyDiscount, getMealDayTotal, getMealTotal } from "../lib/calculationEngine";
 import meals from "../static/mealsDatabase";
 import MealReference from "../types/MealReference";
 import { UserSelectedMealsObjectType } from "../types/userSelectedMealsObject";
@@ -19,12 +19,45 @@ describe('applyDiscount', () => {
     });
 })
 
+describe('getMealDayTotal', () => {
+    const mealList = meals
+    .filter(m => [
+        'Breakfast', // 6.3
+        'Smash Burger', // 4.15
+        'Grain Bowl', // 8
+        'Soda/Water', // 2.25
+    ].some(mName => m.name === mName));
+                    
+    it('should work', () => {
+        console.log(mealList)
+        expect(getMealDayTotal(mealList, 1))
+        .toBe(6.3 + 4.5 + 8 + 2.25);
+
+        expect(getMealDayTotal(mealList, 2))
+        .toBe((6.3 + 4.5 + 8 + 2.25) * 2);
+    });
+
+    it('should work with discount', () => {
+        expect(getMealDayTotal(mealList, 1, true))
+        .toBe(6.3 * .48 + 4.5 * .7 + 8 * .7 + 2.25);
+
+        expect(getMealDayTotal(mealList, 2, true))
+        .toBe((6.3 * .48 + 4.5 * .7 + 8 * .7 + 2.25) * 2);
+    });
+});
+
 describe('getMealTotal', () => {
     const mealList1: MealReference[] = meals
-    .filter(m => ['Breakfast', 'Grain Bowl'].some(mName => m.name === mName)) // Lottie and Falcon
+    .filter(m => [
+        'Breakfast', // 6.3 
+        'Grain Bowl' // 8
+    ].some(mName => m.name === mName)) // Lottie and Falcon
     .map(m => ({ id: m.id as string, instanceId: ':P'}));
     const mealList2: MealReference[] = meals
-    .filter(m => ['Smash Burger', 'Soda/Water'].some(mName => m.name === mName)) // Union and Vending
+    .filter(m => [
+        'Smash Burger',  // 4.5
+        'Soda/Water' // 2.25
+    ].some(mName => m.name === mName)) // Union and Vending
     .map(m => ({ id: m.id as string, instanceId: ':P'}));
     const userMeals: UserSelectedMealsObjectType = {
         Monday: mealList1,
@@ -51,5 +84,9 @@ describe('getMealTotal', () => {
         ).toBe(21.05);
     });
 
-    //TODO: test for discount
+    it('should work for discount', () => {
+        expect(
+            getMealTotal(userMeals, [0,1,0,0,0,0,0], true) 
+        ).toBeCloseTo(3.02 + 5.6);
+    })
 });

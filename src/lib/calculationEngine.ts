@@ -1,6 +1,8 @@
 import Meal from "../types/Meal";
 import { UserSelectedMealsObjectType } from "../types/userSelectedMealsObject";
 import { DISCOUNTS } from "../static/discounts";
+import meals from "../static/mealsDatabase";
+import { WEEKDAYS_START_SUNDAY } from "../static/constants";
 
 /**
  * Applies a discount to the meal price based on the location.
@@ -13,13 +15,22 @@ export function applyDiscount(meal: Meal) {
     return DISCOUNTS[meal.location] === undefined ? meal.price : meal.price * (1 - DISCOUNTS[meal.location]);    
 }
 
+export function getMealDayTotal(meals: Meal[], days: number, discount = false) {
+    return meals.reduce((total, m) => total + (discount ? applyDiscount(m) : m.price), 0) * days;
+}
+
 /**
  * Calculates the total amount for the meals the user selected within the given timeframe.
- * @param meals The object representing the user selected meals
+ * @param userMeals The object representing the user selected meals
  * @param weekdays An array of weekdays the user will be purchasing meals in
  * @returns The total of all the meals given the amount of weekdays
  */
-export function getMealTotal(meals: UserSelectedMealsObjectType, weekdays: number[]) {
-    
-    return 0;
+export function getMealTotal(userMeals: UserSelectedMealsObjectType, weekdays: number[], discount = false) {
+    let total = 0;
+    WEEKDAYS_START_SUNDAY.forEach((day, i) => {
+        if (weekdays[i] === 0) return;
+        const mealList = userMeals[day].map(m => meals.find(m2 => m2.id === m.id) as Meal);
+        total += getMealDayTotal(mealList, weekdays[i], discount);
+    });
+    return total;
 }

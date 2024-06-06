@@ -9,8 +9,8 @@ import MealContainer from '../containers/MealContainer';
 import Meal from '../../types/Meal';
 import meals from '../../static/mealsDatabase';
 import { CustomMealsCtx } from '../../static/context';
-import { getWeekdaysBetween } from '../../lib/dateFormatter';
-import { strToDate } from '../../lib/dateFormatter';
+import { getWeekdaysBetween } from '../../lib/dateCalcuation';
+import { strToDate } from '../../lib/dateCalcuation';
 
 /**
  * Renders a meal table for meals added to given days an an option to remove meals from that day.
