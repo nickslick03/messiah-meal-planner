@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useState } from 'react';
+import { useContext, useMemo, useState } from 'react';
 import { WEEKDAYS } from '../../static/constants';
 import Select from '../form_elements/Select';
 import { newImportanceIndex } from '../../types/ImportanceIndex';
@@ -9,7 +9,7 @@ import MealContainer from '../containers/MealContainer';
 import Meal from '../../types/Meal';
 import meals from '../../static/mealsDatabase';
 import { CustomMealsCtx } from '../../static/context';
-import { getWeekdaysBetween } from '../../lib/calculationEngine';
+import { getWeekdaysBetween } from '../../lib/dateFormatter';
 import { strToDate } from '../../lib/dateFormatter';
 
 /**
