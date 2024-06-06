@@ -1,14 +1,16 @@
-import { useContext, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { WEEKDAYS } from '../../static/constants';
 import Select from '../form_elements/Select';
 import { newImportanceIndex } from '../../types/ImportanceIndex';
 import DotLeader from '../other/DotLeader';
-import { UserSelectedMealsCtx } from '../../static/context';
+import { EndDateCtx, IsBreakCtx, StartDateCtx, UserSelectedMealsCtx } from '../../static/context';
 import Divider from '../other/Divider';
 import MealContainer from '../containers/MealContainer';
 import Meal from '../../types/Meal';
 import meals from '../../static/mealsDatabase';
 import { CustomMealsCtx } from '../../static/context';
+import { getWeekdaysBetween } from '../../lib/calculationEngine';
+import { strToDate } from '../../lib/dateFormatter';
 
 /**
  * Renders a meal table for meals added to given days an an option to remove meals from that day.
@@ -61,6 +63,15 @@ const DayEditor = () => {
     [userSelectedMealsValue, weekdayIndex]
   );
 
+  const startDate = useContext(StartDateCtx);
+  const endDate = useContext(EndDateCtx);
+  const weekOff = useContext(IsBreakCtx);
+
+  // The total number of weekdays
+  const totalWeekdays = useMemo(() => 
+    getWeekdaysBetween(strToDate(startDate.value), strToDate(endDate.value), weekOff.value),
+    [startDate, endDate, weekOff]);
+
   /**
    * Removes a meal from the currently selected day.
    * @param meal - The meal to be removed
@@ -107,7 +118,7 @@ const DayEditor = () => {
           },
           {
             title: `Number of ${weekday}(s)`,
-            value: '10'
+            value: `${totalWeekdays[(weekdayIndex + 1) % 7]}`
           },
           {
             title: `Total of All ${weekday}s`,

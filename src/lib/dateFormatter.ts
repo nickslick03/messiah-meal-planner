@@ -1,5 +1,8 @@
-export function DateInputFormat(date = new Date()) {
-    const formatDate = date.getDate() < 10 ? `0${date.getDate()}`:date.getDate();
-    const formatMonth = date.getMonth() < 10 ? `0${date.getMonth()}`: date.getMonth();
-    return [date.getFullYear(), formatMonth, formatDate].join('-');
+/**
+ * @param dateInput the date represented as a string from a date input (YYYY-MM-DD).
+ * @returns The date object with the CORRECT DAY.
+ */
+export function strToDate(dateInput: string) {
+    const [year, month, day] = dateInput.split('-');
+    return new Date(`${month}/${day}/${year}`);
 }
