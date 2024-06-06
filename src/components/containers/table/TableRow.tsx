@@ -3,7 +3,9 @@ import Meal from '../../../types/Meal';
 import ButtonCell from './ButtonCell';
 import TableCell from './TableCell';
 import formatCurrency from '../../../lib/formatCurrency';
-import { useEffect, useRef } from 'react';
+import { useContext, useEffect, useMemo, useRef } from 'react';
+import { MealPlanCtx } from '../../../static/context';
+import { applyDiscount } from '../../../lib/calculationEngine';
 
 interface TableRowProps {
   data: Meal;
@@ -30,14 +32,11 @@ const TableRow = ({
   onCustomClick,
   newCustomMealID,
 }: TableRowProps): JSX.Element => {
-  /**
-   * Updates a custom meal in the customMeals context with the provided location, name, and price.
-   *
-   * @param {string} location - The new location for the custom meal.
-   * @param {string} name - The new name for the custom meal.
-   * @param {number} price - The new price for the custom meal.
-   * @return {void} This function does not return anything.
-   */
+  const isMealPlan = useContext(MealPlanCtx);
+
+  const price = useMemo(
+    () => isMealPlan.value ? applyDiscount(data) : data.price, 
+    [data, isMealPlan.value]);
 
   const tr = useRef<HTMLTableRowElement>(null);
 
@@ -64,7 +63,7 @@ const TableRow = ({
           }
         />
         <TableCell
-          data={formatCurrency(data.price)}
+          data={formatCurrency(price)}
           importance={newImportanceIndex(2)}
         />
         {buttonIcon && buttonOnClick ? (
