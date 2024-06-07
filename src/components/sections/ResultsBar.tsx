@@ -5,8 +5,10 @@ import {
   useState,
   useEffect,
 } from 'react';
-import { BalanceCtx } from '../../static/context';
+import { BalanceCtx, EndDateCtx, IsBreakCtx, MealPlanCtx, StartDateCtx, UserSelectedMealsCtx } from '../../static/context';
 import formatCurrency from '../../lib/formatCurrency';
+import { getMealTotal } from '../../lib/calculationEngine';
+import { getWeekdaysBetween, strToDate } from '../../lib/dateCalcuation';
 
 /**
  * Renders a results bar that sticks to the bottom of the page, displays the starting balance,
@@ -24,9 +26,20 @@ const ResultsBar = () => {
     () => formatCurrency(balance.value || 0),
     [balance]
   );
+  const userMeals = useContext(UserSelectedMealsCtx);
+  const startDate = useContext(StartDateCtx);
+  const endDate = useContext(EndDateCtx);
+  const weekOff = useContext(IsBreakCtx);
+  const isDiscount = useContext(MealPlanCtx);
+    
+  const grandTotal = useMemo(() => 
+    getMealTotal(
+      userMeals.value, 
+      getWeekdaysBetween(strToDate(startDate.value), strToDate(endDate.value), weekOff.value), 
+      isDiscount.value),
+    [endDate.value, isDiscount.value, startDate.value, userMeals.value, weekOff.value]);
 
-  // Check if balance is under $1000
-  const isUnderBalance = useMemo(() => balance.value >= 1000, [balance]);
+  const isUnderBalance = useMemo(() => balance.value >= grandTotal, [balance.value, grandTotal]);
 
   // Ref to the container of this element, for handling the bottom corner rounding
   const ref = useRef<HTMLDivElement>(null);
@@ -55,12 +68,12 @@ const ResultsBar = () => {
       </div>
       <div>
         <span className='font-bold'>Grand Total: </span>
-        <span className='text-messiah-red'>{formatCurrency(1000)}</span>
+        <span className='text-messiah-red'>{formatCurrency(grandTotal)}</span>
       </div>
       <div>
         <span className='font-bold'>$ {isUnderBalance ? 'Extra' : 'Short'}: </span>
         <span className={isUnderBalance ? 'text-messiah-green' : 'text-messiah-red'}>
-          {formatCurrency(1000)}
+          {formatCurrency(Math.abs(balance.value - grandTotal))}
         </span>
       </div>
     </div>

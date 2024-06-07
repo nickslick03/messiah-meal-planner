@@ -3,12 +3,22 @@ import { WEEKDAYS } from '../../static/constants';
 import Select from '../form_elements/Select';
 import { newImportanceIndex } from '../../types/ImportanceIndex';
 import DotLeader from '../other/DotLeader';
-import { UserSelectedMealsCtx } from '../../static/context';
+import {
+  EndDateCtx,
+  IsBreakCtx,
+  MealPlanCtx,
+  StartDateCtx,
+  UserSelectedMealsCtx
+} from '../../static/context';
 import Divider from '../other/Divider';
 import MealContainer from '../containers/MealContainer';
 import Meal from '../../types/Meal';
 import meals from '../../static/mealsDatabase';
 import { CustomMealsCtx } from '../../static/context';
+import { getWeekdaysBetween } from '../../lib/dateCalcuation';
+import { strToDate } from '../../lib/dateCalcuation';
+import { getMealDayTotal } from '../../lib/calculationEngine';
+import formatCurrency from '../../lib/formatCurrency';
 
 /**
  * Renders a meal table for meals added to given days an an option to remove meals from that day.
@@ -61,6 +71,27 @@ const DayEditor = () => {
     [userSelectedMealsValue, weekdayIndex]
   );
 
+  const startDate = useContext(StartDateCtx);
+  const endDate = useContext(EndDateCtx);
+  const weekOff = useContext(IsBreakCtx);
+  const discount = useContext(MealPlanCtx);
+
+  const mealDayTotal = useMemo(
+    () => getMealDayTotal(dayMealList, 1, discount.value),
+    [dayMealList, discount.value]
+  );
+
+  // The total number of days for each weekday (starting on Sunday)
+  const numOfWeekdays = useMemo(
+    () =>
+      getWeekdaysBetween(
+        strToDate(startDate.value),
+        strToDate(endDate.value),
+        weekOff.value
+      ),
+    [startDate, endDate, weekOff]
+  );
+
   /**
    * Removes a meal from the currently selected day.
    * @param meal - The meal to be removed
@@ -102,16 +133,18 @@ const DayEditor = () => {
         info={[
           {
             title: `Total for One ${weekday}`,
-            value: '$100.00',
+            value: `${formatCurrency(mealDayTotal)}`,
             resultsStyle: 'text-messiah-red'
           },
           {
             title: `Number of ${weekday}(s)`,
-            value: '10'
+            value: `${numOfWeekdays[(weekdayIndex + 1) % 7]}` // Convert from Monday to Sunday start
           },
           {
             title: `Total of All ${weekday}s`,
-            value: '$1000.00',
+            value: `${formatCurrency(
+              mealDayTotal * numOfWeekdays[(weekdayIndex + 1) % 7] // Convert from Monday to Sunday start
+            )}`,
             resultsStyle: 'text-messiah-red'
           }
         ]}
