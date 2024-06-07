@@ -31,7 +31,7 @@ const Results = () => {
       isDiscount.value),
     [endDate.value, isDiscount.value, startDate.value, userMeals.value, weekOff.value]);
 
-  const isUnderBalance = useMemo(() => balance.value >= grandTotal, [balance]);
+  const isUnderBalance = useMemo(() => balance.value >= grandTotal, [balance.value, grandTotal]);
 
   const difference = useMemo(() => {
     const b = balance.value || 0;
