@@ -63,7 +63,7 @@ const Input = <T,>({
    */
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (type === 'checkbox') {
-      setValue(e.target.checked as T);
+      setValue(validator(e.target.checked.toString()));
       setInternalValue(e.target.checked.toString());
     } else {
       setValue(validator(e.target.value));
