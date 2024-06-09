@@ -49,7 +49,7 @@ const Input = <T,>({
       : ''}`;
 
   /** The actual value of input element so the input value may persist even when value is null. */
-  const [internalValue, setInternalValue] = useState(value !== null ? '' : value!.toString());
+  const [internalValue, setInternalValue] = useState(value === null ? '' : value!.toString());
 
   /** The title attribute of the input tag. */
   const titleAttribute = useMemo(() => 
