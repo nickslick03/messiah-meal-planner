@@ -22,18 +22,18 @@ export const MealPlanCtx = createContext<ContextType<boolean>>({
   setValue: () => {}
 });
 
-export const BalanceCtx = createContext<ContextType<number>>({
-  value: 0,
+export const BalanceCtx = createContext<ContextType<number | null>>({
+  value: null,
   setValue: () => {}
 });
 
-export const StartDateCtx = createContext<ContextType<string>>({
-  value: '',
+export const StartDateCtx = createContext<ContextType<Date | null>>({
+  value: null,
   setValue: () => {}
 });
 
-export const EndDateCtx = createContext<ContextType<string>>({
-  value: '',
+export const EndDateCtx = createContext<ContextType<Date | null>>({
+  value: null,
   setValue: () => {}
 });
 

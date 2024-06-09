@@ -28,9 +28,9 @@ import meals from './static/mealsDatabase';
 function App() {
   const [isBreak, setIsBreak] = usePersistentState('isBreak', false);
   const [mealPlan, setMealPlan] = usePersistentState('isDD', false);
-  const [balance, setBalance] = usePersistentState('startingBalance', 0);
-  const [startDate, setStartDate] = usePersistentState('startDate', '');
-  const [endDate, setEndDate] = usePersistentState('endDate', '');
+  const [balance, setBalance] = usePersistentState<number | null>('startingBalance', null);
+  const [startDate, setStartDate] = usePersistentState<Date | null>('startDate', null);
+  const [endDate, setEndDate] = usePersistentState<Date | null>('endDate', null);
   const [userSelectedMeals, setUserSelectedMeals] = usePersistentState(
     'userSelectedMeals',
     new UserSelectedMealsObject()
