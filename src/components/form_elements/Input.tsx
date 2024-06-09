@@ -15,9 +15,9 @@ interface InputProps<T> {
   label: string;
   importance?: ImportanceIndex;
   type: HTMLInputTypeAttribute;
-  validator: (value: string) => T | null;
+  validator: (value: string) => T extends boolean ? T : T | null;
   value: T extends boolean ? boolean : T | null;
-  setValue: Dispatch<SetStateAction<T | null>>;
+  setValue: Dispatch<SetStateAction<T extends boolean ? T : T | null>>;
 }
 
 /**
