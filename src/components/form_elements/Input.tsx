@@ -3,21 +3,21 @@ import {
   SetStateAction,
   ChangeEvent,
   HTMLInputTypeAttribute,
-  useMemo
+  useMemo,
+  useState
 } from 'react';
 import { IMPORTANCE_CLASSES } from '../../static/constants';
 import {
   ImportanceIndex,
   newImportanceIndex
 } from '../../types/ImportanceIndex';
-
-interface InputProps {
+interface InputProps<T> {
   label: string;
   importance?: ImportanceIndex;
   type: HTMLInputTypeAttribute;
-  validator?: (value: string) => boolean;
-  value: string | boolean | number;
-  setValue: Dispatch<SetStateAction<string | boolean | number>>;
+  validator: (value: string) => T | null;
+  value: T extends boolean ? boolean : T | null;
+  setValue: Dispatch<SetStateAction<T | null>>;
 }
 
 /**
@@ -26,19 +26,19 @@ interface InputProps {
  * @param {string} label - The label for the input.
  * @param {ImportanceIndex} importance - The importance level of the input.
  * @param {React.HTMLInputTypeAttribute} type - The type of the input.
- * @param {(value: string) => boolean} validator - The validator function for the input value.
+ * @param {(value: string) => T | null} validator - The validator function for the input value. Returns the new value if valid, null otherwise.
  * @param {string | boolean | number} value - The value of the input.
- * @param {React.Dispatch<React.SetStateAction<string | boolean | number>>} setValue - The function to update the input value.
+ * @param {React.Dispatch<React.SetStateAction<T>>} setValue - The function to update the input value.
  * @returns {JSX.Element} The rendered input component.
  */
-const Input = ({
+const Input = <T,>({
   label,
   importance = newImportanceIndex(3),
   type = 'text',
-  validator = () => true,
+  validator,
   value,
   setValue
-}: InputProps): JSX.Element => {
+}: InputProps<T>): JSX.Element => {
   const importanceStyle = IMPORTANCE_CLASSES[importance] ?? 'font-normal';
   const styles =
     `border border-black rounded focus:outline focus:outline-2 focus:outline-messiah-blue 
@@ -48,7 +48,13 @@ const Input = ({
       ? 'w-40 px-1'
       : ''}`;
 
-  const title = useMemo(() => label[label.length -1].match(/[\s:]/) ? label.substring(0, label.length -1) : label, [label]);
+  /** The actual value of input element so the input value may persist even when value is null. */
+  const [internalValue, setInternalValue] = useState(value !== null ? '' : value!.toString());
+
+  /** The title attribute of the input tag. */
+  const titleAttribute = useMemo(() => 
+    label[label.length -1].match(/[\s:]/) ? label.substring(0, label.length -1) : label, 
+    [label]);
 
   /**
    * Handles the change event of an input element.
@@ -57,17 +63,11 @@ const Input = ({
    */
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (type === 'checkbox') {
-      setValue(e.target.checked);
+      setValue(e.target.checked as T);
+      setInternalValue(e.target.checked.toString());
     } else {
-      let newValue =
-        type === 'number' ? parseFloat(e.target.value) : e.target.value;
-      if (typeof newValue === 'number' && isNaN(newValue)) newValue = ''; // Allows blank values for number types
-
-      if (validator(newValue.toString())) {
-        setValue(newValue);
-      } else {
-        setValue(value);
-      }
+      setValue(validator(e.target.value));
+      setInternalValue(e.target.value);
     }
   };
 
@@ -80,18 +80,18 @@ const Input = ({
         <input
           className={`${styles} p-0 h-6 w-6`}
           type={type}
-          checked={value as boolean}
+          checked={internalValue === 'true'}
           onChange={handleChange}
-          title={title}
+          title={titleAttribute}
         />
       ) : (
         <input
           className={styles}
           type={type}
-          value={value as string | number}
+          value={internalValue}
           inputMode={type === 'number' ? 'numeric' : undefined}
           onChange={handleChange}
-          title={title}
+          title={titleAttribute}
         />
       )}
     </label>
