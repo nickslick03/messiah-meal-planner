@@ -29,7 +29,6 @@ describe('getMealDayTotal', () => {
     ].some(mName => m.name === mName));
                     
     it('should work', () => {
-        console.log(mealList)
         expect(getMealDayTotal(mealList, 1))
         .toBe(6.3 + 4.5 + 8 + 2.25);
 

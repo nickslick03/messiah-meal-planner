@@ -3,7 +3,6 @@ import { UserSelectedMealsObjectType } from "../types/userSelectedMealsObject";
 import { DISCOUNTS } from "../static/discounts";
 import meals from "../static/mealsDatabase";
 import { WEEKDAYS_START_SUNDAY } from "../static/constants";
-import { mealsIndex } from "./mealsIndex";
 
 /**
  * Applies a discount to the meal price based on the location.
@@ -39,7 +38,7 @@ export function getMealTotal(userMeals: UserSelectedMealsObjectType, weekdays: n
     let total = 0;
     WEEKDAYS_START_SUNDAY.forEach((day, i) => {
         if (weekdays[i] === 0) return;
-        const mealList = userMeals[day].map(mr => meals[mealsIndex[mr.id]]);
+        const mealList = userMeals[day].map(mr => meals.find(m => m.id === mr.id) as Meal);
         total += getMealDayTotal(mealList, weekdays[i], discount);
     });
     return total;
