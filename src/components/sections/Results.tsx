@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo } from 'react';
+import { useContext, useMemo } from 'react';
 import SectionContainer from '../containers/SectionContainer';
 import DotLeader from '../other/DotLeader';
 import { BalanceCtx, EndDateCtx, IsBreakCtx, MealPlanCtx, StartDateCtx, UserSelectedMealsCtx, CustomMealsCtx } from '../../static/context';
@@ -26,7 +26,7 @@ const Results = () => {
       Array<number>(7).fill(1),
       isDiscount.value,
       [...meals, ...customMeals.value]),
-    [isDiscount.value, userMeals.value]);
+    [customMeals.value, isDiscount.value, userMeals.value]);
   
   /** The grand total of all the meals from the start date to the end date. */
   const grandTotal = useMemo(() =>

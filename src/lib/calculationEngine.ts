@@ -1,7 +1,6 @@
 import Meal from "../types/Meal";
 import { UserSelectedMealsObjectType } from "../types/userSelectedMealsObject";
 import { DISCOUNTS } from "../static/discounts";
-import meals from "../static/mealsDatabase";
 import { WEEKDAYS_START_SUNDAY } from "../static/constants";
 
 /**
