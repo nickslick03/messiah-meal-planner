@@ -90,7 +90,7 @@ const Input = <T,>({
   };
 
   return (
-    <div>
+    <div className='text-left'>
       <label
         className={`${importanceStyle} w-fit flex flex-row flex-wrap gap-2 items-center`}
       >
@@ -114,12 +114,11 @@ const Input = <T,>({
           />
         )}
       </label>
-      {invalidMessage !== undefined
-      ? 
-      <p className={`${showInvalid ? '' : 'invisible'} text-messiah-red text-sm`}>
+      <p 
+        className={`${invalidMessage !== undefined && showInvalid ? '' : 'hidden'} 
+        text-messiah-red text-sm`}>
           {invalidMessage}
       </p>
-      : ''}
     </div>
   );
 };
