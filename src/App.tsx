@@ -29,8 +29,8 @@ function App() {
   const [isBreak, setIsBreak] = usePersistentState('isBreak', false);
   const [mealPlan, setMealPlan] = usePersistentState('isDD', false);
   const [balance, setBalance] = usePersistentState<number | null>('startingBalance', null);
-  const [startDate, setStartDate] = usePersistentState<Date | null>('startDate', null);
-  const [endDate, setEndDate] = usePersistentState<Date | null>('endDate', null);
+  const [startDate, setStartDate] = usePersistentState<Date | null>('startDate', null, (str) => new Date(str));
+  const [endDate, setEndDate] = usePersistentState<Date | null>('endDate', null, (str) => new Date(str));
   const [userSelectedMeals, setUserSelectedMeals] = usePersistentState(
     'userSelectedMeals',
     new UserSelectedMealsObject()

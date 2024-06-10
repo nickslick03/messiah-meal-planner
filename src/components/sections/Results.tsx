@@ -4,7 +4,7 @@ import DotLeader from '../other/DotLeader';
 import { BalanceCtx, EndDateCtx, IsBreakCtx, MealPlanCtx, StartDateCtx, UserSelectedMealsCtx } from '../../static/context';
 import formatCurrency from '../../lib/formatCurrency';
 import { getMealTotal } from '../../lib/calculationEngine';
-import { getWeekdaysBetween, strToDate } from '../../lib/dateCalcuation';
+import { getWeekdaysBetween } from '../../lib/dateCalcuation';
 
 /**
  * Renders the results of the meal planning.
@@ -17,22 +17,32 @@ const Results = () => {
   const weekOff = useContext(IsBreakCtx);
   const isDiscount = useContext(MealPlanCtx);
 
+  /** The meal total for one week. */
   const weekTotal = useMemo(() => 
     getMealTotal(
       userMeals.value, 
-      Array.from<number>({ length: 7 }).fill(1), 
+      Array<number>(7).fill(1),
       isDiscount.value),
     [isDiscount.value, userMeals.value]);
-    
-  const grandTotal = useMemo(() => 
-    getMealTotal(
+  
+  /** The grand total of all the meals from the start date to the end date. */
+  const grandTotal = useMemo(() =>
+    startDate.value !== null && endDate.value !== null && balance.value !== null
+    ? getMealTotal(
       userMeals.value, 
-      getWeekdaysBetween(strToDate(startDate.value), strToDate(endDate.value), weekOff.value), 
-      isDiscount.value),
-    [endDate.value, isDiscount.value, startDate.value, userMeals.value, weekOff.value]);
+      getWeekdaysBetween(startDate.value, endDate.value, weekOff.value), 
+      isDiscount.value)
+    : 0,
+    [endDate.value, isDiscount.value, startDate.value, userMeals.value, weekOff.value, balance.value]);
 
-  const isUnderBalance = useMemo(() => balance.value >= grandTotal, [balance.value, grandTotal]);
+  /** Indicates whether the grand total is under the inital balance. */
+  const isUnderBalance = useMemo(() => 
+    balance.value !== null
+    ? balance.value >= grandTotal
+    : false,
+    [balance.value, grandTotal]);
 
+  /** The difference between the balance and the grand total. */
   const difference = useMemo(() => {
     const b = balance.value || 0;
     return Math.abs(b - grandTotal).toFixed(2);

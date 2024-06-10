@@ -8,7 +8,7 @@ import {
   MealPlanCtx,
   StartDateCtx
 } from '../../static/context';
-import { strToDate } from '../../lib/dateCalcuation';
+import { dateInputToDate } from '../../lib/dateCalcuation';
 
 /**
  * Renders a component for displaying and managing meal plan information.
@@ -28,7 +28,7 @@ const MealPlanInfo = ({
   const balance = useContext(BalanceCtx);
 
   useEffect(() => {
-    if (startDate.value && endDate.value && balance.value) {
+    if (startDate.value !== null && endDate.value !== null && balance.value !== null) {
       onEnterDetails(true);
     } else {
       onEnterDetails(false);
@@ -45,8 +45,8 @@ const MealPlanInfo = ({
           setValue={startDate.setValue}
           validator={(str) =>
             !isNaN(Date.parse(str)) &&
-            (endDate.value === null || +strToDate(str) <= +endDate.value)
-            ? strToDate(str)
+            (endDate.value === null || +dateInputToDate(str) <= +endDate.value)
+            ? dateInputToDate(str)
             : null
           }
         />
@@ -59,11 +59,12 @@ const MealPlanInfo = ({
           }
           validator={(str) =>
             !isNaN(Date.parse(str)) &&
-            (startDate.value === null || +strToDate(str) >= +startDate.value)
-            ? strToDate(str)
+            (startDate.value === null || +dateInputToDate(str) >= +startDate.value)
+            ? dateInputToDate(str)
             : null
           }
         />
+        
         <Input
           label={'Dining Dollars Discount:'}
           type={'checkbox'}

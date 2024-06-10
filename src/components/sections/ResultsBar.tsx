@@ -8,7 +8,7 @@ import {
 import { BalanceCtx, EndDateCtx, IsBreakCtx, MealPlanCtx, StartDateCtx, UserSelectedMealsCtx } from '../../static/context';
 import formatCurrency from '../../lib/formatCurrency';
 import { getMealTotal } from '../../lib/calculationEngine';
-import { getWeekdaysBetween, strToDate } from '../../lib/dateCalcuation';
+import { getWeekdaysBetween } from '../../lib/dateCalcuation';
 
 /**
  * Renders a results bar that sticks to the bottom of the page, displays the starting balance,
@@ -18,12 +18,12 @@ import { getWeekdaysBetween, strToDate } from '../../lib/dateCalcuation';
  */
 
 const ResultsBar = () => {
-  // Load balance context
+  /** Load balance context */
   const balance = useContext(BalanceCtx);
 
-  // Format balance as currency
+  /** Format balance as currency */
   const balCurrency = useMemo(
-    () => formatCurrency(balance.value || 0),
+    () => formatCurrency(balance.value ?? 0),
     [balance]
   );
   const userMeals = useContext(UserSelectedMealsCtx);
@@ -31,17 +31,25 @@ const ResultsBar = () => {
   const endDate = useContext(EndDateCtx);
   const weekOff = useContext(IsBreakCtx);
   const isDiscount = useContext(MealPlanCtx);
-    
+  
+  /** The grand total of all the meals from the start date to the end date. */
   const grandTotal = useMemo(() => 
-    getMealTotal(
+    startDate.value!== null && endDate.value!== null
+    ? getMealTotal(
       userMeals.value, 
-      getWeekdaysBetween(strToDate(startDate.value), strToDate(endDate.value), weekOff.value), 
-      isDiscount.value),
+      getWeekdaysBetween(startDate.value, endDate.value, weekOff.value), 
+      isDiscount.value)
+    : 0,
     [endDate.value, isDiscount.value, startDate.value, userMeals.value, weekOff.value]);
 
-  const isUnderBalance = useMemo(() => balance.value >= grandTotal, [balance.value, grandTotal]);
+  /** Indicates whether the grand total is under the inital balance. */
+  const isUnderBalance = useMemo(() => 
+    balance.value!== null
+    ? balance.value >= grandTotal
+    : false, 
+  [balance.value, grandTotal]);
 
-  // Ref to the container of this element, for handling the bottom corner rounding
+  /** Ref to the container of this element, for handling the bottom corner rounding. */
   const ref = useRef<HTMLDivElement>(null);
 
   // Indicates whether the user is at the bottom of the page
@@ -73,7 +81,7 @@ const ResultsBar = () => {
       <div>
         <span className='font-bold'>$ {isUnderBalance ? 'Extra' : 'Short'}: </span>
         <span className={isUnderBalance ? 'text-messiah-green' : 'text-messiah-red'}>
-          {formatCurrency(Math.abs(balance.value - grandTotal))}
+          {formatCurrency(Math.abs(balance.value ?? 0 - grandTotal))}
         </span>
       </div>
     </div>
