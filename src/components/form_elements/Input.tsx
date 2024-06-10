@@ -4,8 +4,7 @@ import {
   ChangeEvent,
   HTMLInputTypeAttribute,
   useMemo,
-  useState,
-  useEffect
+  useState
 } from 'react';
 import { IMPORTANCE_CLASSES } from '../../static/constants';
 import {
@@ -42,33 +41,38 @@ const Input = <T,>({
   validator,
   value,
   setValue,
-  invalidMessage,
+  invalidMessage
 }: InputProps<T>): JSX.Element => {
   const importanceStyle = IMPORTANCE_CLASSES[importance] ?? 'font-normal';
-  const styles =
-    `border border-black rounded focus:outline focus:outline-2 focus:outline-messiah-blue 
-    ${type === 'number' 
-      ? 'w-16 text-right px-1'
-      : type === 'text'
-      ? 'w-40 px-1'
-      : ''}`;
+  const styles = `border border-black rounded focus:outline focus:outline-2 focus:outline-messiah-blue 
+    ${
+      type === 'number'
+        ? 'w-16 text-right px-1'
+        : type === 'text'
+        ? 'w-40 px-1'
+        : ''
+    }`;
 
   /** The actual value of input element so the input value may persist even when value is null. */
   const [internalValue, setInternalValue] = useState(
-    value === null 
-    ? ''
-    : value instanceof Date
-    ? dateToString(value)
-    : value!.toString()
+    value === null
+      ? ''
+      : value instanceof Date
+      ? dateToString(value)
+      : value!.toString()
   );
 
   /** Controls showing the invalid if the user has previously entered data and the current value is invalid. */
   const [showInvalid, setShowInvalid] = useState(false);
 
   /** The title attribute of the input tag. */
-  const titleAttribute = useMemo(() => 
-    label[label.length -1].match(/[\s:]/) ? label.substring(0, label.length -1) : label, 
-    [label]);
+  const titleAttribute = useMemo(
+    () =>
+      label[label.length - 1].match(/[\s:]/)
+        ? label.substring(0, label.length - 1)
+        : label,
+    [label]
+  );
 
   /**
    * Handles the change event of an input element.
@@ -108,16 +112,19 @@ const Input = <T,>({
             className={styles}
             type={type}
             value={internalValue}
-            inputMode={type === 'number' ? 'numeric' : undefined}
+            inputMode={type === 'number' ? 'decimal' : undefined}
             onChange={handleChange}
             title={titleAttribute}
           />
         )}
       </label>
-      <p 
-        className={`${invalidMessage !== undefined && showInvalid ? '' : 'hidden'} 
-        text-messiah-red text-sm`}>
-          {invalidMessage}
+      <p
+        className={`${
+          invalidMessage !== undefined && showInvalid ? '' : 'hidden'
+        } 
+        text-messiah-red text-sm`}
+      >
+        {invalidMessage}
       </p>
     </div>
   );
