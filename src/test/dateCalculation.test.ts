@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { getDaysBetween, getWeekdaysBetween, strToDate } from "../lib/dateCalcuation";
+import { getDaysBetween, getWeekdaysBetween, dateInputToDate } from "../lib/dateCalcuation";
 
 describe('strToDate', () => {
     it('should return a date object', () => {
-        expect(strToDate('06/05/2024')).toEqual(new Date('06/05/2024'));
+        expect(dateInputToDate('06/05/2024')).toEqual(new Date('06/05/2024'));
     });    
 });
 

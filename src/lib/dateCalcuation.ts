@@ -1,10 +1,22 @@
 /**
+ * Converts a string in the format YYYY-MM-DD (value attribute from a date input tag) to a Date object.
  * @param dateInput the date represented as a string from a date input (YYYY-MM-DD).
  * @returns The date object with the CORRECT DAY.
  */
-export function strToDate(dateInput: string) {
-  const [year, month, day] = dateInput.split('-');
+export function dateInputToDate(dateInput: string) {
+  const [year, month, day] = dateInput.split('-').map(Number);
   return new Date(`${month}/${day}/${year}`);
+}
+
+/**
+ * Converts a string in the format YYYY-MM-DD (value attribute from a date input tag) to a Date object.
+ * @param dateInput - the date represented as a string from a date input (YYYY-MM-DD).
+ * @returns The date object with the correct day.
+ */export function dateToString(date: Date) {
+  const year = date.getFullYear() + '';
+  const month = (date.getMonth() + 1) + '';
+  const day = (date.getDate()) + '';
+  return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
 }
 
 /**
