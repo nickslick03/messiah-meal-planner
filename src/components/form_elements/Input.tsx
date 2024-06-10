@@ -4,7 +4,8 @@ import {
   ChangeEvent,
   HTMLInputTypeAttribute,
   useMemo,
-  useState
+  useState,
+  useEffect
 } from 'react';
 import { IMPORTANCE_CLASSES } from '../../static/constants';
 import {
@@ -17,8 +18,9 @@ interface InputProps<T> {
   importance?: ImportanceIndex;
   type: HTMLInputTypeAttribute;
   validator: (value: string) => T extends boolean ? T : T | null;
-  value: T extends boolean ? boolean : T | null;
+  value: T extends boolean ? T : T | null;
   setValue: Dispatch<SetStateAction<T extends boolean ? T : T | null>>;
+  invalidMessage?: string;
 }
 
 /**
@@ -30,6 +32,7 @@ interface InputProps<T> {
  * @param {(value: string) => T | null} validator - The validator function for the input value. Returns the new value if valid, null otherwise.
  * @param {string | boolean | number} value - The value of the input.
  * @param {React.Dispatch<React.SetStateAction<T>>} setValue - The function to update the input value.
+ * @param {string} invalidMessage - The message to display when the input is invalid.
  * @returns {JSX.Element} The rendered input component.
  */
 const Input = <T,>({
@@ -38,7 +41,8 @@ const Input = <T,>({
   type = 'text',
   validator,
   value,
-  setValue
+  setValue,
+  invalidMessage,
 }: InputProps<T>): JSX.Element => {
   const importanceStyle = IMPORTANCE_CLASSES[importance] ?? 'font-normal';
   const styles =
@@ -52,13 +56,14 @@ const Input = <T,>({
   /** The actual value of input element so the input value may persist even when value is null. */
   const [internalValue, setInternalValue] = useState(
     value === null 
-    ? undefined
+    ? ''
     : value instanceof Date
     ? dateToString(value)
     : value!.toString()
   );
 
-  if (type === 'date') console.log({label, value, internalValue});
+  /** Controls showing the invalid if the user has previously entered data and the current value is invalid. */
+  const [showInvalid, setShowInvalid] = useState(false);
 
   /** The title attribute of the input tag. */
   const titleAttribute = useMemo(() => 
@@ -71,39 +76,51 @@ const Input = <T,>({
    * @param {React.ChangeEvent<HTMLInputElement>} e - The change event object.
    */
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    let newValue: typeof value;
     if (type === 'checkbox') {
-      setValue(validator(e.target.checked.toString()));
+      newValue = validator(e.target.checked.toString());
+      setValue(newValue);
       setInternalValue(e.target.checked.toString());
     } else {
-      setValue(validator(e.target.value));
+      newValue = validator(e.target.value);
+      setValue(newValue);
       setInternalValue(e.target.value);
     }
+    setShowInvalid(newValue === null);
   };
 
   return (
-    <label
-      className={`${importanceStyle} w-fit flex flex-row flex-wrap gap-2 items-center`}
-    >
-      {label}
-      {type === 'checkbox' ? (
-        <input
-          className={`${styles} p-0 h-6 w-6`}
-          type={type}
-          checked={internalValue === 'true'}
-          onChange={handleChange}
-          title={titleAttribute}
-        />
-      ) : (
-        <input
-          className={styles}
-          type={type}
-          value={internalValue}
-          inputMode={type === 'number' ? 'numeric' : undefined}
-          onChange={handleChange}
-          title={titleAttribute}
-        />
-      )}
-    </label>
+    <div>
+      <label
+        className={`${importanceStyle} w-fit flex flex-row flex-wrap gap-2 items-center`}
+      >
+        {label}
+        {type === 'checkbox' ? (
+          <input
+            className={`${styles} p-0 h-6 w-6`}
+            type={type}
+            checked={internalValue === 'true'}
+            onChange={handleChange}
+            title={titleAttribute}
+          />
+        ) : (
+          <input
+            className={styles}
+            type={type}
+            value={internalValue}
+            inputMode={type === 'number' ? 'numeric' : undefined}
+            onChange={handleChange}
+            title={titleAttribute}
+          />
+        )}
+      </label>
+      {invalidMessage !== undefined
+      ? 
+      <p className={`${showInvalid ? '' : 'invisible'} text-messiah-red text-sm`}>
+          {invalidMessage}
+      </p>
+      : ''}
+    </div>
   );
 };
 

@@ -49,6 +49,7 @@ const MealPlanInfo = ({
             ? dateInputToDate(str)
             : null
           }
+          invalidMessage={'Start date must be before end date.'}
         />
         <Input
           label={'End Date:'}
@@ -63,6 +64,7 @@ const MealPlanInfo = ({
             ? dateInputToDate(str)
             : null
           }
+          invalidMessage={'End date must be after start date.'}
         />
         
         <Input
@@ -85,10 +87,11 @@ const MealPlanInfo = ({
           value={balance.value}
           setValue={balance.setValue}
           validator={(str) =>
-            (!isNaN(parseFloat(str)) && parseFloat(str) >= 0)
+            (!isNaN(parseFloat(str)) && parseFloat(str) > 0)
             ? parseFloat(str)
             : null
           }
+          invalidMessage={'Starting balance must be a positive number.'}
         />
       </div>
     </SectionContainer>

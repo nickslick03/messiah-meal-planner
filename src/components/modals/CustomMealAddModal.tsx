@@ -89,6 +89,7 @@ const CustomMealAddModal = ({
             ? str
             : null
           }
+          invalidMessage={'Meal name cannot be empty.'}
         />
         <Input
           label='Price:'
@@ -96,10 +97,11 @@ const CustomMealAddModal = ({
           value={price}
           setValue={setPrice}
           validator={(str) => 
-            (!isNaN(parseFloat(str)) && parseFloat(str) >= 0)
+            (!isNaN(parseFloat(str)) && parseFloat(str) > 0)
             ? parseFloat(str)
             : null
           }
+          invalidMessage={'Price must be a positive number.'}
         />
         {startingData && (
           <Button
