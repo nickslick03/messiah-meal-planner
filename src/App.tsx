@@ -11,7 +11,7 @@ import {
   MealQueueCtx,
   CustomMealsCtx
 } from './static/context';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Meal from './types/Meal';
 import MealReference from './types/MealReference';
 import DayEditor from './components/sections/DayEditor';
@@ -24,6 +24,8 @@ import {
 } from './types/userSelectedMealsObject';
 import usePersistentState from './hooks/usePersistentState';
 import meals from './static/mealsDatabase';
+import { getMealTotal } from './lib/calculationEngine';
+import { getWeekdaysBetween } from './lib/dateCalcuation';
 
 function App() {
   const [isBreak, setIsBreak] = usePersistentState('isBreak', false);
@@ -71,6 +73,32 @@ function App() {
     }
   }, [userSelectedMeals, customMeals, setUserSelectedMeals]);
 
+  /** The grand total of all the meals from the start date to the end date. */
+  const grandTotal = useMemo(() =>
+    startDate !== null && endDate !== null && balance !== null
+    ? getMealTotal(
+      userSelectedMeals,
+      getWeekdaysBetween(startDate, endDate, isBreak),
+      mealPlan,
+      [...meals, ...customMeals])
+    : 0,
+    [balance, customMeals, endDate, isBreak, mealPlan, startDate, userSelectedMeals]);
+
+  /** Indicates whether the grand total is under the inital balance. */
+  const isUnderBalance = useMemo(() => 
+    balance !== null
+    ? balance >= grandTotal
+    : false,
+    [balance, grandTotal]);
+
+  /** The difference between the balance and the grand total. */
+  const difference = useMemo(
+    () => 
+      balance!== null && grandTotal!== null
+        ? Math.abs(balance - grandTotal)
+        : 0,
+    [balance, grandTotal]);
+
   return (
     <IsBreakCtx.Provider value={{ value: isBreak, setValue: setIsBreak }}>
       <MealPlanCtx.Provider value={{ value: mealPlan, setValue: setMealPlan }}>
@@ -105,8 +133,16 @@ function App() {
                           <AvailableMeals />
                           <MealQueue />
                           <DayEditor />
-                          <Results />
-                          <ResultsBar />
+                          <Results 
+                            grandTotal={grandTotal}
+                            isUnderBalance={isUnderBalance} 
+                            difference={difference}                            
+                          />
+                          <ResultsBar 
+                            grandTotal={grandTotal}
+                            isUnderBalance={isUnderBalance} 
+                            difference={difference}  
+                          />
                         </>
                       ) : (
                         <div className='flex flex-col items-center'>
