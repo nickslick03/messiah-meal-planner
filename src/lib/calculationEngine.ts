@@ -25,20 +25,24 @@ export function applyDiscount(meal: Meal) {
  * @returns The total price for the given meals over the specified number of weekdays.
  */
 export function getMealDayTotal(meals: Meal[], days: number, discount = false) {
-    return meals.reduce((total, m) => total + (discount ? applyDiscount(m) : m.price), 0) * days;
+    let total = 0;
+    meals.forEach(m => total += (discount? applyDiscount(m) : m.price));
+    return total * days;
 }
 
 /**
  * Calculates the total amount for the meals the user selected within the given timeframe.
  * @param userMeals The object representing the user selected meals
  * @param weekdays An array of weekdays the user will be purchasing meals in
+ * @param discount A boolean flag indicating whether to apply a discount to the meal prices.
+ * @param searchMealList An array of meals to search from.
  * @returns The total of all the meals given the amount of weekdays
  */
-export function getMealTotal(userMeals: UserSelectedMealsObjectType, weekdays: number[], discount = false) {
+export function getMealTotal(userMeals: UserSelectedMealsObjectType, weekdays: number[], discount: boolean, searchMealList: Meal[]): number {
     let total = 0;
     WEEKDAYS_START_SUNDAY.forEach((day, i) => {
         if (weekdays[i] === 0) return;
-        const mealList = userMeals[day].map(mr => meals.find(m => m.id === mr.id) as Meal);
+        const mealList = userMeals[day].map(mr => searchMealList.find(m => m.id === mr.id) as Meal);
         total += getMealDayTotal(mealList, weekdays[i], discount);
     });
     return total;

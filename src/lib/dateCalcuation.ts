@@ -4,7 +4,7 @@
  * @returns The date object with the CORRECT DAY.
  */
 export function dateInputToDate(dateInput: string) {
-  const [year, month, day] = dateInput.split('-').map(Number);
+  const [year, month, day] = dateInput.split('-');
   return new Date(`${month}/${day}/${year}`);
 }
 

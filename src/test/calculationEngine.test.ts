@@ -70,22 +70,22 @@ describe('getMealTotal', () => {
 
     it('should work for 1 day', () => {
         expect(
-            getMealTotal(userMeals, [0,1,0,0,0,0,0]) // mealList1
+            getMealTotal(userMeals, [0,1,0,0,0,0,0], false, meals) // mealList1
         ).toBe(14.3);
         expect(
-            getMealTotal(userMeals, [1,0,0,0,0,0,0]) // mealList2
+            getMealTotal(userMeals, [1,0,0,0,0,0,0], false, meals) // mealList2
         ).toBe(6.75);
     });
 
     it('should work for multiple days', () => {
         expect(
-            getMealTotal(userMeals, [1,1,0,0,0,0,0]) 
+            getMealTotal(userMeals, [1,1,0,0,0,0,0], false, meals) 
         ).toBe(21.05);
     });
 
     it('should work for discount', () => {
         expect(
-            getMealTotal(userMeals, [0,1,0,0,0,0,0], true) 
+            getMealTotal(userMeals, [0,1,0,0,0,0,0], true, meals) 
         ).toBeCloseTo(3.02 + 5.6);
     })
 });

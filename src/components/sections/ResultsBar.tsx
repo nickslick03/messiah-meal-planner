@@ -5,10 +5,11 @@ import {
   useState,
   useEffect,
 } from 'react';
-import { BalanceCtx, EndDateCtx, IsBreakCtx, MealPlanCtx, StartDateCtx, UserSelectedMealsCtx } from '../../static/context';
+import { BalanceCtx, CustomMealsCtx, EndDateCtx, IsBreakCtx, MealPlanCtx, StartDateCtx, UserSelectedMealsCtx } from '../../static/context';
 import formatCurrency from '../../lib/formatCurrency';
 import { getMealTotal } from '../../lib/calculationEngine';
 import { getWeekdaysBetween } from '../../lib/dateCalcuation';
+import meals from '../../static/mealsDatabase';
 
 /**
  * Renders a results bar that sticks to the bottom of the page, displays the starting balance,
@@ -31,16 +32,26 @@ const ResultsBar = () => {
   const endDate = useContext(EndDateCtx);
   const weekOff = useContext(IsBreakCtx);
   const isDiscount = useContext(MealPlanCtx);
+  const customMeals = useContext(CustomMealsCtx);
   
   /** The grand total of all the meals from the start date to the end date. */
-  const grandTotal = useMemo(() => 
-    startDate.value!== null && endDate.value!== null
+  const grandTotal = useMemo(() =>
+    startDate.value !== null && endDate.value !== null && balance.value !== null
     ? getMealTotal(
       userMeals.value, 
       getWeekdaysBetween(startDate.value, endDate.value, weekOff.value), 
-      isDiscount.value)
+      isDiscount.value,
+      [...meals, ...customMeals.value])
     : 0,
-    [endDate.value, isDiscount.value, startDate.value, userMeals.value, weekOff.value]);
+    [
+      endDate.value, 
+      isDiscount.value, 
+      startDate.value, 
+      userMeals.value, 
+      weekOff.value, 
+      balance.value,
+      customMeals.value
+    ]);
 
   /** Indicates whether the grand total is under the inital balance. */
   const isUnderBalance = useMemo(() => 
