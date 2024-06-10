@@ -11,6 +11,7 @@ import {
   ImportanceIndex,
   newImportanceIndex
 } from '../../types/ImportanceIndex';
+import { dateToString } from '../../lib/dateCalcuation';
 interface InputProps<T> {
   label: string;
   importance?: ImportanceIndex;
@@ -49,7 +50,15 @@ const Input = <T,>({
       : ''}`;
 
   /** The actual value of input element so the input value may persist even when value is null. */
-  const [internalValue, setInternalValue] = useState(value === null ? '' : value!.toString());
+  const [internalValue, setInternalValue] = useState(
+    value === null 
+    ? undefined
+    : value instanceof Date
+    ? dateToString(value)
+    : value!.toString()
+  );
+
+  if (type === 'date') console.log({label, value, internalValue});
 
   /** The title attribute of the input tag. */
   const titleAttribute = useMemo(() => 
