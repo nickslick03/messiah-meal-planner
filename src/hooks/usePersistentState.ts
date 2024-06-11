@@ -9,12 +9,19 @@ import { Dispatch, SetStateAction, useEffect, useState } from 'react';
  */
 const usePersistentState = <T>(
   key: string,
-  initialValue: T
+  initialValue: T,
+  deserialize?: (value: string) => T,
 ): [T, Dispatch<SetStateAction<T>>] => {
   // Set the initial value of the state
   const [value, setValue] = useState<T>(() => {
     const storedValue = localStorage.getItem(key);
-    return storedValue !== null ? JSON.parse(storedValue) : initialValue;
+    if (storedValue !== 'null' && storedValue !== null) {
+      if (deserialize) {
+        return deserialize(JSON.parse(storedValue));
+      }
+      return JSON.parse(storedValue);
+    }
+    return initialValue;
   });
 
   // Update localStorage on update

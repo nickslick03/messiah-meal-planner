@@ -1,14 +1,18 @@
 import {
   useContext,
-  useMemo,
   useRef,
   useState,
   useEffect,
 } from 'react';
-import { BalanceCtx, EndDateCtx, IsBreakCtx, MealPlanCtx, StartDateCtx, UserSelectedMealsCtx } from '../../static/context';
+import { BalanceCtx } from '../../static/context';
 import formatCurrency from '../../lib/formatCurrency';
-import { getMealTotal } from '../../lib/calculationEngine';
-import { getWeekdaysBetween, strToDate } from '../../lib/dateCalcuation';
+
+
+interface ResultsBarProps {
+  grandTotal: number;
+  isUnderBalance: boolean;
+  difference: number;
+}
 
 /**
  * Renders a results bar that sticks to the bottom of the page, displays the starting balance,
@@ -16,32 +20,15 @@ import { getWeekdaysBetween, strToDate } from '../../lib/dateCalcuation';
  *
  * @returns {JSX.Element} The rendered ResultsBar component.
  */
-
-const ResultsBar = () => {
-  // Load balance context
+const ResultsBar = ({
+  grandTotal,
+  isUnderBalance,
+  difference
+}: ResultsBarProps) => {
+  /** Load balance context */
   const balance = useContext(BalanceCtx);
 
-  // Format balance as currency
-  const balCurrency = useMemo(
-    () => formatCurrency(balance.value || 0),
-    [balance]
-  );
-  const userMeals = useContext(UserSelectedMealsCtx);
-  const startDate = useContext(StartDateCtx);
-  const endDate = useContext(EndDateCtx);
-  const weekOff = useContext(IsBreakCtx);
-  const isDiscount = useContext(MealPlanCtx);
-    
-  const grandTotal = useMemo(() => 
-    getMealTotal(
-      userMeals.value, 
-      getWeekdaysBetween(strToDate(startDate.value), strToDate(endDate.value), weekOff.value), 
-      isDiscount.value),
-    [endDate.value, isDiscount.value, startDate.value, userMeals.value, weekOff.value]);
-
-  const isUnderBalance = useMemo(() => balance.value >= grandTotal, [balance.value, grandTotal]);
-
-  // Ref to the container of this element, for handling the bottom corner rounding
+  /** Ref to the container of this element, for handling the bottom corner rounding. */
   const ref = useRef<HTMLDivElement>(null);
 
   // Indicates whether the user is at the bottom of the page
@@ -64,7 +51,7 @@ const ResultsBar = () => {
       }`}>
       <div className='hidden sm:block'>
         <span className='font-bold'>Starting Balance: </span>
-        <span className='text-messiah-green'>{balCurrency}</span>
+        <span className='text-messiah-green'>{formatCurrency(balance.value ?? 0)}</span>
       </div>
       <div>
         <span className='font-bold'>Grand Total: </span>
@@ -73,7 +60,7 @@ const ResultsBar = () => {
       <div>
         <span className='font-bold'>$ {isUnderBalance ? 'Extra' : 'Short'}: </span>
         <span className={isUnderBalance ? 'text-messiah-green' : 'text-messiah-red'}>
-          {formatCurrency(Math.abs(balance.value - grandTotal))}
+          {formatCurrency(difference)}
         </span>
       </div>
     </div>

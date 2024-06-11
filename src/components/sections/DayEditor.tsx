@@ -16,7 +16,6 @@ import Meal from '../../types/Meal';
 import meals from '../../static/mealsDatabase';
 import { CustomMealsCtx } from '../../static/context';
 import { getWeekdaysBetween } from '../../lib/dateCalcuation';
-import { strToDate } from '../../lib/dateCalcuation';
 import { getMealDayTotal } from '../../lib/calculationEngine';
 import formatCurrency from '../../lib/formatCurrency';
 
@@ -84,11 +83,12 @@ const DayEditor = () => {
   // The total number of days for each weekday (starting on Sunday)
   const numOfWeekdays = useMemo(
     () =>
-      getWeekdaysBetween(
-        strToDate(startDate.value),
-        strToDate(endDate.value),
-        weekOff.value
-      ),
+      startDate.value !== null && endDate.value !== null
+      ? getWeekdaysBetween(
+        startDate.value,
+        endDate.value,
+        weekOff.value)
+      : Array(7).fill(0),
     [startDate, endDate, weekOff]
   );
 

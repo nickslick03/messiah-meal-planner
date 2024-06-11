@@ -23,7 +23,7 @@ const MealQueue = () => {
   // notification text
   const [message, setMessage] = useState({ text: '' });
 
-  // Dereference the meal queue
+  /** Dereferences the meal queue. */
   const mealQueueValue = useMemo(
     () =>
       mealQueue.value
@@ -120,11 +120,12 @@ const MealQueue = () => {
     []
   );
 
-  // Memos to control whether buttons can be clicked
+  /** Indicates whether the add meal button is disabled. */
   const isAddMealsButtonDisabled = useMemo(
     () => mealQueue.value.length == 0 || selectedDays.length == 0,
     [mealQueue, selectedDays]
   );
+  /** Indicates whether the clear meal button is disabled. */
   const isClearMealsButtonDisabled = useMemo(
     () => mealQueue.value.length == 0,
     [mealQueue]
@@ -151,6 +152,7 @@ const MealQueue = () => {
                 type: day ? 'add' : 'remove'
               })
             }
+            validator={(str) => str === 'true'}
             key={day}
           />
         ))}

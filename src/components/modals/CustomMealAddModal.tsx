@@ -1,6 +1,6 @@
 import Select from '../form_elements/Select';
 import Input from '../form_elements/Input';
-import { Dispatch, SetStateAction, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useState } from 'react';
 import ModalContainer from '../containers/ModalContainer';
 import { DINING_LOCATIONS } from '../../static/constants';
@@ -35,30 +35,26 @@ const CustomMealAddModal = ({
 }: CustomMealAddModalProps) => {
   // Default values
   const DEFAULT_LOCATION = 'Select Location...';
-  const DEFAULT_PRICE = 0;
-  const DEFAULT_NAME = '';
+  const DEFAULT_PRICE = null;
+  const DEFAULT_NAME = null;
 
   // State variables for use in adding a custom meal
   const [location, setLocation] = useState(
     startingData?.location ?? DEFAULT_LOCATION
   );
-  const [price, setPrice] = useState(startingData?.price ?? DEFAULT_PRICE);
-  const [name, setName] = useState(startingData?.name ?? DEFAULT_NAME);
+  const [price, setPrice] = useState<number | null>(startingData?.price ?? DEFAULT_PRICE);
+  const [name, setName] = useState<string | null>(startingData?.name ?? DEFAULT_NAME);
 
-  // Reset modal state
+  /** Resets the modal state. */
   const resetState = () => {
     setLocation(DEFAULT_LOCATION);
     setPrice(DEFAULT_PRICE);
     setName(DEFAULT_NAME);
   };
 
-  // Function to check if the form is incomplete
+  /** Checks whether the form is incomplete. */
   const isIncomplete = useMemo(
-    () =>
-      price === 0 ||
-      (price as unknown as string) === '' ||
-      name === '' ||
-      location === 'Select Location...',
+    () => price === null || name === null || location === DEFAULT_LOCATION,
     [price, name, location]
   );
 
@@ -67,7 +63,7 @@ const CustomMealAddModal = ({
       title={`${startingData ? 'Edit' : 'Add'} Custom Meal`}
       confirmText={startingData ? 'Update' : 'Add'}
       onConfirm={() => {
-        onConfirm(location, name, price);
+        onConfirm(location, name ?? 'custom meal', price ?? 0);
         resetState();
       }}
       onCancel={() => {
@@ -87,20 +83,25 @@ const CustomMealAddModal = ({
           label='Meal Name:'
           type='text'
           value={name}
-          setValue={
-            setName as Dispatch<SetStateAction<string | boolean | number>>
+          setValue={setName}
+          validator={(str) => 
+            str.length > 0 && str.match(/\S/)
+            ? str
+            : null
           }
+          invalidMessage={'Meal name cannot be empty.'}
         />
         <Input
           label='Price:'
           type='number'
           value={price}
-          setValue={
-            setPrice as Dispatch<SetStateAction<string | boolean | number>>
+          setValue={setPrice}
+          validator={(str) => 
+            (!isNaN(parseFloat(str)) && parseFloat(str) > 0)
+            ? parseFloat(str)
+            : null
           }
-          validator={(str) =>
-            (!isNaN(parseFloat(str)) && parseFloat(str) >= 0) || str === ''
-          }
+          invalidMessage={'Price must be a positive number.'}
         />
         {startingData && (
           <Button
