@@ -53,14 +53,13 @@ const Input = <T,>({
         : ''
     }`;
 
-  /** The actual value of input element so the input value may persist even when value is null. */
-  const [internalValue, setInternalValue] = useState(
+  /** The initial value of the input. */
+  const initialValue = 
     value === null
       ? ''
       : value instanceof Date
       ? dateToString(value)
-      : value!.toString()
-  );
+      : value!.toString();
 
   /** Controls showing the invalid if the user has previously entered data and the current value is invalid. */
   const [showInvalid, setShowInvalid] = useState(false);
@@ -84,11 +83,9 @@ const Input = <T,>({
     if (type === 'checkbox') {
       newValue = validator(e.target.checked.toString());
       setValue(newValue);
-      setInternalValue(e.target.checked.toString());
     } else {
       newValue = validator(e.target.value);
       setValue(newValue);
-      setInternalValue(e.target.value);
     }
     setShowInvalid(newValue === null);
   };
@@ -103,17 +100,17 @@ const Input = <T,>({
           <input
             className={`${styles} p-0 h-6 w-6`}
             type={type}
-            checked={internalValue === 'true'}
-            onChange={handleChange}
+            defaultChecked={initialValue === 'true'}
+            onInput={handleChange}
             title={titleAttribute}
           />
         ) : (
           <input
             className={styles}
             type={type}
-            value={internalValue}
+            defaultValue={initialValue}
             inputMode={type === 'number' ? 'decimal' : undefined}
-            onChange={handleChange}
+            onInput={handleChange}
             title={titleAttribute}
           />
         )}
