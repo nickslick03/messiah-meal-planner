@@ -1,7 +1,5 @@
 import { useContext, useMemo, useState } from 'react';
 import { WEEKDAYS } from '../../static/constants';
-import Select from '../form_elements/Select';
-import { newImportanceIndex } from '../../types/ImportanceIndex';
 import DotLeader from '../other/DotLeader';
 import {
   EndDateCtx,
@@ -18,6 +16,7 @@ import { CustomMealsCtx } from '../../static/context';
 import { getWeekdaysBetween } from '../../lib/dateCalcuation';
 import { getMealDayTotal } from '../../lib/calculationEngine';
 import formatCurrency from '../../lib/formatCurrency';
+import DaySelector from '../form_elements/DaySelector';
 
 /**
  * Renders a meal table for meals added to given days an an option to remove meals from that day.
@@ -84,11 +83,8 @@ const DayEditor = () => {
   const numOfWeekdays = useMemo(
     () =>
       startDate.value !== null && endDate.value !== null
-      ? getWeekdaysBetween(
-        startDate.value,
-        endDate.value,
-        weekOff.value)
-      : Array(7).fill(0),
+        ? getWeekdaysBetween(startDate.value, endDate.value, weekOff.value)
+        : Array(7).fill(0),
     [startDate, endDate, weekOff]
   );
 
@@ -108,18 +104,12 @@ const DayEditor = () => {
   return (
     <MealContainer
       title={
-        <div>
-          <Select
-            label=''
-            importance={newImportanceIndex(4)}
-            list={WEEKDAYS}
-            value={WEEKDAYS[weekdayIndex]}
-            setSelected={(newWeekday) =>
-              setWeekdayIndex(
-                WEEKDAYS.indexOf(newWeekday as (typeof WEEKDAYS)[number])
-              )
-            }
-            isTitle={true}
+        <div className='w-full'>
+          <DaySelector
+            daysSelected={new Array(7)
+              .fill(false)
+              .map((_, day) => day === weekdayIndex)}
+            onChange={setWeekdayIndex}
           />
         </div>
       }
