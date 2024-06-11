@@ -104,7 +104,7 @@ const DayEditor = () => {
   return (
     <MealContainer
       title={
-        <div className='w-full'>
+        <div className='w-full bg-gray-300 rounded-lg'>
           <DaySelector
             daysSelected={new Array(7)
               .fill(false)

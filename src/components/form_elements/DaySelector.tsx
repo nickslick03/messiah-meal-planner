@@ -26,7 +26,7 @@ const DaySelector = ({
         >
           <button
             key={i}
-            className={`w-full h-10 rounded-lg items-center justify-center ${
+            className={`w-full p-1 h-10 rounded-lg items-center justify-center ${
               daysSelected[i]
                 ? 'bg-messiah-light-blue sm:hover:bg-messiah-light-blue-hover active:bg-messiah-light-blue-active'
                 : 'bg-gray-300 sm:hover:bg-gray-200 active:bg-gray-400'
