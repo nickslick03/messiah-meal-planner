@@ -152,7 +152,7 @@ const MealQueue = () => {
               type: selectedDays.indexOf(i) === -1 ? 'add' : 'remove'
             })
           }
-          maxWidth={12}
+          square={true}
         />
       </div>
       <div className='flex gap-2 mt-4'>
