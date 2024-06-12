@@ -1,7 +1,5 @@
 import { useContext, useMemo, useState } from 'react';
 import { WEEKDAYS } from '../../static/constants';
-import Select from '../form_elements/Select';
-import { newImportanceIndex } from '../../types/ImportanceIndex';
 import DotLeader from '../other/DotLeader';
 import {
   EndDateCtx,
@@ -18,6 +16,7 @@ import { CustomMealsCtx } from '../../static/context';
 import { getWeekdaysBetween } from '../../lib/dateCalcuation';
 import { getMealDayTotal } from '../../lib/calculationEngine';
 import formatCurrency from '../../lib/formatCurrency';
+import DaySelector from '../form_elements/DaySelector';
 
 /**
  * Renders a meal table for meals added to given days an an option to remove meals from that day.
@@ -80,16 +79,19 @@ const DayEditor = () => {
     [dayMealList, discount.value]
   );
 
-  // The total number of days for each weekday (starting on Sunday)
+  /** The total number of days for each weekday (starting on Sunday) */
   const numOfWeekdays = useMemo(
     () =>
       startDate.value !== null && endDate.value !== null
-      ? getWeekdaysBetween(
-        startDate.value,
-        endDate.value,
-        weekOff.value)
-      : Array(7).fill(0),
+        ? getWeekdaysBetween(startDate.value, endDate.value, weekOff.value)
+        : Array(7).fill(0),
     [startDate, endDate, weekOff]
+  );
+
+  /** The total number of meals for each weekday (starting on Sunday). */
+  const numOfMeals = useMemo(
+    () => WEEKDAYS.map((day) => userSelectedMealsValue[day].length),
+    [userSelectedMealsValue]
   );
 
   /**
@@ -107,19 +109,15 @@ const DayEditor = () => {
 
   return (
     <MealContainer
-      title={
-        <div>
-          <Select
-            label=''
-            importance={newImportanceIndex(4)}
-            list={WEEKDAYS}
-            value={WEEKDAYS[weekdayIndex]}
-            setSelected={(newWeekday) =>
-              setWeekdayIndex(
-                WEEKDAYS.indexOf(newWeekday as (typeof WEEKDAYS)[number])
-              )
-            }
-            isTitle={true}
+      title='Day Editor'
+      daySelector={
+        <div className='w-full bg-gray-300 rounded-lg mt-4'>
+          <DaySelector
+            daysSelected={new Array(7)
+              .fill(false)
+              .map((_, day) => day === weekdayIndex)}
+            onChange={setWeekdayIndex}
+            numOfMeals={numOfMeals}
           />
         </div>
       }
@@ -138,12 +136,12 @@ const DayEditor = () => {
           },
           {
             title: `Number of ${weekday}(s)`,
-            value: `${numOfWeekdays[(weekdayIndex + 1) % 7]}` // Convert from Monday to Sunday start
+            value: `${numOfWeekdays[weekdayIndex]}`
           },
           {
             title: `Total of All ${weekday}s`,
             value: `${formatCurrency(
-              mealDayTotal * numOfWeekdays[(weekdayIndex + 1) % 7] // Convert from Monday to Sunday start
+              mealDayTotal * numOfWeekdays[weekdayIndex] // Convert from Monday to Sunday start
             )}`,
             resultsStyle: 'text-messiah-red'
           }

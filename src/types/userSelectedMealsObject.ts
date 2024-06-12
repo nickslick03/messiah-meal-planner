@@ -5,13 +5,13 @@ import { WEEKDAYS } from '../static/constants';
  * This class is used with the userSelectedMeals context.
  */
 export class UserSelectedMealsObject {
+  Sunday: MealReference[] = [];
   Monday: MealReference[] = [];
   Tuesday: MealReference[] = [];
   Wednesday: MealReference[] = [];
   Thursday: MealReference[] = [];
   Friday: MealReference[] = [];
   Saturday: MealReference[] = [];
-  Sunday: MealReference[] = [];
 
   constructor() {
     WEEKDAYS.forEach((day) => {

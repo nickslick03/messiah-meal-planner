@@ -8,7 +8,8 @@ import SortingModal from '../modals/SortingModal';
 import Meal from '../../types/Meal';
 
 interface MealContainerProps {
-  title?: React.ReactNode;
+  title?: string;
+  daySelector?: React.ReactNode;
   addOrRemove?: string;
   customMeal?: boolean;
   children?: React.ReactNode;
@@ -26,6 +27,7 @@ const DEFAULT_DIRECTION = true;
 /**
  * A Container for sections with a meal table. Additional children of the section go under the meal table.
  * @param {string} title The title of the section
+ * @param {React.ReactNode} daySelector The day selector for the section, if applicable
  * @param {string} addOrRemove A string denoting whether the side buttons are add or remove buttons. Defaults to 'add'.
  * @param {React.ReactNode} children The children of the section.
  * @param {Meal[]} meals The list of meals to display
@@ -37,6 +39,7 @@ const DEFAULT_DIRECTION = true;
  */
 const MealContainer = ({
   title,
+  daySelector,
   addOrRemove = 'Add',
   children = '',
   meals,
@@ -56,8 +59,8 @@ const MealContainer = ({
   const [sortColumn, setSortColumn] = useState(DEFAULT_COLUMN);
 
   return (
-    <SectionContainer title={typeof title === 'string' ? title : ''}>
-      {typeof title === 'object' ? title : ''}
+    <SectionContainer title={title}>
+      {daySelector ?? <></>}
       <div className='absolute top-0 right-0'>
         <Button
           icon={sortDirection ? <FaSortAmountUp /> : <FaSortAmountDown />}

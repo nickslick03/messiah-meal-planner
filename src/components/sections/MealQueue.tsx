@@ -1,5 +1,4 @@
-import { WEEKDAYS, WEEKDAY_ABBREVIATIONS } from '../../static/constants';
-import Input from '../form_elements/Input';
+import { WEEKDAYS } from '../../static/constants';
 import Button from '../form_elements/Button';
 import { useReducer, useContext, useMemo, useState } from 'react';
 import { MealQueueCtx, UserSelectedMealsCtx } from '../../static/context';
@@ -10,6 +9,7 @@ import { v4 as uuid } from 'uuid';
 import Notification from '../other/Notification';
 import meals from '../../static/mealsDatabase';
 import { CustomMealsCtx } from '../../static/context';
+import DaySelector from '../form_elements/DaySelector';
 
 /**
  * Renders the Meal Queue section, where meals in the queue can be added to different days of the week.
@@ -59,16 +59,16 @@ const MealQueue = () => {
   const onAddMeals = () => {
     userSelectedMeals.setValue(
       Object.fromEntries(
-        Object.entries(userSelectedMeals.value).map(
-          ([key, value], index: number) =>
+        WEEKDAYS.map(
+          (day, index: number) =>
             selectedDays.includes(index)
               ? [
-                  key,
-                  value.concat(
+                  day,
+                  userSelectedMeals.value[day].concat(
                     mealQueue.value.map((m) => ({ ...m, instanceId: uuid() }))
                   )
                 ]
-              : [key, value]
+              : [day, userSelectedMeals.value[day]]
         )
       ) as UserSelectedMealsObjectType
     );
@@ -140,22 +140,20 @@ const MealQueue = () => {
       createNotification={(name) => `Removed ${name} from meal queue`}
     >
       <div className='mb-4' />
-      <div className='flex justify-center flex-wrap gap-6'>
-        {WEEKDAY_ABBREVIATIONS.map((day, i) => (
-          <Input
-            label={`${day}.`}
-            type='checkbox'
-            value={selectedDays.indexOf(i) !== -1}
-            setValue={(day) =>
-              selectedDaysDispatch({
-                index: i,
-                type: day ? 'add' : 'remove'
-              })
-            }
-            validator={(str) => str === 'true'}
-            key={day}
-          />
-        ))}
+      <p className='mb-2'>Add these meals to:</p>
+      <div className='flex justify-center flex-wrap gap-6 w-full'>
+        <DaySelector
+          daysSelected={new Array(7)
+            .fill(false)
+            .map((_v, i) => selectedDays.indexOf(i) !== -1)}
+          onChange={(i) =>
+            selectedDaysDispatch({
+              index: i,
+              type: selectedDays.indexOf(i) === -1 ? 'add' : 'remove'
+            })
+          }
+          square={true}
+        />
       </div>
       <div className='flex gap-2 mt-4'>
         <Button
