@@ -119,7 +119,7 @@ const MealQueue = () => {
     },
     []
   );
-``
+
   /** Indicates whether the add meal button is disabled. */
   const isAddMealsButtonDisabled = useMemo(
     () => mealQueue.value.length == 0 || selectedDays.length == 0,
