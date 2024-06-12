@@ -26,7 +26,7 @@ const DaySelector = ({
         <div key={i} className={`flex-1 ${square && 'w-10'}`}>
           <button
             key={i}
-            className={`w-full p-1 h-10 ${
+            className={`w-full p-1 min-h-10 ${
               square && 'w-10'
             } rounded-lg flex items-center justify-center ${
               daysSelected[i]
