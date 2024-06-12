@@ -11,9 +11,11 @@ interface DaySelectorProps {
 
 /**
  * Component for a day selector, with each day in a circle that can be selected (and deselected)
- * @param {Object} props - Object with onChange function and list of selected days, and square boolean
- * to indicate if the selector should be square, and numOfMeals to indicate the number of meals on the
- * each day (optional, not displayed if empty)
+ * @param {boolean[]} props.daysSelected - List of booleans indicating whether each day is selected or not
+ * @param {function} props.onChange - Function to call when a day is clicked, with the index of the day as an argument
+ * @param {boolean} [props.square=false] - Optional boolean indicating whether the selector should be square or not
+ * @param {number[]} [props.numOfMeals] - Optional list of numbers indicating the number of meals on each day
+ * @returns {JSX.Element} The DaySelector component
  */
 const DaySelector = ({
   daysSelected,
