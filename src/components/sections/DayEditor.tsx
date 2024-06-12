@@ -79,13 +79,20 @@ const DayEditor = () => {
     [dayMealList, discount.value]
   );
 
-  // The total number of days for each weekday (starting on Sunday)
+  /** The total number of days for each weekday (starting on Sunday) */
   const numOfWeekdays = useMemo(
     () =>
       startDate.value !== null && endDate.value !== null
         ? getWeekdaysBetween(startDate.value, endDate.value, weekOff.value)
         : Array(7).fill(0),
     [startDate, endDate, weekOff]
+  );
+
+  /** The total number of meals for each weekday (starting on Sunday). */
+  const numOfMeals = useMemo(
+    () =>
+      WEEKDAYS.map((day) => userSelectedMealsValue[day].length),
+    [userSelectedMealsValue]
   );
 
   /**
@@ -103,7 +110,7 @@ const DayEditor = () => {
 
   return (
     <MealContainer
-      title='Edit Days'
+      title='Day Editor'
       daySelector={
         <div className='w-full bg-gray-300 rounded-lg mt-4'>
           <DaySelector
@@ -111,6 +118,7 @@ const DayEditor = () => {
               .fill(false)
               .map((_, day) => day === weekdayIndex)}
             onChange={setWeekdayIndex}
+            numOfMeals={numOfMeals}
           />
         </div>
       }

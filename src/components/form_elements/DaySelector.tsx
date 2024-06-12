@@ -6,6 +6,7 @@ interface DaySelectorProps {
   daysSelected: boolean[];
   onChange: (i: number) => void;
   square?: boolean;
+  numOfMeals?: number[];
 }
 
 /**
@@ -16,7 +17,8 @@ interface DaySelectorProps {
 const DaySelector = ({
   daysSelected,
   onChange,
-  square = false
+  square = false,
+  numOfMeals
 }: DaySelectorProps) => {
   return (
     <div
@@ -28,7 +30,7 @@ const DaySelector = ({
             key={i}
             className={`w-full p-1 min-h-10 ${
               square && 'w-10'
-            } rounded-lg flex items-center justify-center ${
+            } rounded-lg flex flex-col items-center justify-center ${
               daysSelected[i]
                 ? 'bg-messiah-light-blue sm:hover:bg-messiah-light-blue-hover active:bg-messiah-light-blue-active'
                 : 'bg-gray-300 sm:hover:bg-gray-200 active:bg-gray-400'
@@ -36,6 +38,11 @@ const DaySelector = ({
             onClick={() => onChange(i)}
           >
             <p className='text-14'>{day}</p>
+            {numOfMeals
+              ? <p className='text-xs font-extralight'>
+                  {numOfMeals[i]} <span className='hidden sm:inline'>meal{numOfMeals[i] !== 1 ? 's' : ''}</span>
+                </p>
+              : ''}
           </button>
         </div>
       ))}
