@@ -59,16 +59,16 @@ const MealQueue = () => {
   const onAddMeals = () => {
     userSelectedMeals.setValue(
       Object.fromEntries(
-        Object.entries(userSelectedMeals.value).map(
-          ([key, value], index: number) =>
+        WEEKDAYS.map(
+          (day, index: number) =>
             selectedDays.includes(index)
               ? [
-                  key,
-                  value.concat(
+                  day,
+                  userSelectedMeals.value[day].concat(
                     mealQueue.value.map((m) => ({ ...m, instanceId: uuid() }))
                   )
                 ]
-              : [key, value]
+              : [day, userSelectedMeals.value[day]]
         )
       ) as UserSelectedMealsObjectType
     );
@@ -119,7 +119,7 @@ const MealQueue = () => {
     },
     []
   );
-
+``
   /** Indicates whether the add meal button is disabled. */
   const isAddMealsButtonDisabled = useMemo(
     () => mealQueue.value.length == 0 || selectedDays.length == 0,
