@@ -18,3 +18,6 @@ export class UserSelectedMealsObject {
 export type UserSelectedMealsObjectType = {
   [K in (typeof WEEKDAYS)[number]]: MealReference[];
 };
+
+// Type for keys
+export type Weekday = (typeof WEEKDAYS)[number];

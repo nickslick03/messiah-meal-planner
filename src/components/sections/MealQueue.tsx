@@ -4,12 +4,17 @@ import { useReducer, useContext, useMemo, useState } from 'react';
 import { MealQueueCtx, UserSelectedMealsCtx } from '../../static/context';
 import MealContainer from '../containers/MealContainer';
 import Meal from '../../types/Meal';
-import { UserSelectedMealsObjectType } from '../../types/userSelectedMealsObject';
+import {
+  UserSelectedMealsObjectType,
+  Weekday
+} from '../../types/userSelectedMealsObject';
 import { v4 as uuid } from 'uuid';
 import Notification from '../other/Notification';
 import meals from '../../static/mealsDatabase';
 import { CustomMealsCtx } from '../../static/context';
 import DaySelector from '../form_elements/DaySelector';
+import mapUserMeals from '../../lib/mapUserMeals';
+import dereferenceMeal from '../../lib/dereferenceMeal';
 
 /**
  * Renders the Meal Queue section, where meals in the queue can be added to different days of the week.
@@ -27,16 +32,7 @@ const MealQueue = () => {
   const mealQueueValue = useMemo(
     () =>
       mealQueue.value
-        .map(
-          (mr) =>
-            ({
-              // Load meal data
-              ...[...meals, ...customMeals.value].find((m) => m.id === mr.id),
-
-              // Assign instanceId
-              instanceId: mr.instanceId
-            } as Meal)
-        )
+        .map((mr) => dereferenceMeal(mr, meals, customMeals.value))
         .filter((m) => m !== undefined) as Meal[],
     [mealQueue, customMeals]
   );
@@ -58,18 +54,15 @@ const MealQueue = () => {
    */
   const onAddMeals = () => {
     userSelectedMeals.setValue(
-      Object.fromEntries(
-        WEEKDAYS.map(
-          (day, index: number) =>
-            selectedDays.includes(index)
-              ? [
-                  day,
-                  userSelectedMeals.value[day].concat(
-                    mealQueue.value.map((m) => ({ ...m, instanceId: uuid() }))
-                  )
-                ]
-              : [day, userSelectedMeals.value[day]]
-        )
+      mapUserMeals((day: Weekday, index: number) =>
+        selectedDays.includes(index)
+          ? [
+              day,
+              userSelectedMeals.value[day].concat(
+                mealQueue.value.map((m) => ({ ...m, instanceId: uuid() }))
+              )
+            ]
+          : [day, userSelectedMeals.value[day]]
       ) as UserSelectedMealsObjectType
     );
     const numOfMeals = mealQueue.value.length;

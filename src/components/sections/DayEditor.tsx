@@ -17,6 +17,9 @@ import { getWeekdaysBetween } from '../../lib/dateCalcuation';
 import { getMealDayTotal } from '../../lib/calculationEngine';
 import formatCurrency from '../../lib/formatCurrency';
 import DaySelector from '../form_elements/DaySelector';
+import { Weekday } from '../../types/userSelectedMealsObject';
+import mapUserMeals from '../../lib/mapUserMeals';
+import dereferenceMeal from '../../lib/dereferenceMeal';
 
 /**
  * Renders a meal table for meals added to given days an an option to remove meals from that day.
@@ -32,27 +35,14 @@ const DayEditor = () => {
   // Dereference the userSelectedMeals context
   const userSelectedMealsValue = useMemo(
     () =>
-      Object.fromEntries(
-        Object.entries(userSelectedMeals.value).map(
-          ([key, value]) =>
-            [
-              key,
-              value
-                .map(
-                  (mr) =>
-                    ({
-                      // Load meal data
-                      ...[...meals, ...customMeals.value].find(
-                        (m) => m.id === mr.id
-                      ),
-
-                      // Assign the instance id
-                      instanceId: mr.instanceId
-                    } as Meal)
-                )
-                .filter((m) => m !== undefined)
-            ] as [string, Meal[]]
-        )
+      mapUserMeals(
+        (day: Weekday) =>
+          [
+            day,
+            userSelectedMeals.value[day]
+              .map((mr) => dereferenceMeal(mr, meals, customMeals.value))
+              .filter((m) => m !== undefined)
+          ] as [string, Meal[]]
       ),
     [userSelectedMeals, customMeals]
   );
@@ -65,7 +55,7 @@ const DayEditor = () => {
 
   // Get the list of selected meals for the given day
   const dayMealList = useMemo(
-    () => userSelectedMealsValue[WEEKDAYS[weekdayIndex]] ?? [],
+    () => (userSelectedMealsValue[WEEKDAYS[weekdayIndex]] as Meal[]) ?? [],
     [userSelectedMealsValue, weekdayIndex]
   );
 
