@@ -90,8 +90,7 @@ const DayEditor = () => {
 
   /** The total number of meals for each weekday (starting on Sunday). */
   const numOfMeals = useMemo(
-    () =>
-      WEEKDAYS.map((day) => userSelectedMealsValue[day].length),
+    () => WEEKDAYS.map((day) => userSelectedMealsValue[day].length),
     [userSelectedMealsValue]
   );
 
@@ -137,12 +136,12 @@ const DayEditor = () => {
           },
           {
             title: `Number of ${weekday}(s)`,
-            value: `${numOfWeekdays[(weekdayIndex + 1) % 7]}` // Convert from Monday to Sunday start
+            value: `${numOfWeekdays[weekdayIndex]}`
           },
           {
             title: `Total of All ${weekday}s`,
             value: `${formatCurrency(
-              mealDayTotal * numOfWeekdays[(weekdayIndex + 1) % 7] // Convert from Monday to Sunday start
+              mealDayTotal * numOfWeekdays[weekdayIndex] // Convert from Monday to Sunday start
             )}`,
             resultsStyle: 'text-messiah-red'
           }

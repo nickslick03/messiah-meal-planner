@@ -12,7 +12,8 @@ interface DaySelectorProps {
 /**
  * Component for a day selector, with each day in a circle that can be selected (and deselected)
  * @param {Object} props - Object with onChange function and list of selected days, and square boolean
- * to indicate if the selector should be square
+ * to indicate if the selector should be square, and numOfMeals to indicate the number of meals on the
+ * each day (optional, not displayed if empty)
  */
 const DaySelector = ({
   daysSelected,
@@ -38,11 +39,16 @@ const DaySelector = ({
             onClick={() => onChange(i)}
           >
             <p className='text-14'>{day}</p>
-            {numOfMeals
-              ? <p className='text-xs font-extralight'>
-                  {numOfMeals[i]} <span className='hidden sm:inline'>meal{numOfMeals[i] !== 1 ? 's' : ''}</span>
-                </p>
-              : ''}
+            {numOfMeals ? (
+              <p className='text-xs font-extralight'>
+                {numOfMeals[i]}{' '}
+                <span className='hidden sm:inline'>
+                  meal{numOfMeals[i] !== 1 ? 's' : ''}
+                </span>
+              </p>
+            ) : (
+              ''
+            )}
           </button>
         </div>
       ))}

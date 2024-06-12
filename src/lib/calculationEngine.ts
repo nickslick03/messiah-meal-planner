@@ -1,7 +1,7 @@
-import Meal from "../types/Meal";
-import { UserSelectedMealsObjectType } from "../types/userSelectedMealsObject";
-import { DISCOUNTS } from "../static/discounts";
-import { WEEKDAYS_START_SUNDAY } from "../static/constants";
+import Meal from '../types/Meal';
+import { UserSelectedMealsObjectType } from '../types/userSelectedMealsObject';
+import { DISCOUNTS } from '../static/discounts';
+import { WEEKDAYS } from '../static/constants';
 
 /**
  * Applies a discount to the meal price based on the location.
@@ -11,7 +11,9 @@ import { WEEKDAYS_START_SUNDAY } from "../static/constants";
  * @returns The discounted price of the meal.
  */
 export function applyDiscount(meal: Meal) {
-    return DISCOUNTS[meal.location] === undefined ? meal.price : meal.price * (1 - DISCOUNTS[meal.location]);    
+  return DISCOUNTS[meal.location] === undefined
+    ? meal.price
+    : meal.price * (1 - DISCOUNTS[meal.location]);
 }
 
 /**
@@ -24,9 +26,9 @@ export function applyDiscount(meal: Meal) {
  * @returns The total price for the given meals over the specified number of weekdays.
  */
 export function getMealDayTotal(meals: Meal[], days: number, discount = false) {
-    let total = 0;
-    meals.forEach(m => total += (discount? applyDiscount(m) : m.price));
-    return total * days;
+  let total = 0;
+  meals.forEach((m) => (total += discount ? applyDiscount(m) : m.price));
+  return total * days;
 }
 
 /**
@@ -37,12 +39,19 @@ export function getMealDayTotal(meals: Meal[], days: number, discount = false) {
  * @param searchMealList An array of meals to search from.
  * @returns The total of all the meals given the amount of weekdays
  */
-export function getMealTotal(userMeals: UserSelectedMealsObjectType, weekdays: number[], discount: boolean, searchMealList: Meal[]): number {
-    let total = 0;
-    WEEKDAYS_START_SUNDAY.forEach((day, i) => {
-        if (weekdays[i] === 0) return;
-        const mealList = userMeals[day].map(mr => searchMealList.find(m => m.id === mr.id) as Meal);
-        total += getMealDayTotal(mealList, weekdays[i], discount);
-    });
-    return total;
+export function getMealTotal(
+  userMeals: UserSelectedMealsObjectType,
+  weekdays: number[],
+  discount: boolean,
+  searchMealList: Meal[]
+): number {
+  let total = 0;
+  WEEKDAYS.forEach((day, i) => {
+    if (weekdays[i] === 0) return;
+    const mealList = userMeals[day].map(
+      (mr) => searchMealList.find((m) => m.id === mr.id) as Meal
+    );
+    total += getMealDayTotal(mealList, weekdays[i], discount);
+  });
+  return total;
 }
