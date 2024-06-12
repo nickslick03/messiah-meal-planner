@@ -14,7 +14,11 @@ export class UserSelectedMealsObject {
   Saturday: MealReference[] = [];
 }
 
-// Type alias for the class
+/** 
+ * Type alias for the UserSelectedMealsObject class.
+*/
 export type UserSelectedMealsObjectType = {
   [K in (typeof WEEKDAYS)[number]]: MealReference[];
 };
+
+export type Weekday =  typeof WEEKDAYS[number];
