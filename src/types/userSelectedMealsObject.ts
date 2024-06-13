@@ -12,15 +12,13 @@ export class UserSelectedMealsObject {
   Thursday: MealReference[] = [];
   Friday: MealReference[] = [];
   Saturday: MealReference[] = [];
-
-  constructor() {
-    WEEKDAYS.forEach((day) => {
-      this[day] = [];
-    });
-  }
 }
 
-// Type alias for the class
+/** 
+ * Type alias for the UserSelectedMealsObject class.
+*/
 export type UserSelectedMealsObjectType = {
   [K in (typeof WEEKDAYS)[number]]: MealReference[];
 };
+
+export type Weekday =  typeof WEEKDAYS[number];
