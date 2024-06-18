@@ -34,20 +34,24 @@ const CustomMealAddModal = ({
   startingData
 }: CustomMealAddModalProps) => {
   // Default values
-  const DEFAULT_LOCATION = 'Select Location...';
+  const DEFAULT_LOCATION = 'Select Place...';
   const DEFAULT_PRICE = null;
   const DEFAULT_NAME = null;
 
   // State variables for use in adding a custom meal
-  const [location, setLocation] = useState(
+  const [location, setPlace] = useState(
     startingData?.location ?? DEFAULT_LOCATION
   );
-  const [price, setPrice] = useState<number | null>(startingData?.price ?? DEFAULT_PRICE);
-  const [name, setName] = useState<string | null>(startingData?.name ?? DEFAULT_NAME);
+  const [price, setPrice] = useState<number | null>(
+    startingData?.price ?? DEFAULT_PRICE
+  );
+  const [name, setName] = useState<string | null>(
+    startingData?.name ?? DEFAULT_NAME
+  );
 
   /** Resets the modal state. */
   const resetState = () => {
-    setLocation(DEFAULT_LOCATION);
+    setPlace(DEFAULT_LOCATION);
     setPrice(DEFAULT_PRICE);
     setName(DEFAULT_NAME);
   };
@@ -74,21 +78,17 @@ const CustomMealAddModal = ({
     >
       <form className='flex flex-col mt-4 gap-4'>
         <Select
-          label='Location:'
-          list={['Select Location...', ...DINING_LOCATIONS]}
+          label='Place:'
+          list={['Select Place...', ...DINING_LOCATIONS]}
           value={location}
-          setSelected={setLocation}
+          setSelected={setPlace}
         />
         <Input
           label='Meal Name:'
           type='text'
           value={name}
           setValue={setName}
-          validator={(str) => 
-            str.length > 0 && str.match(/\S/)
-            ? str
-            : null
-          }
+          validator={(str) => (str.length > 0 && str.match(/\S/) ? str : null)}
           invalidMessage={'Meal name cannot be empty.'}
         />
         <Input
@@ -96,10 +96,10 @@ const CustomMealAddModal = ({
           type='number'
           value={price}
           setValue={setPrice}
-          validator={(str) => 
-            (!isNaN(parseFloat(str)) && parseFloat(str) > 0)
-            ? parseFloat(str)
-            : null
+          validator={(str) =>
+            !isNaN(parseFloat(str)) && parseFloat(str) > 0
+              ? parseFloat(str)
+              : null
           }
           invalidMessage={'Price must be a positive number.'}
         />

@@ -20,7 +20,7 @@ export default {
         inter: ['Inter', 'monospace']
       },
       dropShadow: {
-        dark: '0 2px 3px rgb(0 0 0 / 0.3)'
+        dark: '0 2px 2px rgb(0 0 0 / 0.3)'
       },
       keyframes: {
         topNotify: {

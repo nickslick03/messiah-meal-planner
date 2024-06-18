@@ -21,6 +21,7 @@ interface InputProps<T> {
   setValue: Dispatch<SetStateAction<T extends boolean ? T : T | null>>;
   invalidMessage?: string;
   placeholder?: string;
+  cssClasses?: string;
 }
 
 /**
@@ -34,6 +35,7 @@ interface InputProps<T> {
  * @param {React.Dispatch<React.SetStateAction<T>>} setValue - The function to update the input value.
  * @param {string} invalidMessage - The message to display when the input is invalid.
  * @param {string} placeholder - The placeholder text for the input.
+ * @param {string} cssClasses - The styles to apply to the input.
  * @returns {JSX.Element} The rendered input component.
  */
 const Input = <T,>({
@@ -44,7 +46,8 @@ const Input = <T,>({
   value,
   setValue,
   invalidMessage,
-  placeholder = ''
+  placeholder = '',
+  cssClasses
 }: InputProps<T>): JSX.Element => {
   const importanceStyle = IMPORTANCE_CLASSES[importance] ?? 'font-normal';
   const styles = `border border-black rounded focus:outline focus:outline-2 focus:outline-messiah-blue 
@@ -54,10 +57,10 @@ const Input = <T,>({
         : type === 'text'
         ? 'w-40 px-1'
         : ''
-    }`;
+    } ${cssClasses ?? ''}`;
 
   /** The initial value of the input. */
-  const initialValue = 
+  const initialValue =
     value === null
       ? ''
       : value instanceof Date
@@ -71,10 +74,10 @@ const Input = <T,>({
   const titleAttribute = useMemo(
     () =>
       label
-      ? label[label.length - 1].match(/[\s:]/)
-        ? label.substring(0, label.length - 1)
-        : label
-      : 'input',
+        ? label[label.length - 1].match(/[\s:]/)
+          ? label.substring(0, label.length - 1)
+          : label
+        : 'input',
     [label]
   );
 
@@ -96,9 +99,9 @@ const Input = <T,>({
   };
 
   return (
-    <div className='text-left flex items-center'>
+    <div className='text-left flex items-center w-full'>
       <label
-        className={`${importanceStyle} w-fit flex flex-row flex-wrap gap-2 items-center`}
+        className={`${importanceStyle} w-full flex flex-row flex-wrap gap-2 items-center`}
       >
         {label || ''}
         {type === 'checkbox' ? (

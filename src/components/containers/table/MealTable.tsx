@@ -40,13 +40,13 @@ const MealTable = ({
   onCustomClick,
   newCustomMealID
 }: MealTableProps): JSX.Element => {
-  const headers = ['Location', 'Name', 'Price', buttonTitle ?? null];
+  const headers = ['Place', 'Name', 'Price', buttonTitle ?? null];
 
   /** State variable to store sort direction */
   const [sortDirection, setSortDirection] = useState(true);
 
   /** State variable to store sort column */
-  const [sortColumn, setSortColumn] = useState<SortBy | ''>('Location');
+  const [sortColumn, setSortColumn] = useState<SortBy | ''>('Place');
 
   /** State variable to store search key. */
   const [searchKey, setSearchKey] = useState<string | null>('');
@@ -72,7 +72,7 @@ const MealTable = ({
         : customFilteredMeals;
     return sortMeals(
       sortMeals(filteredMeals, 'Name', true),
-      sortColumn || 'Location',
+      sortColumn || 'Place',
       sortDirection
     );
   }, [data, sortColumn, sortDirection, searchKey, customOnly]);
@@ -91,16 +91,20 @@ const MealTable = ({
   return (
     <>
       <div
-        className={`${data.length === 0 ? 'hidden' : ''}
-        mt-4 mb-1 flex gap-10 items-center [&_input[type="text"]]:w-48`}
+        className={`${
+          data.length === 0 ? 'hidden' : ''
+        } mt-4 mb-1 flex gap-10 items-center w-full`}
       >
-        <Input
-          type='text'
-          value={searchKey}
-          setValue={setSearchKey}
-          validator={(s) => s}
-          placeholder='Search for meals...'
-        />
+        <div className='flex-grow'>
+          <Input
+            type='text'
+            value={searchKey}
+            setValue={setSearchKey}
+            validator={(s) => s}
+            placeholder='Search for meals...'
+            cssClasses='w-full border-[2px] border-messiah-blue rounded-lg p-2 px-3'
+          />
+        </div>
         <div className='text-sm'>
           <Input
             type='checkbox'
@@ -116,7 +120,7 @@ const MealTable = ({
           filteredAndSortedData.length > 0 ? '' : 'hidden'
         }`}
       >
-        <table className='w-full [&_tr>td:nth-child(-n+2)]:text-left [&_tr>td:nth-child(n+3)]:text-right relative overflow-hidden'>
+        <table className='w-full [&_tr>td:nth-child(-n+2)]:text-left [&_tr>td:nth-child(n+3)]:text-right relative'>
           {/* Table header */}
           <thead className='sticky top-0 bg-white drop-shadow-dark'>
             <tr>
