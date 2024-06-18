@@ -81,9 +81,9 @@ const MealTable = ({
           data.length > 0 ? '' : 'hidden'
         }`}
       >
-        <table className='w-full [&_tr>td:nth-child(-n+2)]:text-left [&_tr>td:nth-child(n+3)]:text-right'>
+        <table className='w-full [&_tr>td:nth-child(-n+2)]:text-left [&_tr>td:nth-child(n+3)]:text-right relative'>
           {/* Table header */}
-          <thead>
+          <thead className='sticky top-0 bg-white'>
             <tr>
               {headers.map((header, index) =>
                 header !== null ? (
