@@ -49,7 +49,9 @@ const MealTable = ({
   const [sortColumn, setSortColumn] = useState<SortBy | ''>('');
 
   /** State variable to store search key. */
-  const [searchKey, setSearchKey] = useState<string | null>('')
+  const [searchKey, setSearchKey] = useState<string | null>('');
+
+  const [customOnly, setCustomOnly] = useState(false);
 
   /** The notification message */ 
   const [message, setMessage] = useState({ text: '' });
@@ -59,16 +61,19 @@ const MealTable = ({
     setMessage({ text: createNotification(row.name) });
   };
 
-  /** The sorted meal list. */
+  /** The sorted and filtered meal list. */
   const filteredAndSortedData = useMemo(
-    () => sortMeals(
-      sortMeals(
-        searchKey !== '' ? filterMeals(data, searchKey as string) : data, 
-        'Name', 
-        true), 
-      sortColumn || 'Location', 
-      sortDirection),
-    [data, sortColumn, sortDirection, searchKey]
+    () => {
+      const customFilteredMeals = customOnly ? data.filter(meal => meal.isCustom) : data;
+      const filteredMeals = searchKey !== '' 
+        ? filterMeals(customFilteredMeals, searchKey as string) 
+        : customFilteredMeals;
+      return sortMeals(
+        sortMeals(filteredMeals, 'Name', true), 
+        sortColumn || 'Location', 
+        sortDirection);
+    },
+    [data, sortColumn, sortDirection, searchKey, customOnly]
   );
 
   /** Handles the header click which sorts the meal table. */
@@ -85,14 +90,26 @@ const MealTable = ({
 
   return (
     <>
-      <div className={`${data.length === 0 ? 'hidden' : ''} flex justify-center mt-4 mb-1`}>
+      <div 
+        className={`${data.length === 0 ? 'hidden' : ''}
+        mt-4 mb-1 flex gap-10 items-center [&_input[type="text"]]:w-48`}
+      >
         <Input 
           type='text' 
           value={searchKey}
           setValue={setSearchKey}
           validator={(s) => s}
           placeholder='Search for meals...'
-          />
+        />
+        <div className='text-sm'>
+          <Input 
+            type='checkbox'
+            label='Custom meals only'
+            value={customOnly}
+            setValue={setCustomOnly}
+            validator={(s) => s === 'true'} 
+          />  
+        </div>
       </div>
       <div
         className={`overflow-y-scroll flex-grow max-h-[400px] w-full ${

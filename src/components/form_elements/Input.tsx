@@ -96,7 +96,7 @@ const Input = <T,>({
   };
 
   return (
-    <div className='text-left'>
+    <div className='text-left flex items-center'>
       <label
         className={`${importanceStyle} w-fit flex flex-row flex-wrap gap-2 items-center`}
       >
