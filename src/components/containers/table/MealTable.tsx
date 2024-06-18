@@ -84,7 +84,7 @@ const MealTable = ({
   /** Handles the header click which sorts the meal table. */
   const handleSortClick = (header: SortBy) => {
     if (header === sortColumn) {
-      setSortColumn(sortDirection ? sortColumn : '');
+      setSortColumn(sortDirection ? sortColumn : 'Place');
       setSortDirection(!sortDirection);
     } else {
       setSortColumn(header);
