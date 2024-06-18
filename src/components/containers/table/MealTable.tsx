@@ -96,6 +96,7 @@ const MealTable = ({
           data.length === 0 ? 'hidden' : ''
         } mt-4 mb-1 flex gap-2 items-center w-full`}
       >
+        {/* Search bar */}
         <div className='flex-grow'>
           <Input
             type='text'
@@ -106,6 +107,7 @@ const MealTable = ({
             cssClasses='w-full border-[2px] border-messiah-blue rounded-lg p-2 px-3 h-full'
           />
         </div>
+        {/* Custom meal filtering toggle */}
         <div className='text-sm h-full bg-gray-300 rounded-lg flex flex-row'>
           <button
             onClick={() => setCustomOnly(false)}
