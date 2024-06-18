@@ -4,12 +4,19 @@ import {
   newImportanceIndex
 } from '../../../types/ImportanceIndex';
 
+enum SortState {
+  NONE,
+  ASCENDING,
+  DESCENDING,
+}
+
 interface TableCellProps {
   data: string | number;
   importance?: ImportanceIndex;
   isHeader?: boolean;
   isCustom?: boolean;
   onCustomClick?: () => void;
+  sortState?: SortState;
 }
 
 /**
@@ -25,7 +32,7 @@ interface TableCellProps {
 const TableCell = ({
   data,
   importance = newImportanceIndex(3),
-  isHeader = false,
+  sortState = SortState.NONE,
   isCustom = false,
   onCustomClick
 }: TableCellProps): JSX.Element => {
@@ -33,17 +40,17 @@ const TableCell = ({
 
   return (
     <td
-      className={`${importanceStyle} ${
-        isHeader ? 'border-b-4 border-b-messiah-blue' : ''
-      } p-2 text-center`}
+      className={`${importanceStyle} p-2 text-center`}
     >
-      {isCustom && onCustomClick !== undefined ? (
+      {onCustomClick !== undefined ? (
         <button
-          className='bg-transparent border-none font-inter underline text-messiah-blue hover:text-messiah-blue-hover p-0 m-0'
+          className={`${isCustom || sortState !== SortState.NONE ? 'text-messiah-blue' : ''} 
+          bg-transparent border-none font-inter underline 
+          hover:text-messiah-blue-hover p-0 m-0 text-nowrap`}
           type='button'
           onClick={onCustomClick}
         >
-          {data}
+          {data}{sortState === SortState.ASCENDING? ' ▲' : sortState === SortState.DESCENDING? ' ▼' : ''}
         </button>
       ) : (
         data

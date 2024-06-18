@@ -11,8 +11,6 @@ interface MealTableProps {
   data: Array<Meal>;
   buttonIcon?: JSX.Element;
   buttonTitle?: string;
-  sortedBy?: string;
-  sortDirection?: boolean;
   buttonOnClick: (meal: Meal) => void;
   createNotification: (name: string) => string;
   onCustomClick?: (data: Meal) => void;
@@ -25,8 +23,6 @@ interface MealTableProps {
  * @param {Array<Meal>} data - The array of meal objects to be displayed in the table
  * @param {string} buttonTitle - The title of the optional button column
  * @param {JSX.Element} buttonIcon - The icon for the optional button
- * @param {string} sortedBy - The column to sort the table by
- * @param {boolean} sortDirection - The direction to sort the table in, true = ascending, false = descending
  * @param {(Meal) => void} buttonOnClick - The click event handler for the optional button
  * @param {(string) => string} notificationMessage - A function that takes in the meal name and returns the notification message when the meal button is clicked.
  * @param {() => void} onCustomClick - The click event handler for editing a custom meal
@@ -37,19 +33,20 @@ const MealTable = ({
   data,
   buttonIcon,
   buttonTitle,
-  sortedBy,
   buttonOnClick,
   createNotification,
-  sortDirection,
   onCustomClick,
   newCustomMealID,
 }: MealTableProps): JSX.Element => {
   const headers = ['Location', 'Name', 'Price', buttonTitle ?? null];
-  if (sortedBy === undefined) {
-    sortedBy = headers[0] as string;
-  }
+  
+  /** State variable to store sort direction */ 
+  const [sortDirection, setSortDirection] = useState(true);
 
-  // The notification message
+  /** State variable to store sort column */ 
+  const [sortColumn, setSortColumn] = useState<SortBy | ''>('');
+
+  /** The notification message */ 
   const [message, setMessage] = useState({ text: '' });
 
   const handleButtonClick = (row: Meal) => {
@@ -57,11 +54,25 @@ const MealTable = ({
     setMessage({ text: createNotification(row.name) });
   };
 
-  // Sort data
+  /** The sorted meal list. */
   const sortedData = useMemo(
-    () => sortMeals(data, sortedBy as SortBy, sortDirection ?? false),
-    [data, sortedBy, sortDirection]
+    () => sortMeals(
+      sortMeals(data, 'Name', true), 
+      sortColumn || 'Location', 
+      sortDirection),
+    [data, sortColumn, sortDirection]
   );
+
+  /** Handles the header click which sorts the meal table. */
+  const handleSortClick = (header: SortBy) => {
+    if (header === sortColumn) {
+      setSortColumn(sortDirection ? sortColumn : '');
+      setSortDirection(!sortDirection);
+    } else {
+      setSortColumn(header);
+      setSortDirection(true);
+    }
+  }
 
   return (
     <>
@@ -79,8 +90,14 @@ const MealTable = ({
                   <TableCell
                     key={index}
                     data={header}
-                    importance={newImportanceIndex(header === sortedBy ? 5 : 4)}
+                    importance={newImportanceIndex(header === sortColumn ? 5 : 4)}
                     isHeader={true}
+                    onCustomClick={
+                      !['Add', 'Del'].includes(header)
+                      ? () => handleSortClick(header as SortBy)
+                      : undefined
+                    }
+                    sortState={header !== sortColumn ? 0 : sortDirection ? 1 : 2}
                   />
                 ) : (
                   <Fragment key={index}></Fragment>
