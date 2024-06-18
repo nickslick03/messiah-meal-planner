@@ -12,6 +12,7 @@ interface SelectProps {
   value: string;
   setSelected: React.Dispatch<React.SetStateAction<string>>;
   isTitle?: boolean;
+  cssClasses?: string;
 }
 
 /**
@@ -23,6 +24,8 @@ interface SelectProps {
  * @param {string} value The value of the selected column
  * @param {React.Dispatch<React.SetStateAction<string>>} setSelected A react state setter to track the selected option
  * @param {boolean} isTitle If true, gives the options tags the styling of a header tag and removes the border of the select tag
+ * @param {string} cssClasses The css classes to apply
+ * @returns {JSX.Element} The rendered select
  */
 const Select = ({
   label,
@@ -30,7 +33,8 @@ const Select = ({
   importance = newImportanceIndex(3),
   list = [],
   value,
-  setSelected
+  setSelected,
+  cssClasses
 }: SelectProps): JSX.Element => {
   const importanceStyle = IMPORTANCE_CLASSES[importance] ?? 'font-normal';
 
@@ -45,7 +49,7 @@ const Select = ({
         value={value}
         className={`${
           isTitle ? 'text-2xl' : ''
-        } border border-black rounded focus:outline focus:outline-2 focus:outline-messiah-blue`}
+        } border border-black rounded focus:outline focus:outline-2 focus:outline-messiah-blue ${cssClasses} p-1 relative`}
         onChange={(e) => setSelected(e.target.value)}
       >
         {list.map((opt, i) => (

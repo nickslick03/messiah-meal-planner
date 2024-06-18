@@ -8,6 +8,7 @@ import sortMeals from '../../../lib/sortMeals';
 import SortBy from '../../../types/SortBy';
 import Input from '../../form_elements/Input';
 import { filterMeals } from '../../../lib/filterMeals';
+import { FaListUl, FaUser } from 'react-icons/fa';
 
 interface MealTableProps {
   data: Array<Meal>;
@@ -93,7 +94,7 @@ const MealTable = ({
       <div
         className={`${
           data.length === 0 ? 'hidden' : ''
-        } mt-4 mb-1 flex gap-10 items-center w-full`}
+        } mt-4 mb-1 flex gap-2 items-center w-full`}
       >
         <div className='flex-grow'>
           <Input
@@ -102,17 +103,28 @@ const MealTable = ({
             setValue={setSearchKey}
             validator={(s) => s}
             placeholder='Search for meals...'
-            cssClasses='w-full border-[2px] border-messiah-blue rounded-lg p-2 px-3'
+            cssClasses='w-full border-[2px] border-messiah-blue rounded-lg p-2 px-3 h-full'
           />
         </div>
-        <div className='text-sm'>
-          <Input
-            type='checkbox'
-            label='Custom meals only'
-            value={customOnly}
-            setValue={setCustomOnly}
-            validator={(s) => s === 'true'}
-          />
+        <div className='text-sm h-full bg-gray-300 rounded-lg flex flex-row'>
+          <button
+            onClick={() => setCustomOnly(false)}
+            className={`flex flex-row items-center justify-center h-full rounded-lg p-[5px] sm:hover:bg-messiah-light-blue-hover sm:active:bg-messiah-light-blue-active ${
+              customOnly ? '' : 'bg-messiah-light-blue'
+            }`}
+          >
+            <FaListUl className='p-2' size={30} />
+            <span className={'hidden sm:inline'}>All&nbsp;</span>
+          </button>
+          <button
+            onClick={() => setCustomOnly(true)}
+            className={`flex flex-row items-center justify-center h-full rounded-lg p-[5px] sm:hover:bg-messiah-light-blue-hover sm:active:bg-messiah-light-blue-active ${
+              customOnly ? 'bg-messiah-light-blue' : ''
+            }`}
+          >
+            <FaUser className='p-2' size={30} />
+            <span className={'hidden sm:inline'}>Custom Only&nbsp;</span>
+          </button>
         </div>
       </div>
       <div
