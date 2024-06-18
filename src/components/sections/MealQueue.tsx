@@ -131,6 +131,7 @@ const MealQueue = () => {
       addOrRemove='Del'
       buttonOnClick={removeMealFromQueue}
       createNotification={(name) => `Removed ${name} from meal queue`}
+      searchable={false}
     >
       <div className='mb-4' />
       <p className='mb-2'>Add these meals to:</p>

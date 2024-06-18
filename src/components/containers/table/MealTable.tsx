@@ -18,6 +18,7 @@ interface MealTableProps {
   createNotification: (name: string) => string;
   onCustomClick?: (data: Meal) => void;
   newCustomMealID?: string;
+  searchable?: boolean;
 }
 
 /**
@@ -30,6 +31,7 @@ interface MealTableProps {
  * @param {(string) => string} notificationMessage - A function that takes in the meal name and returns the notification message when the meal button is clicked.
  * @param {() => void} onCustomClick - The click event handler for editing a custom meal
  * @param {string | undefined} newCustomMealID - The ID of the newly added custom meal to scroll to
+ * @param {boolean} searchable - Whether the table should be searchable
  * @return {JSX.Element} The rendered table component
  */
 const MealTable = ({
@@ -39,7 +41,8 @@ const MealTable = ({
   buttonOnClick,
   createNotification,
   onCustomClick,
-  newCustomMealID
+  newCustomMealID,
+  searchable = true
 }: MealTableProps): JSX.Element => {
   const headers = ['Place', 'Name', 'Price', buttonTitle ?? null];
 
@@ -96,37 +99,43 @@ const MealTable = ({
           data.length === 0 ? 'hidden' : ''
         } mt-4 mb-1 flex gap-2 items-center w-full`}
       >
-        {/* Search bar */}
-        <div className='flex-grow'>
-          <Input
-            type='text'
-            value={searchKey}
-            setValue={setSearchKey}
-            validator={(s) => s}
-            placeholder='Search for meals...'
-            cssClasses='w-full border-[2px] border-messiah-blue rounded-lg p-2 px-3 h-full'
-          />
-        </div>
-        {/* Custom meal filtering toggle */}
-        <div className='text-sm h-full bg-gray-300 rounded-lg flex flex-row'>
-          <button
-            onClick={() => setCustomOnly(false)}
-            className={`flex flex-row items-center justify-center h-full rounded-lg p-[5px] sm:hover:bg-messiah-light-blue-hover sm:active:bg-messiah-light-blue-active ${
-              customOnly ? '' : 'bg-messiah-light-blue'
-            }`}
-          >
-            <FaListUl className='p-2' size={30} />
-            <span className={'hidden sm:inline'}>All&nbsp;</span>
-          </button>
-          <button
-            onClick={() => setCustomOnly(true)}
-            className={`flex flex-row items-center justify-center h-full rounded-lg p-[5px] sm:hover:bg-messiah-light-blue-hover sm:active:bg-messiah-light-blue-active ${
-              customOnly ? 'bg-messiah-light-blue' : ''
-            }`}
-          >
-            <FaUser className='p-2' size={30} />
-            <span className={'hidden sm:inline'}>Custom Only&nbsp;</span>
-          </button>
+        <div
+          className={
+            searchable ? 'w-full flex flex-row gap-2 items-center' : 'hidden'
+          }
+        >
+          {/* Search bar */}
+          <div className='flex-grow'>
+            <Input
+              type='text'
+              value={searchKey}
+              setValue={setSearchKey}
+              validator={(s) => s}
+              placeholder='Search for meals...'
+              cssClasses='w-full border-[2px] border-messiah-blue rounded-lg p-2 px-3 h-full'
+            />
+          </div>
+          {/* Custom meal filtering toggle */}
+          <div className='text-sm h-full bg-gray-300 rounded-lg flex flex-row'>
+            <button
+              onClick={() => setCustomOnly(false)}
+              className={`flex flex-row items-center justify-center h-full rounded-lg p-[5px] sm:hover:bg-messiah-light-blue-hover sm:active:bg-messiah-light-blue-active ${
+                customOnly ? '' : 'bg-messiah-light-blue'
+              }`}
+            >
+              <FaListUl className='p-2' size={30} />
+              <span className={'hidden sm:inline'}>All&nbsp;</span>
+            </button>
+            <button
+              onClick={() => setCustomOnly(true)}
+              className={`flex flex-row items-center justify-center h-full rounded-lg p-[5px] sm:hover:bg-messiah-light-blue-hover sm:active:bg-messiah-light-blue-active ${
+                customOnly ? 'bg-messiah-light-blue' : ''
+              }`}
+            >
+              <FaUser className='p-2' size={30} />
+              <span className={'hidden sm:inline'}>Custom Only&nbsp;</span>
+            </button>
+          </div>
         </div>
       </div>
       <div

@@ -15,8 +15,8 @@ interface MealContainerProps {
   createNotification: (name: string) => string;
   onCustomClick?: (data: Meal) => void;
   newCustomMealID?: string;
+  searchable?: boolean;
 }
-
 
 /**
  * A Container for sections with a meal table. Additional children of the section go under the meal table.
@@ -29,6 +29,7 @@ interface MealContainerProps {
  * @param {(string) => string} notificationMessage - A function that takes in the meal name and returns the notification message when the meal button is clicked.
  * @param {() => void} onCustomClick - The click event handler for editing a custom meal
  * @param {string | undefined} newCustomMealID - The ID of the newly added custom meal to scroll to
+ * @param {boolean} searchable - Whether the table should be searchable
  * @return {JSX.Element} The Available Meals section component.
  */
 const MealContainer = ({
@@ -40,9 +41,9 @@ const MealContainer = ({
   buttonOnClick,
   createNotification,
   onCustomClick,
-  newCustomMealID
+  newCustomMealID,
+  searchable = true
 }: MealContainerProps) => {
-
   return (
     <SectionContainer title={title}>
       {daySelector ?? <></>}
@@ -54,6 +55,7 @@ const MealContainer = ({
         createNotification={createNotification}
         onCustomClick={onCustomClick}
         newCustomMealID={newCustomMealID}
+        searchable={searchable}
       />
       {children}
     </SectionContainer>

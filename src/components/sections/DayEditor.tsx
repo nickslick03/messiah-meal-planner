@@ -115,6 +115,7 @@ const DayEditor = () => {
       meals={dayMealList}
       buttonOnClick={removeMeal}
       createNotification={(name) => `Removed ${name} from ${weekday}`}
+      searchable={false}
     >
       <Divider />
       <DotLeader
