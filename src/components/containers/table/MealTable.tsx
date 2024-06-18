@@ -38,22 +38,22 @@ const MealTable = ({
   buttonOnClick,
   createNotification,
   onCustomClick,
-  newCustomMealID,
+  newCustomMealID
 }: MealTableProps): JSX.Element => {
   const headers = ['Location', 'Name', 'Price', buttonTitle ?? null];
-  
-  /** State variable to store sort direction */ 
+
+  /** State variable to store sort direction */
   const [sortDirection, setSortDirection] = useState(true);
 
-  /** State variable to store sort column */ 
-  const [sortColumn, setSortColumn] = useState<SortBy | ''>('');
+  /** State variable to store sort column */
+  const [sortColumn, setSortColumn] = useState<SortBy | ''>('Location');
 
   /** State variable to store search key. */
   const [searchKey, setSearchKey] = useState<string | null>('');
 
   const [customOnly, setCustomOnly] = useState(false);
 
-  /** The notification message */ 
+  /** The notification message */
   const [message, setMessage] = useState({ text: '' });
 
   const handleButtonClick = (row: Meal) => {
@@ -62,19 +62,20 @@ const MealTable = ({
   };
 
   /** The sorted and filtered meal list. */
-  const filteredAndSortedData = useMemo(
-    () => {
-      const customFilteredMeals = customOnly ? data.filter(meal => meal.isCustom) : data;
-      const filteredMeals = searchKey !== '' 
-        ? filterMeals(customFilteredMeals, searchKey as string) 
+  const filteredAndSortedData = useMemo(() => {
+    const customFilteredMeals = customOnly
+      ? data.filter((meal) => meal.isCustom)
+      : data;
+    const filteredMeals =
+      searchKey !== ''
+        ? filterMeals(customFilteredMeals, searchKey as string)
         : customFilteredMeals;
-      return sortMeals(
-        sortMeals(filteredMeals, 'Name', true), 
-        sortColumn || 'Location', 
-        sortDirection);
-    },
-    [data, sortColumn, sortDirection, searchKey, customOnly]
-  );
+    return sortMeals(
+      sortMeals(filteredMeals, 'Name', true),
+      sortColumn || 'Location',
+      sortDirection
+    );
+  }, [data, sortColumn, sortDirection, searchKey, customOnly]);
 
   /** Handles the header click which sorts the meal table. */
   const handleSortClick = (header: SortBy) => {
@@ -85,30 +86,29 @@ const MealTable = ({
       setSortColumn(header);
       setSortDirection(true);
     }
-  }
-
+  };
 
   return (
     <>
-      <div 
+      <div
         className={`${data.length === 0 ? 'hidden' : ''}
         mt-4 mb-1 flex gap-10 items-center [&_input[type="text"]]:w-48`}
       >
-        <Input 
-          type='text' 
+        <Input
+          type='text'
           value={searchKey}
           setValue={setSearchKey}
           validator={(s) => s}
           placeholder='Search for meals...'
         />
         <div className='text-sm'>
-          <Input 
+          <Input
             type='checkbox'
             label='Custom meals only'
             value={customOnly}
             setValue={setCustomOnly}
-            validator={(s) => s === 'true'} 
-          />  
+            validator={(s) => s === 'true'}
+          />
         </div>
       </div>
       <div
@@ -116,23 +116,27 @@ const MealTable = ({
           filteredAndSortedData.length > 0 ? '' : 'hidden'
         }`}
       >
-        <table className='w-full [&_tr>td:nth-child(-n+2)]:text-left [&_tr>td:nth-child(n+3)]:text-right relative'>
+        <table className='w-full [&_tr>td:nth-child(-n+2)]:text-left [&_tr>td:nth-child(n+3)]:text-right relative overflow-hidden'>
           {/* Table header */}
-          <thead className='sticky top-0 bg-white'>
+          <thead className='sticky top-0 bg-white drop-shadow-dark'>
             <tr>
               {headers.map((header, index) =>
                 header !== null ? (
                   <TableCell
                     key={index}
                     data={header}
-                    importance={newImportanceIndex(header === sortColumn ? 5 : 4)}
+                    importance={newImportanceIndex(
+                      header === sortColumn ? 5 : 4
+                    )}
                     isHeader={true}
                     onCustomClick={
                       !['Add', 'Del'].includes(header)
-                      ? () => handleSortClick(header as SortBy)
-                      : undefined
+                        ? () => handleSortClick(header as SortBy)
+                        : undefined
                     }
-                    sortState={header !== sortColumn ? 0 : sortDirection ? 1 : 2}
+                    sortState={
+                      header !== sortColumn ? 0 : sortDirection ? 1 : 2
+                    }
                   />
                 ) : (
                   <Fragment key={index}></Fragment>
@@ -155,8 +159,12 @@ const MealTable = ({
           </tbody>
         </table>
       </div>
-      <p className={`p-6 text-gray-400 ${filteredAndSortedData.length > 0 ? 'hidden' : ''}`}>
-        {data.length === 0 
+      <p
+        className={`p-6 text-gray-400 ${
+          filteredAndSortedData.length > 0 ? 'hidden' : ''
+        }`}
+      >
+        {data.length === 0
           ? 'No meals to display.'
           : 'Your search returned no results.'}
       </p>

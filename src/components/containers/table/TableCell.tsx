@@ -3,11 +3,12 @@ import {
   ImportanceIndex,
   newImportanceIndex
 } from '../../../types/ImportanceIndex';
+import { MdArrowDropDown, MdArrowDropUp } from 'react-icons/md';
 
 enum SortState {
   NONE,
   ASCENDING,
-  DESCENDING,
+  DESCENDING
 }
 
 interface TableCellProps {
@@ -27,6 +28,7 @@ interface TableCellProps {
  * @param {boolean} isHeader - Whether the table cell is a header
  * @param {boolean} isCustom - Whether the table cell represents a custom meal
  * @param {() => void} onCustomClick - The click event handler for clicking on a custom meal
+ * @param {SortState} sortState - The sort state of the table cell
  * @returns {JSX.Element} The rendered table cell
  */
 const TableCell = ({
@@ -39,18 +41,25 @@ const TableCell = ({
   const importanceStyle = IMPORTANCE_CLASSES[importance] ?? 'font-normal';
 
   return (
-    <td
-      className={`${importanceStyle} p-2 text-center`}
-    >
+    <td className={`${importanceStyle} p-2 text-center`}>
       {onCustomClick !== undefined ? (
         <button
-          className={`${isCustom || sortState !== SortState.NONE ? 'text-messiah-blue' : ''} 
+          className={`${
+            isCustom || sortState !== SortState.NONE ? 'text-messiah-blue' : ''
+          } 
           bg-transparent border-none font-inter underline 
-          hover:text-messiah-blue-hover p-0 m-0 text-nowrap`}
+          hover:text-messiah-blue-hover p-0 m-0 text-nowrap inline-flex`}
           type='button'
           onClick={onCustomClick}
         >
-          {data}{sortState === SortState.ASCENDING? ' ▲' : sortState === SortState.DESCENDING? ' ▼' : ''}
+          {data}
+          {sortState === SortState.ASCENDING ? (
+            <MdArrowDropUp size={25} />
+          ) : sortState === SortState.DESCENDING ? (
+            <MdArrowDropDown size={25} />
+          ) : (
+            ''
+          )}
         </button>
       ) : (
         data
