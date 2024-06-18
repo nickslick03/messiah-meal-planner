@@ -6,6 +6,8 @@ import Notification from '../../other/Notification';
 import { Fragment, useMemo, useState } from 'react';
 import sortMeals from '../../../lib/sortMeals';
 import SortBy from '../../../types/SortBy';
+import Input from '../../form_elements/Input';
+import { filterMeals } from '../../../lib/filterMeals';
 
 interface MealTableProps {
   data: Array<Meal>;
@@ -46,6 +48,9 @@ const MealTable = ({
   /** State variable to store sort column */ 
   const [sortColumn, setSortColumn] = useState<SortBy | ''>('');
 
+  /** State variable to store search key. */
+  const [searchKey, setSearchKey] = useState<string | null>('')
+
   /** The notification message */ 
   const [message, setMessage] = useState({ text: '' });
 
@@ -55,12 +60,15 @@ const MealTable = ({
   };
 
   /** The sorted meal list. */
-  const sortedData = useMemo(
+  const filteredAndSortedData = useMemo(
     () => sortMeals(
-      sortMeals(data, 'Name', true), 
+      sortMeals(
+        searchKey !== '' ? filterMeals(data, searchKey as string) : data, 
+        'Name', 
+        true), 
       sortColumn || 'Location', 
       sortDirection),
-    [data, sortColumn, sortDirection]
+    [data, sortColumn, sortDirection, searchKey]
   );
 
   /** Handles the header click which sorts the meal table. */
@@ -74,11 +82,21 @@ const MealTable = ({
     }
   }
 
+
   return (
     <>
+      <div className={`${data.length === 0 ? 'hidden' : ''} flex justify-center mt-4 mb-1`}>
+        <Input 
+          type='text' 
+          value={searchKey}
+          setValue={setSearchKey}
+          validator={(s) => s}
+          placeholder='Search for meals...'
+          />
+      </div>
       <div
         className={`overflow-y-scroll flex-grow max-h-[400px] w-full ${
-          data.length > 0 ? '' : 'hidden'
+          filteredAndSortedData.length > 0 ? '' : 'hidden'
         }`}
       >
         <table className='w-full [&_tr>td:nth-child(-n+2)]:text-left [&_tr>td:nth-child(n+3)]:text-right relative'>
@@ -107,7 +125,7 @@ const MealTable = ({
           </thead>
           {/* Table body */}
           <tbody>
-            {sortedData.map((row, index) => (
+            {filteredAndSortedData.map((row, index) => (
               <TableRow
                 key={index}
                 data={row}
@@ -120,8 +138,10 @@ const MealTable = ({
           </tbody>
         </table>
       </div>
-      <p className={`p-6 text-gray-400 ${data.length > 0 ? 'hidden' : ''}`}>
-        No meals to display.
+      <p className={`p-6 text-gray-400 ${filteredAndSortedData.length > 0 ? 'hidden' : ''}`}>
+        {data.length === 0 
+          ? 'No meals to display.'
+          : 'Your search returned no results.'}
       </p>
       <Notification message={message} />
     </>
