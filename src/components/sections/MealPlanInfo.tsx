@@ -8,7 +8,7 @@ import {
   MealPlanCtx,
   StartDateCtx
 } from '../../static/context';
-import { dateInputToDate } from '../../lib/dateCalcuation';
+import { dateInputToDate, getDaysBetween } from '../../lib/dateCalcuation';
 
 /**
  * Renders a component for displaying and managing meal plan information.
@@ -28,7 +28,13 @@ const MealPlanInfo = ({
   const balance = useContext(BalanceCtx);
 
   useEffect(() => {
-    if (startDate.value !== null && endDate.value !== null && balance.value !== null) {
+    if (
+      startDate.value !== null &&
+      endDate.value !== null &&
+      balance.value !== null &&
+      mealPlan.value !== null &&
+      isBreak.value !== null
+    ) {
       onEnterDetails(true);
     } else {
       onEnterDetails(false);
@@ -46,8 +52,8 @@ const MealPlanInfo = ({
           validator={(str) =>
             !isNaN(Date.parse(str)) &&
             (endDate.value === null || +dateInputToDate(str) <= +endDate.value)
-            ? dateInputToDate(str)
-            : null
+              ? dateInputToDate(str)
+              : null
           }
           invalidMessage={'Start date must be before end date.'}
         />
@@ -55,18 +61,17 @@ const MealPlanInfo = ({
           label={'End Date:'}
           type={'date'}
           value={endDate.value}
-          setValue={
-            endDate.setValue
-          }
+          setValue={endDate.setValue}
           validator={(str) =>
             !isNaN(Date.parse(str)) &&
-            (startDate.value === null || +dateInputToDate(str) >= +startDate.value)
-            ? dateInputToDate(str)
-            : null
+            (startDate.value === null ||
+              +dateInputToDate(str) >= +startDate.value)
+              ? dateInputToDate(str)
+              : null
           }
           invalidMessage={'End date must be after start date.'}
         />
-        
+
         <Input
           label={'Dining Dollars Discount:'}
           type={'checkbox'}
@@ -79,7 +84,20 @@ const MealPlanInfo = ({
           type={'checkbox'}
           value={isBreak.value}
           setValue={isBreak.setValue}
-          validator={(str) => str === 'true'}
+          validator={(str) =>
+            str === 'true' &&
+            getDaysBetween(
+              startDate.value ?? new Date(),
+              endDate.value ?? new Date()
+            ) >= 7
+              ? true
+              : str === 'false'
+              ? false
+              : null
+          }
+          invalidMessage={
+            "You can't take a 1-week break if your meal plan is less than 1 week long."
+          }
         />
         <Input
           label={'Starting Balance: $'}
@@ -87,9 +105,9 @@ const MealPlanInfo = ({
           value={balance.value}
           setValue={balance.setValue}
           validator={(str) =>
-            (!isNaN(parseFloat(str)) && parseFloat(str) > 0)
-            ? parseFloat(str)
-            : null
+            !isNaN(parseFloat(str)) && parseFloat(str) > 0
+              ? parseFloat(str)
+              : null
           }
           invalidMessage={'Starting balance must be a positive number.'}
         />
