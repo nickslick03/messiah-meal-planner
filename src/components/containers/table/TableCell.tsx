@@ -3,6 +3,13 @@ import {
   ImportanceIndex,
   newImportanceIndex
 } from '../../../types/ImportanceIndex';
+import { MdArrowDropDown, MdArrowDropUp } from 'react-icons/md';
+
+enum SortState {
+  NONE,
+  ASCENDING,
+  DESCENDING
+}
 
 interface TableCellProps {
   data: string | number;
@@ -10,6 +17,7 @@ interface TableCellProps {
   isHeader?: boolean;
   isCustom?: boolean;
   onCustomClick?: () => void;
+  sortState?: SortState;
 }
 
 /**
@@ -20,30 +28,38 @@ interface TableCellProps {
  * @param {boolean} isHeader - Whether the table cell is a header
  * @param {boolean} isCustom - Whether the table cell represents a custom meal
  * @param {() => void} onCustomClick - The click event handler for clicking on a custom meal
+ * @param {SortState} sortState - The sort state of the table cell
  * @returns {JSX.Element} The rendered table cell
  */
 const TableCell = ({
   data,
   importance = newImportanceIndex(3),
-  isHeader = false,
+  sortState = SortState.NONE,
   isCustom = false,
   onCustomClick
 }: TableCellProps): JSX.Element => {
   const importanceStyle = IMPORTANCE_CLASSES[importance] ?? 'font-normal';
 
   return (
-    <td
-      className={`${importanceStyle} ${
-        isHeader ? 'border-b-4 border-b-messiah-blue' : ''
-      } p-2 text-center`}
-    >
-      {isCustom && onCustomClick !== undefined ? (
+    <td className={`${importanceStyle} p-2 text-center`}>
+      {onCustomClick !== undefined ? (
         <button
-          className='bg-transparent border-none font-inter underline text-messiah-blue hover:text-messiah-blue-hover p-0 m-0'
+          className={`${
+            isCustom || sortState !== SortState.NONE ? 'text-messiah-blue' : ''
+          } 
+          bg-transparent border-none font-inter underline 
+          hover:text-messiah-blue-hover p-0 m-0 text-nowrap inline-flex`}
           type='button'
           onClick={onCustomClick}
         >
           {data}
+          {sortState === SortState.ASCENDING ? (
+            <MdArrowDropUp size={25} />
+          ) : sortState === SortState.DESCENDING ? (
+            <MdArrowDropDown size={25} />
+          ) : (
+            ''
+          )}
         </button>
       ) : (
         data

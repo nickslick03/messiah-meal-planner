@@ -5,7 +5,7 @@ import SortBy from '../types/SortBy';
  * Sorts an array of Meal objects based on the specified criteria.
  *
  * @param {Meal[]} data - The array of Meal objects to be sorted.
- * @param {string} sortedBy - The field to sort the Meal objects by. Possible values are 'Location', 'Name', or 'Price'.
+ * @param {string} sortedBy - The field to sort the Meal objects by. Possible values are 'Place', 'Name', or 'Price'.
  * @param {boolean} sortDirection - The direction of the sorting. If true, the array will be sorted in ascending order; otherwise, it will be sorted in descending order.
  * @returns {Meal[]} - The sorted array of Meal objects.
  */
@@ -16,7 +16,7 @@ const sortMeals = (
 ): Meal[] =>
   data.sort((a, b) => {
     switch (sortedBy) {
-      case 'Location':
+      case 'Place':
         return sortDirection
           ? a.location.localeCompare(b.location)
           : b.location.localeCompare(a.location);
