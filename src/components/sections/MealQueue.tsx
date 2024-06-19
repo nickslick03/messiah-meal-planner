@@ -10,7 +10,7 @@ import {
 } from '../../types/userSelectedMealsObject';
 import { v4 as uuid } from 'uuid';
 import Notification from '../other/Notification';
-import meals from '../../static/mealsDatabase';
+import meals, { locationClosures } from '../../static/mealsDatabase';
 import { CustomMealsCtx } from '../../static/context';
 import DaySelector from '../form_elements/DaySelector';
 import mapUserMeals from '../../lib/mapUserMeals';
@@ -113,10 +113,22 @@ const MealQueue = () => {
     []
   );
 
+  /** List of locations where a day is selected with a meal that comes from a closed location. */
+  const offendedLocations = useMemo(
+    () => {
+      const userLocations = new Set(mealQueueValue.map((m) => m.location));
+      return (Object.getOwnPropertyNames(locationClosures) as (keyof typeof locationClosures)[])
+      .filter((location) =>
+         userLocations.has(location) 
+        && locationClosures[location].some(n => selectedDays.includes(n)));
+    },
+    [mealQueueValue, selectedDays]
+  );
+
   /** Indicates whether the add meal button is disabled. */
   const isAddMealsButtonDisabled = useMemo(
-    () => mealQueue.value.length == 0 || selectedDays.length == 0,
-    [mealQueue, selectedDays]
+    () => mealQueue.value.length == 0 || selectedDays.length == 0 || offendedLocations.length > 0,
+    [mealQueue.value.length, offendedLocations.length, selectedDays.length]
   );
   /** Indicates whether the clear meal button is disabled. */
   const isClearMealsButtonDisabled = useMemo(
@@ -148,6 +160,12 @@ const MealQueue = () => {
           square={true}
         />
       </div>
+      {offendedLocations.map((location, i) => 
+      <p
+        className={`text-messiah-red text-sm mt-2`} key={i}
+      >
+        {`${location} is closed on days ${locationClosures[location].map(n => WEEKDAYS[n]).join(', ')}`}
+      </p>)}
       <div className='flex gap-2 mt-4'>
         <Button
           title='Add Meals to Selected Days'
