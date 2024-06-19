@@ -50,7 +50,7 @@ const MealTable = ({
   const [sortDirection, setSortDirection] = useState(true);
 
   /** State variable to store sort column */
-  const [sortColumn, setSortColumn] = useState<SortBy | ''>('Place');
+  const [sortColumn, setSortColumn] = useState<SortBy>('Place');
 
   /** State variable to store search key. */
   const [searchKey, setSearchKey] = useState<string | null>('');
@@ -83,13 +83,8 @@ const MealTable = ({
 
   /** Handles the header click which sorts the meal table. */
   const handleSortClick = (header: SortBy) => {
-    if (header === sortColumn) {
-      setSortColumn(sortDirection ? sortColumn : 'Place');
-      setSortDirection(!sortDirection);
-    } else {
       setSortColumn(header);
-      setSortDirection(true);
-    }
+      setSortDirection(sortColumn === header ? !sortDirection : true);
   };
 
   return (
