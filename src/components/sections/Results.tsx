@@ -207,11 +207,11 @@ const Results = ({
 
   return (
     <SectionContainer title='Results'>
-      <div className='flex flex-row flex-wrap w-full justify-center my-4'>
-        <div className='relative my-4 max-w-fullmin-h-[250px] sm:min-h-[300px] flex-1'>
+      <div className='flex flex-row flex-wrap w-full justify-evenly my-4'>
+        <div className='relative my-4 w-full lg:w-[45%] min-h-[250px] sm:min-h-[300px]'>
           <Bar data={barChartData} options={barChartOptions} />
         </div>
-        <div className='relative my-4 max-w-full min-h-[250px] sm:min-h-[300px] flex-1'>
+        <div className='relative my-4 w-full lg:w-[45%] min-h-[250px] sm:min-h-[300px]'>
           <Pie data={pieChartData} options={pieChartOptions} />
         </div>
       </div>
