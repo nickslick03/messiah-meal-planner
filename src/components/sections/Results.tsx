@@ -5,7 +5,8 @@ import {
   BalanceCtx,
   MealPlanCtx,
   UserSelectedMealsCtx,
-  CustomMealsCtx
+  CustomMealsCtx,
+  IsBreakCtx
 } from '../../static/context';
 import formatCurrency from '../../lib/formatCurrency';
 import { getMealTotal } from '../../lib/calculationEngine';
@@ -21,6 +22,7 @@ interface ResultsProps {
   isUnderBalance: boolean;
   difference: number;
   grandTotal: number;
+  dayWhenRunOut: Date;
 }
 
 /** The background color for charts. */
@@ -46,13 +48,19 @@ const borderColor = [
 /**
  * Renders the results of the meal planning.
  */
-const Results = ({ isUnderBalance, difference, grandTotal }: ResultsProps) => {
+const Results = ({
+  isUnderBalance,
+  difference,
+  grandTotal,
+  dayWhenRunOut
+}: ResultsProps) => {
   // Load all necessary contexts
   const balance = useContext(BalanceCtx);
   const userMeals = useContext(UserSelectedMealsCtx);
   const isDiscount = useContext(MealPlanCtx);
   const customMeals = useContext(CustomMealsCtx);
   const userSelectedMeals = useContext(UserSelectedMealsCtx);
+  const isBreak = useContext(IsBreakCtx);
 
   /** The meal total for one week. */
   const weekTotal = useMemo(
@@ -199,16 +207,12 @@ const Results = ({ isUnderBalance, difference, grandTotal }: ResultsProps) => {
 
   return (
     <SectionContainer title='Results'>
-      <div className='flex flex-row flex-wrap w-full justify-center'>
-        <div className='flex flex-col items-center my-4 flex-1'>
-          <div className='relative my-4 w-full min-h-[250px] sm:min-h-[300px]'>
-            <Bar data={barChartData} options={barChartOptions} />
-          </div>
+      <div className='flex flex-row flex-wrap w-full justify-center my-4'>
+        <div className='relative my-4 max-w-fullmin-h-[250px] sm:min-h-[300px] flex-1'>
+          <Bar data={barChartData} options={barChartOptions} />
         </div>
-        <div className='flex flex-col items-center my-4 flex-1'>
-          <div className='relative w-full min-h-[250px] sm:min-h-[300px]'>
-            <Pie data={pieChartData} options={pieChartOptions} />
-          </div>
+        <div className='relative my-4 max-w-full min-h-[250px] sm:min-h-[300px] flex-1'>
+          <Pie data={pieChartData} options={pieChartOptions} />
         </div>
       </div>
       <Divider />
@@ -229,7 +233,23 @@ const Results = ({ isUnderBalance, difference, grandTotal }: ResultsProps) => {
             value: `${formatCurrency(grandTotal)}`,
             resultsStyle: 'text-messiah-red'
           }
-        ]}
+        ].concat(
+          !isUnderBalance
+            ? [
+                {
+                  title:
+                    'Date When Money Runs Out' +
+                    (isBreak.value
+                      ? ' (Assuming Your Break Is Over Before This)'
+                      : ''),
+                  value: `${
+                    dayWhenRunOut.getMonth() + 1
+                  }/${dayWhenRunOut.getDate()}/${dayWhenRunOut.getFullYear()}`,
+                  resultsStyle: 'text-black'
+                }
+              ]
+            : []
+        )}
       />
       <div
         className={`${

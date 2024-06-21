@@ -24,7 +24,7 @@ import {
 } from './types/userSelectedMealsObject';
 import usePersistentState from './hooks/usePersistentState';
 import meals from './static/mealsDatabase';
-import { getMealTotal } from './lib/calculationEngine';
+import { getMealTotal, calculateDateWhenRunOut } from './lib/calculationEngine';
 import { getWeekdaysBetween } from './lib/dateCalcuation';
 
 function App() {
@@ -127,6 +127,28 @@ function App() {
     [balance, grandTotal]
   );
 
+  const dayWhenRunOut = useMemo(
+    () =>
+      calculateDateWhenRunOut(
+        userSelectedMeals,
+        mealPlan ?? false,
+        [...meals, ...customMeals],
+        startDate ?? new Date(),
+        endDate ?? new Date(),
+        balance ?? 0,
+        isBreak ?? false
+      ),
+    [
+      userSelectedMeals,
+      mealPlan,
+      customMeals,
+      startDate,
+      endDate,
+      balance,
+      isBreak
+    ]
+  );
+
   return (
     <IsBreakCtx.Provider value={{ value: isBreak, setValue: setIsBreak }}>
       <MealPlanCtx.Provider value={{ value: mealPlan, setValue: setMealPlan }}>
@@ -165,6 +187,7 @@ function App() {
                             grandTotal={grandTotal}
                             isUnderBalance={isUnderBalance}
                             difference={difference}
+                            dayWhenRunOut={dayWhenRunOut}
                           />
                           <ResultsBar
                             grandTotal={grandTotal}
