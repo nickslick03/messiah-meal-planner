@@ -20,6 +20,7 @@ import DaySelector from '../form_elements/DaySelector';
 import { Weekday } from '../../types/userSelectedMealsObject';
 import mapUserMeals from '../../lib/mapUserMeals';
 import dereferenceMeal from '../../lib/dereferenceMeal';
+import tutorial from '../../static/tutorial';
 
 /**
  * Renders a meal table for meals added to given days an an option to remove meals from that day.
@@ -65,7 +66,7 @@ const DayEditor = () => {
   const discount = useContext(MealPlanCtx);
 
   const mealDayTotal = useMemo(
-    () => getMealDayTotal(dayMealList, 1, discount.value),
+    () => getMealDayTotal(dayMealList, 1, discount.value ?? false),
     [dayMealList, discount.value]
   );
 
@@ -73,7 +74,11 @@ const DayEditor = () => {
   const numOfWeekdays = useMemo(
     () =>
       startDate.value !== null && endDate.value !== null
-        ? getWeekdaysBetween(startDate.value, endDate.value, weekOff.value)
+        ? getWeekdaysBetween(
+            startDate.value,
+            endDate.value,
+            weekOff.value ?? false
+          )
         : Array(7).fill(0),
     [startDate, endDate, weekOff]
   );
@@ -116,6 +121,7 @@ const DayEditor = () => {
       buttonOnClick={removeMeal}
       createNotification={(name) => `Removed ${name} from ${weekday}`}
       searchable={false}
+      tutorial={tutorial.dayEditor}
     >
       <Divider />
       <DotLeader

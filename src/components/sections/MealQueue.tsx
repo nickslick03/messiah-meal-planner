@@ -15,6 +15,7 @@ import { CustomMealsCtx } from '../../static/context';
 import DaySelector from '../form_elements/DaySelector';
 import mapUserMeals from '../../lib/mapUserMeals';
 import dereferenceMeal from '../../lib/dereferenceMeal';
+import tutorial from '../../static/tutorial';
 
 /**
  * Renders the Meal Queue section, where meals in the queue can be added to different days of the week.
@@ -114,20 +115,25 @@ const MealQueue = () => {
   );
 
   /** List of locations where a day is selected with a meal that comes from a closed location. */
-  const offendedLocations = useMemo(
-    () => {
-      const userLocations = new Set(mealQueueValue.map((m) => m.location));
-      return (Object.getOwnPropertyNames(locationClosures) as (keyof typeof locationClosures)[])
-      .filter((location) =>
-         userLocations.has(location) 
-        && locationClosures[location].some(n => selectedDays.includes(n)));
-    },
-    [mealQueueValue, selectedDays]
-  );
+  const offendedLocations = useMemo(() => {
+    const userLocations = new Set(mealQueueValue.map((m) => m.location));
+    return (
+      Object.getOwnPropertyNames(
+        locationClosures
+      ) as (keyof typeof locationClosures)[]
+    ).filter(
+      (location) =>
+        userLocations.has(location) &&
+        locationClosures[location].some((n) => selectedDays.includes(n))
+    );
+  }, [mealQueueValue, selectedDays]);
 
   /** Indicates whether the add meal button is disabled. */
   const isAddMealsButtonDisabled = useMemo(
-    () => mealQueue.value.length == 0 || selectedDays.length == 0 || offendedLocations.length > 0,
+    () =>
+      mealQueue.value.length == 0 ||
+      selectedDays.length == 0 ||
+      offendedLocations.length > 0,
     [mealQueue.value.length, offendedLocations.length, selectedDays.length]
   );
   /** Indicates whether the clear meal button is disabled. */
@@ -144,6 +150,7 @@ const MealQueue = () => {
       buttonOnClick={removeMealFromQueue}
       createNotification={(name) => `Removed ${name} from meal queue`}
       searchable={false}
+      tutorial={tutorial.mealQueue}
     >
       <div className='mb-4' />
       <p className='mb-2'>Add these meals to:</p>
@@ -161,12 +168,13 @@ const MealQueue = () => {
           square={true}
         />
       </div>
-      {offendedLocations.map((location, i) => 
-      <p
-        className={`text-messiah-red text-sm mt-2`} key={i}
-      >
-        {`${location} is closed on days ${locationClosures[location].map(n => WEEKDAYS[n]).join(', ')}`}
-      </p>)}
+      {offendedLocations.map((location, i) => (
+        <p className={`text-messiah-red text-sm mt-2`} key={i}>
+          {`${location} is closed on days ${locationClosures[location]
+            .map((n) => WEEKDAYS[n])
+            .join(', ')}`}
+        </p>
+      ))}
       <div className='flex gap-2 mt-4'>
         <Button
           title='Add Meals to Selected Days'

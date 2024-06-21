@@ -5,6 +5,7 @@ import CustomMeal from '../other/CustomMeal';
 import { CustomMealsCtx, MealQueueCtx } from '../../static/context';
 import { useContext, useEffect, useState } from 'react';
 import { v4 as uuid } from 'uuid';
+import tutorial from '../../static/tutorial';
 import CustomMealAddModal from '../modals/CustomMealAddModal';
 
 /**
@@ -81,6 +82,7 @@ const AvailableMeals = () => {
       }}
       newCustomMealID={newCustomMealID}
       searchable
+      tutorial={tutorial.availableMeals}
     >
       {
         // This cannot work with only the 'visible' property because otherwise it will not re-render
