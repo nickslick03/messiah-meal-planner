@@ -58,3 +58,10 @@ export function getWeekdaysBetween(start: Date, end: Date, weekOff = false) {
     weekdays[i]++; // adds weekdays not within a full week
   return weekdays;
 }
+
+export const getAllDatesBetween = (start: Date, end: Date): Date[] =>
+  start > end
+    ? []
+    : [new Date(start)].concat(
+        getAllDatesBetween(new Date(start.setDate(start.getDate() + 1)), end)
+      );
