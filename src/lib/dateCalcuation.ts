@@ -49,9 +49,9 @@ export function getWeekdaysBetween(start: Date, end: Date, weekOff = false) {
   const fullWeeks = Math.floor(daysBetween / 7) - (weekOff ? 1 : 0);
 
   if (daysBetween === -1 || fullWeeks < 0)
-    return Array.from<number>({ length: 7 }).fill(0);
+    return Array(7).fill(0);
 
-  const weekdays = Array.from<number>({ length: 7 }).fill(fullWeeks);
+  const weekdays = Array(7).fill(fullWeeks);
   const startWeekday = start.getDay();
   const endWeekday = end.getDay();
 

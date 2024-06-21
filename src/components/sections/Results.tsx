@@ -5,103 +5,155 @@ import { BalanceCtx, MealPlanCtx, UserSelectedMealsCtx, CustomMealsCtx } from '.
 import formatCurrency from '../../lib/formatCurrency';
 import { getMealTotal } from '../../lib/calculationEngine';
 import meals, { mealLocations } from '../../static/mealsDatabase';
-import { Pie } from 'react-chartjs-2';
+import { Bar, Pie } from 'react-chartjs-2';
 import 'chart.js/auto';
-import dereferenceMeal from '../../lib/dereferenceMeal';
-import mapUserMeals from '../../lib/mapUserMeals';
-import { Weekday } from '../../types/userSelectedMealsObject';
-import Meal from '../../types/Meal';
 import { WEEKDAYS } from '../../static/constants';
+import { userMealsToStackedChart } from '../../lib/mealChartFormat';
+import Divider from '../other/Divider';
+
 
 interface ResultsProps {
   isUnderBalance: boolean;
   difference: number;
+  grandTotal: number;
 }
 
-const options = {
-  responsive: true, // Ensure the chart is responsive
-  maintainAspectRatio: false, // Allow the chart to take up the entire container's size
+
+const barChartOptions = {
+  plugins: {
+    title: {
+      display: true,
+      text: 'Meals by Weekday'
+    }
+  },
+  scales: {
+    x: {
+      stacked: true
+    },
+    y: {
+      beginAtZero: true,
+      stacked: true,
+      ticks: {
+        callback: function(value: number) {
+          return value.toLocaleString("en-US",{style:"currency", currency:"USD"});
+        }
+      }
+    },
+  }
 };
+
+const pieChartOptions = {
+  plugins: {
+    title: {
+      display: true,
+      text: 'Meals by Price'
+    }
+  }
+};
+
+
+const backgroundColor = [
+  "rgba(54, 162, 235, 0.2)",
+  "rgba(75, 192, 192, 0.2)",
+  "rgba(255, 205, 86, 0.2)",
+  "rgba(255, 99, 132, 0.2)",
+  'rgba(153, 102, 255, 0.2)',
+  'rgba(201, 203, 207, 0.2)'
+];
+
+const borderColor = [
+  "rgb(54, 162, 235)",
+  "rgb(75, 192, 192)",
+  "rgb(255, 205, 86)",
+  "rgb(255, 99, 132)",
+  'rgb(153, 102, 255)',
+  'rgb(201, 203, 207)'
+];
 
 /**
  * Renders the results of the meal planning.
  */
 const Results = ({
   isUnderBalance,
-  difference
+  difference,
+  grandTotal
 }: ResultsProps) => {
-  // const balance = useContext(BalanceCtx);
-  // const userMeals = useContext(UserSelectedMealsCtx);
-  // const isDiscount = useContext(MealPlanCtx);
-
+  const balance = useContext(BalanceCtx);
+  const userMeals = useContext(UserSelectedMealsCtx);
+  const isDiscount = useContext(MealPlanCtx);
   const customMeals = useContext(CustomMealsCtx);
+
+  /** The meal total for one week. */
+  const weekTotal = useMemo(() => 
+    getMealTotal(
+      userMeals.value, 
+      Array<number>(7).fill(1),
+      isDiscount.value,
+      [...meals, ...customMeals.value]),
+    [customMeals.value, isDiscount.value, userMeals.value]);
   const userSelectedMeals = useContext(UserSelectedMealsCtx);
 
-  // /** The meal total for one week. */
-  // const weekTotal = useMemo(() => 
-  //   getMealTotal(
-  //     userMeals.value, 
-  //     Array<number>(7).fill(1),
-  //     isDiscount.value,
-  //     [...meals, ...customMeals.value]),
-  //   [customMeals.value, isDiscount.value, userMeals.value]);
-  
-    // Dereference the userSelectedMeals context
-  const userSelectedMealsValue = useMemo(
-    () =>
-      mapUserMeals(
-        (day: Weekday) =>
-          [
-            day,
-            userSelectedMeals.value[day]
-              .map((mr) => dereferenceMeal(mr, meals, customMeals.value))
-              .filter((m) => m !== undefined)
-          ] as [string, Meal[]]
-      ),
-    [userSelectedMeals, customMeals]
-  ) as { [k: string]: Meal[] };
-
-  const allMeals = useMemo(() => {
-    let arr: Meal[] = [];
-    for (let i = 0; i < 7; i++) {
-      arr = arr.concat(userSelectedMealsValue[WEEKDAYS[i]]);
+  const barChartData = useMemo(() => {
+    const locationMap = userMealsToStackedChart(userSelectedMeals.value);
+    return {
+      labels: [...WEEKDAYS],
+      datasets: mealLocations.map((location, i) => ({
+        label: location,
+        data: locationMap.get(location) ?? [],
+        backgroundColor: backgroundColor[i],
+        borderColor: borderColor[i],
+        borderWidth: 1
+      }))
     }
-    return arr;
-  }, [userSelectedMealsValue]);
+  }, [userSelectedMeals.value]);
 
-  const mealsByLocationData = useMemo(() => {
-    const arr: number[] = Array<number>(mealLocations.length).fill(0);
-    allMeals.forEach((meal) => {
-      arr[mealLocations.indexOf(meal.location)] += 1;
-    });
-    return arr;
-  }, [allMeals]);
+  const pieChartData = useMemo(() => {
+    const locationMap = userMealsToStackedChart(userSelectedMeals.value);
+    const priceMap: number[] = [];
+    locationMap.forEach((prices) => 
+      priceMap.push(prices.reduce((p, c) => p + c)));
+    return {
+      labels: mealLocations,
+      datasets: [{
+        data: priceMap,
+        backgroundColor: borderColor,
+        hoverOffset: 4
+      }]
+    }
+  }, [userSelectedMeals.value]);
 
-
-  const mealsByLocationChartData = useMemo(() => ({
-    labels: mealLocations,
-    datasets: [{
-      label: 'Meals by Location',
-      data: mealsByLocationData,
-      backgroundColor: ['red', 'green', 'blue', 'orange'],
-      hoverOffset: 4,
-    }]
-  }), [mealsByLocationData]);
 
   return (
     <SectionContainer title='Results'>
-
-    <div className='mt-4'>
-      <h2 className='font-bold text-center'>By Location</h2>
-      <div className='w-full'>
-        <Pie data={mealsByLocationChartData} options={options}/>
+      <div className='relative w-full my-4'>
+        <Bar data={barChartData} options={barChartOptions} />
       </div>
-    </div>
-
+      <div className='w-half mb-8'>
+        <Pie data={pieChartData} options={pieChartOptions} />  
+      </div>
+      <Divider />
+      <DotLeader
+        info={[
+          {
+            title: 'Starting Balance',
+            value: formatCurrency(balance.value || 0),
+            resultsStyle: 'text-messiah-green'
+          },
+          {
+            title: 'Weekly Total',
+            value: `${formatCurrency(weekTotal)}`,
+            resultsStyle: 'text-messiah-red'
+          },
+          {
+            title: 'Grand Total',
+            value: `${formatCurrency(grandTotal)}`,
+            resultsStyle: 'text-messiah-red'
+          }
+        ]}
+      />
       <div
-        className={`${
-          isUnderBalance ? 'text-messiah-green' : 'text-messiah-red'
-        } text-xl font-bold mt-4 text-center`}
+        className={`${isUnderBalance ? 'text-messiah-green' : 'text-messiah-red'
+          } text-xl font-bold mt-4 text-center`}
       >
         {isUnderBalance
           ? `You have an extra ${formatCurrency(difference)}!`
@@ -112,3 +164,4 @@ const Results = ({
 };
 
 export default Results;
+
