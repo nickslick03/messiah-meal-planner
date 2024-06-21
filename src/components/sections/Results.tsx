@@ -131,10 +131,7 @@ const Results = ({ isUnderBalance, difference, grandTotal }: ResultsProps) => {
                 (tooltipItem.parsed * 100) / total
               );
 
-              return `${tooltipValue.toLocaleString('en-US', {
-                style: 'currency',
-                currency: 'USD'
-              })} (${tooltipPercentage}%)`;
+              return `${formatCurrency(tooltipValue)} (${tooltipPercentage}%)`;
             }
           }
         }
@@ -165,13 +162,7 @@ const Results = ({ isUnderBalance, difference, grandTotal }: ResultsProps) => {
               if (!tooltipItem) return '';
               const dataset = barChartData.datasets[tooltipItem.datasetIndex];
               if (!dataset) return '';
-              return dataset.data[tooltipItem.dataIndex].toLocaleString(
-                'en-US',
-                {
-                  style: 'currency',
-                  currency: 'USD'
-                }
-              );
+              return formatCurrency(dataset.data[tooltipItem.dataIndex]);
             }
           }
         }
@@ -189,10 +180,7 @@ const Results = ({ isUnderBalance, difference, grandTotal }: ResultsProps) => {
                 typeof tickValue === 'string'
                   ? parseFloat(tickValue)
                   : tickValue;
-              return value.toLocaleString('en-US', {
-                style: 'currency',
-                currency: 'USD'
-              });
+              return formatCurrency(value);
             }
           }
         }
