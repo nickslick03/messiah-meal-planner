@@ -85,10 +85,12 @@ const borderColor = [
  * Renders the results of the meal planning.
  */
 const Results = ({ isUnderBalance, difference, grandTotal }: ResultsProps) => {
+  // Load all necessary contexts
   const balance = useContext(BalanceCtx);
   const userMeals = useContext(UserSelectedMealsCtx);
   const isDiscount = useContext(MealPlanCtx);
   const customMeals = useContext(CustomMealsCtx);
+  const userSelectedMeals = useContext(UserSelectedMealsCtx);
 
   /** The meal total for one week. */
   const weekTotal = useMemo(
@@ -101,8 +103,8 @@ const Results = ({ isUnderBalance, difference, grandTotal }: ResultsProps) => {
       ),
     [customMeals.value, isDiscount.value, userMeals.value]
   );
-  const userSelectedMeals = useContext(UserSelectedMealsCtx);
 
+  /** The data for the bar chart, splits up weekly meal prices by location. */
   const barChartData = useMemo(() => {
     const locationMap = userMealsToStackedChart(userSelectedMeals.value);
     return {
@@ -117,6 +119,7 @@ const Results = ({ isUnderBalance, difference, grandTotal }: ResultsProps) => {
     };
   }, [userSelectedMeals.value]);
 
+  /** The data for the pie chart, splits up weekly meal prices by location. */
   const pieChartData = useMemo(() => {
     const locationMap = userMealsToStackedChart(userSelectedMeals.value);
     const priceMap: number[] = [];
