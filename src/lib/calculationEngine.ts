@@ -60,6 +60,13 @@ export function getMealTotal(
   return total;
 }
 
+/**
+ * Calculates the date that the user will run out of funds, or the last date if they won't.
+ * @param userMeals The object representing the user selected meals
+ * @param discount A boolean flag indicating whether to apply a discount to the meal prices.
+ * @param searchMealList An array of meals to search from.
+ * @param startDate The start date of the timeframe
+ */
 export function calculateDateWhenRunOut(
   userMeals: UserSelectedMealsObjectType,
   discount: boolean,
@@ -70,7 +77,7 @@ export function calculateDateWhenRunOut(
   weekOff = false
 ): Date {
   const allDates = weekOff
-    ? getAllDatesBetween(startDate, endDate).slice(0, -7)
+    ? getAllDatesBetween(startDate, endDate).slice(7)
     : getAllDatesBetween(startDate, endDate);
   const allWeekdays: Weekday[] = allDates.map(
     (date) => WEEKDAYS[new Date(date).getDay()]
