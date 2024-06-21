@@ -1,7 +1,12 @@
 import { useContext, useMemo } from 'react';
 import SectionContainer from '../containers/SectionContainer';
 import DotLeader from '../other/DotLeader';
-import { BalanceCtx, MealPlanCtx, UserSelectedMealsCtx, CustomMealsCtx } from '../../static/context';
+import {
+  BalanceCtx,
+  MealPlanCtx,
+  UserSelectedMealsCtx,
+  CustomMealsCtx
+} from '../../static/context';
 import formatCurrency from '../../lib/formatCurrency';
 import { getMealTotal } from '../../lib/calculationEngine';
 import meals, { mealLocations } from '../../static/mealsDatabase';
@@ -11,13 +16,11 @@ import { WEEKDAYS } from '../../static/constants';
 import { userMealsToStackedChart } from '../../lib/mealChartFormat';
 import Divider from '../other/Divider';
 
-
 interface ResultsProps {
   isUnderBalance: boolean;
   difference: number;
   grandTotal: number;
 }
-
 
 const barChartOptions = {
   plugins: {
@@ -34,11 +37,16 @@ const barChartOptions = {
       beginAtZero: true,
       stacked: true,
       ticks: {
-        callback: function(value: number) {
-          return value.toLocaleString("en-US",{style:"currency", currency:"USD"});
+        callback: function (tickValue: string | number) {
+          const value =
+            typeof tickValue === 'string' ? parseFloat(tickValue) : tickValue;
+          return value.toLocaleString('en-US', {
+            style: 'currency',
+            currency: 'USD'
+          });
         }
       }
-    },
+    }
   }
 };
 
@@ -51,21 +59,20 @@ const pieChartOptions = {
   }
 };
 
-
 const backgroundColor = [
-  "rgba(54, 162, 235, 0.2)",
-  "rgba(75, 192, 192, 0.2)",
-  "rgba(255, 205, 86, 0.2)",
-  "rgba(255, 99, 132, 0.2)",
+  'rgba(54, 162, 235, 0.2)',
+  'rgba(75, 192, 192, 0.2)',
+  'rgba(255, 205, 86, 0.2)',
+  'rgba(255, 99, 132, 0.2)',
   'rgba(153, 102, 255, 0.2)',
   'rgba(201, 203, 207, 0.2)'
 ];
 
 const borderColor = [
-  "rgb(54, 162, 235)",
-  "rgb(75, 192, 192)",
-  "rgb(255, 205, 86)",
-  "rgb(255, 99, 132)",
+  'rgb(54, 162, 235)',
+  'rgb(75, 192, 192)',
+  'rgb(255, 205, 86)',
+  'rgb(255, 99, 132)',
   'rgb(153, 102, 255)',
   'rgb(201, 203, 207)'
 ];
@@ -73,24 +80,23 @@ const borderColor = [
 /**
  * Renders the results of the meal planning.
  */
-const Results = ({
-  isUnderBalance,
-  difference,
-  grandTotal
-}: ResultsProps) => {
+const Results = ({ isUnderBalance, difference, grandTotal }: ResultsProps) => {
   const balance = useContext(BalanceCtx);
   const userMeals = useContext(UserSelectedMealsCtx);
   const isDiscount = useContext(MealPlanCtx);
   const customMeals = useContext(CustomMealsCtx);
 
   /** The meal total for one week. */
-  const weekTotal = useMemo(() => 
-    getMealTotal(
-      userMeals.value, 
-      Array<number>(7).fill(1),
-      isDiscount.value || false,
-      [...meals, ...customMeals.value]),
-    [customMeals.value, isDiscount.value, userMeals.value]);
+  const weekTotal = useMemo(
+    () =>
+      getMealTotal(
+        userMeals.value,
+        Array<number>(7).fill(1),
+        isDiscount.value || false,
+        [...meals, ...customMeals.value]
+      ),
+    [customMeals.value, isDiscount.value, userMeals.value]
+  );
   const userSelectedMeals = useContext(UserSelectedMealsCtx);
 
   const barChartData = useMemo(() => {
@@ -104,24 +110,26 @@ const Results = ({
         borderColor: borderColor[i],
         borderWidth: 1
       }))
-    }
+    };
   }, [userSelectedMeals.value]);
 
   const pieChartData = useMemo(() => {
     const locationMap = userMealsToStackedChart(userSelectedMeals.value);
     const priceMap: number[] = [];
-    locationMap.forEach((prices) => 
-      priceMap.push(prices.reduce((p, c) => p + c)));
+    locationMap.forEach((prices) =>
+      priceMap.push(prices.reduce((p, c) => p + c))
+    );
     return {
       labels: mealLocations,
-      datasets: [{
-        data: priceMap,
-        backgroundColor: borderColor,
-        hoverOffset: 4
-      }]
-    }
+      datasets: [
+        {
+          data: priceMap,
+          backgroundColor: borderColor,
+          hoverOffset: 4
+        }
+      ]
+    };
   }, [userSelectedMeals.value]);
-
 
   return (
     <SectionContainer title='Results'>
@@ -129,7 +137,7 @@ const Results = ({
         <Bar data={barChartData} options={barChartOptions} />
       </div>
       <div className='w-half mb-8'>
-        <Pie data={pieChartData} options={pieChartOptions} />  
+        <Pie data={pieChartData} options={pieChartOptions} />
       </div>
       <Divider />
       <DotLeader
@@ -152,8 +160,9 @@ const Results = ({
         ]}
       />
       <div
-        className={`${isUnderBalance ? 'text-messiah-green' : 'text-messiah-red'
-          } text-xl font-bold mt-4 text-center`}
+        className={`${
+          isUnderBalance ? 'text-messiah-green' : 'text-messiah-red'
+        } text-xl font-bold mt-4 text-center`}
       >
         {isUnderBalance
           ? `You have an extra ${formatCurrency(difference)}!`
@@ -164,4 +173,3 @@ const Results = ({
 };
 
 export default Results;
-
