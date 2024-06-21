@@ -4,6 +4,13 @@ import { UserSelectedMealsObjectType } from '../types/userSelectedMealsObject';
 import dereferenceMeal from './dereferenceMeal';
 import Meal from '../types/Meal';
 
+/**
+ * This function takes in a UserSelectedMealsObject and returns data for a stacked chart of the total cost of each meal.
+ * @param userSelectedMeals The userSelectedMeals object
+ * @param meals The list of all meals
+ * @param customMeals The list of all custom meals
+ * @returns The stacked chart of the total cost of each meal in the userSelectedMeals object
+ */
 export function userMealsToStackedChart(
   userSelectedMeals: UserSelectedMealsObjectType,
   meals: Meal[],
