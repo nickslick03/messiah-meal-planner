@@ -137,14 +137,16 @@ const Results = ({ isUnderBalance, difference, grandTotal }: ResultsProps) => {
 
   return (
     <SectionContainer title='Results'>
-      <div className='flex flex-col items-center w-full my-4'>
-        <div className='relative w-full my-4 min-h-[300px]'>
-          <Bar data={barChartData} options={barChartOptions} />
+      <div className='flex flex-row flex-wrap w-full justify-center'>
+        <div className='flex flex-col items-center my-4 flex-1'>
+          <div className='relative my-4 w-full min-h-[250px] sm:min-h-[300px]'>
+            <Bar data={barChartData} options={barChartOptions} />
+          </div>
         </div>
-      </div>
-      <div className='flex flex-col items-center w-full my-4'>
-        <div className='relative w-half min-h-[300px]'>
-          <Pie data={pieChartData} options={pieChartOptions} />
+        <div className='flex flex-col items-center my-4 flex-1'>
+          <div className='relative w-full min-h-[250px] sm:min-h-[300px]'>
+            <Pie data={pieChartData} options={pieChartOptions} />
+          </div>
         </div>
       </div>
       <Divider />
