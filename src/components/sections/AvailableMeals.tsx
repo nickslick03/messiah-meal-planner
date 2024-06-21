@@ -80,6 +80,7 @@ const AvailableMeals = () => {
         else setCurrentCustomData(data);
       }}
       newCustomMealID={newCustomMealID}
+      searchable
     >
       {
         // This cannot work with only the 'visible' property because otherwise it will not re-render

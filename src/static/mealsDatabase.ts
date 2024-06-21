@@ -7,6 +7,11 @@ const generateId = (location: string, name: string) => {
   return CryptoJS.MD5(location + name).toString();
 };
 
+/** location values are arrays of weekdays represented as indices denoting when that location is closed. */
+export const locationClosures = {
+  'Falcon': [0, 6]
+}
+
 // List of available meals at Messiah
 const meals: Meal[] = [
   {

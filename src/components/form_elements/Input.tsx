@@ -13,13 +13,15 @@ import {
 } from '../../types/ImportanceIndex';
 import { dateToString } from '../../lib/dateCalcuation';
 interface InputProps<T> {
-  label: string;
+  label?: string;
   importance?: ImportanceIndex;
   type: HTMLInputTypeAttribute;
-  validator: (value: string) => T extends boolean ? T : T | null;
-  value: T extends boolean ? T : T | null;
-  setValue: Dispatch<SetStateAction<T extends boolean ? T : T | null>>;
+  validator: (value: string) => T | null;
+  value: T | null;
+  setValue: Dispatch<SetStateAction<T | null>>;
   invalidMessage?: string;
+  placeholder?: string;
+  cssClasses?: string;
 }
 
 /**
@@ -32,6 +34,8 @@ interface InputProps<T> {
  * @param {string | boolean | number} value - The value of the input.
  * @param {React.Dispatch<React.SetStateAction<T>>} setValue - The function to update the input value.
  * @param {string} invalidMessage - The message to display when the input is invalid.
+ * @param {string} placeholder - The placeholder text for the input.
+ * @param {string} cssClasses - The styles to apply to the input.
  * @returns {JSX.Element} The rendered input component.
  */
 const Input = <T,>({
@@ -41,7 +45,9 @@ const Input = <T,>({
   validator,
   value,
   setValue,
-  invalidMessage
+  invalidMessage,
+  placeholder = '',
+  cssClasses
 }: InputProps<T>): JSX.Element => {
   const importanceStyle = IMPORTANCE_CLASSES[importance] ?? 'font-normal';
   const styles = `border border-black rounded focus:outline focus:outline-2 focus:outline-messiah-blue 
@@ -51,10 +57,10 @@ const Input = <T,>({
         : type === 'text'
         ? 'w-40 px-1'
         : ''
-    }`;
+    } ${cssClasses ?? ''}`;
 
   /** The initial value of the input. */
-  const initialValue = 
+  const initialValue =
     value === null
       ? ''
       : value instanceof Date
@@ -67,9 +73,11 @@ const Input = <T,>({
   /** The title attribute of the input tag. */
   const titleAttribute = useMemo(
     () =>
-      label[label.length - 1].match(/[\s:]/)
-        ? label.substring(0, label.length - 1)
-        : label,
+      label
+        ? label[label.length - 1].match(/[\s:]/)
+          ? label.substring(0, label.length - 1)
+          : label
+        : 'input',
     [label]
   );
 
@@ -91,11 +99,11 @@ const Input = <T,>({
   };
 
   return (
-    <div className='text-left'>
+    <div className='text-left flex items-center w-full'>
       <label
-        className={`${importanceStyle} w-fit flex flex-row flex-wrap gap-2 items-center`}
+        className={`${importanceStyle} w-full flex flex-row flex-wrap gap-2 items-center`}
       >
-        {label}
+        {label || ''}
         {type === 'checkbox' ? (
           <input
             className={`${styles} p-0 h-6 w-6`}
@@ -112,6 +120,7 @@ const Input = <T,>({
             inputMode={type === 'number' ? 'decimal' : undefined}
             onInput={handleChange}
             title={titleAttribute}
+            placeholder={placeholder}
           />
         )}
       </label>

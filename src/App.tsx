@@ -28,11 +28,28 @@ import { getMealTotal } from './lib/calculationEngine';
 import { getWeekdaysBetween } from './lib/dateCalcuation';
 
 function App() {
-  const [isBreak, setIsBreak] = usePersistentState('isBreak', false);
-  const [mealPlan, setMealPlan] = usePersistentState('isDD', false);
-  const [balance, setBalance] = usePersistentState<number | null>('startingBalance', null);
-  const [startDate, setStartDate] = usePersistentState<Date | null>('startDate', null, (str) => new Date(str));
-  const [endDate, setEndDate] = usePersistentState<Date | null>('endDate', null, (str) => new Date(str));
+  const [isBreak, setIsBreak] = usePersistentState<boolean | null>(
+    'isBreak',
+    false
+  );
+  const [mealPlan, setMealPlan] = usePersistentState<boolean | null>(
+    'isDD',
+    false
+  );
+  const [balance, setBalance] = usePersistentState<number | null>(
+    'startingBalance',
+    null
+  );
+  const [startDate, setStartDate] = usePersistentState<Date | null>(
+    'startDate',
+    null,
+    (str) => new Date(str)
+  );
+  const [endDate, setEndDate] = usePersistentState<Date | null>(
+    'endDate',
+    null,
+    (str) => new Date(str)
+  );
   const [userSelectedMeals, setUserSelectedMeals] = usePersistentState(
     'userSelectedMeals',
     new UserSelectedMealsObject()
@@ -74,30 +91,41 @@ function App() {
   }, [userSelectedMeals, customMeals, setUserSelectedMeals]);
 
   /** The grand total of all the meals from the start date to the end date. */
-  const grandTotal = useMemo(() =>
-    startDate !== null && endDate !== null && balance !== null
-    ? getMealTotal(
-      userSelectedMeals,
-      getWeekdaysBetween(startDate, endDate, isBreak),
+  const grandTotal = useMemo(
+    () =>
+      startDate !== null && endDate !== null && balance !== null
+        ? getMealTotal(
+            userSelectedMeals,
+            getWeekdaysBetween(startDate, endDate, isBreak ?? false),
+            mealPlan ?? false,
+            [...meals, ...customMeals]
+          )
+        : 0,
+    [
+      balance,
+      customMeals,
+      endDate,
+      isBreak,
       mealPlan,
-      [...meals, ...customMeals])
-    : 0,
-    [balance, customMeals, endDate, isBreak, mealPlan, startDate, userSelectedMeals]);
+      startDate,
+      userSelectedMeals
+    ]
+  );
 
   /** Indicates whether the grand total is under the inital balance. */
-  const isUnderBalance = useMemo(() => 
-    balance !== null
-    ? balance >= grandTotal
-    : false,
-    [balance, grandTotal]);
+  const isUnderBalance = useMemo(
+    () => (balance !== null ? balance >= grandTotal : false),
+    [balance, grandTotal]
+  );
 
   /** The difference between the balance and the grand total. */
   const difference = useMemo(
-    () => 
-      balance!== null && grandTotal!== null
+    () =>
+      balance !== null && grandTotal !== null
         ? Math.abs(balance - grandTotal)
         : 0,
-    [balance, grandTotal]);
+    [balance, grandTotal]
+  );
 
   return (
     <IsBreakCtx.Provider value={{ value: isBreak, setValue: setIsBreak }}>
@@ -133,15 +161,15 @@ function App() {
                           <AvailableMeals />
                           <MealQueue />
                           <DayEditor />
-                          <Results 
+                          <Results
                             grandTotal={grandTotal}
-                            isUnderBalance={isUnderBalance} 
-                            difference={difference}                            
+                            isUnderBalance={isUnderBalance}
+                            difference={difference}
                           />
-                          <ResultsBar 
+                          <ResultsBar
                             grandTotal={grandTotal}
-                            isUnderBalance={isUnderBalance} 
-                            difference={difference}  
+                            isUnderBalance={isUnderBalance}
+                            difference={difference}
                           />
                         </>
                       ) : (

@@ -12,12 +12,12 @@ interface ContextType<T> {
   setValue: Dispatch<SetStateAction<T>>;
 }
 
-export const IsBreakCtx = createContext<ContextType<boolean>>({
+export const IsBreakCtx = createContext<ContextType<boolean | null>>({
   value: false,
   setValue: () => {}
 });
 
-export const MealPlanCtx = createContext<ContextType<boolean>>({
+export const MealPlanCtx = createContext<ContextType<boolean | null>>({
   value: false,
   setValue: () => {}
 });
