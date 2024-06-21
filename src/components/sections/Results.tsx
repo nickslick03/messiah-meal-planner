@@ -46,7 +46,7 @@ const pieChartOptions = {
   plugins: {
     title: {
       display: true,
-      text: 'Meals by Price'
+      text: 'Meals by Weekly Price'
     }
   }
 };
@@ -88,7 +88,7 @@ const Results = ({
     getMealTotal(
       userMeals.value, 
       Array<number>(7).fill(1),
-      isDiscount.value,
+      isDiscount.value || false,
       [...meals, ...customMeals.value]),
     [customMeals.value, isDiscount.value, userMeals.value]);
   const userSelectedMeals = useContext(UserSelectedMealsCtx);
