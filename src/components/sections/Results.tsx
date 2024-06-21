@@ -23,6 +23,8 @@ interface ResultsProps {
 }
 
 const barChartOptions = {
+  responsive: true,
+  maintainAspectRatio: false,
   plugins: {
     title: {
       display: true,
@@ -51,6 +53,8 @@ const barChartOptions = {
 };
 
 const pieChartOptions = {
+  responsive: true,
+  maintainAspectRatio: false,
   plugins: {
     title: {
       display: true,
@@ -133,11 +137,15 @@ const Results = ({ isUnderBalance, difference, grandTotal }: ResultsProps) => {
 
   return (
     <SectionContainer title='Results'>
-      <div className='relative w-full my-4'>
-        <Bar data={barChartData} options={barChartOptions} />
+      <div className='flex flex-col items-center w-full my-4'>
+        <div className='relative w-full my-4 min-h-[300px]'>
+          <Bar data={barChartData} options={barChartOptions} />
+        </div>
       </div>
-      <div className='w-half mb-8'>
-        <Pie data={pieChartData} options={pieChartOptions} />
+      <div className='flex flex-col items-center w-full my-4'>
+        <div className='relative w-half min-h-[300px]'>
+          <Pie data={pieChartData} options={pieChartOptions} />
+        </div>
       </div>
       <Divider />
       <DotLeader
