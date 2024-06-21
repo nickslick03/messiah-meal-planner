@@ -1,15 +1,33 @@
 import { IoAdd, IoRemove } from 'react-icons/io5';
+import smAvailableMeals from '../assets/sm-availableMeals.png';
+import lgAvailableMeals from '../assets/lg-availableMeals.png';
+import smDayEditor from '../assets/sm-dayEditor.png';
+import lgDayEditor from '../assets/lg-dayEditor.png';
+import smMealPlanInfo from '../assets/sm-mealPlanInfo.png';
+import lgMealPlanInfo from '../assets/lg-mealPlanInfo.png';
+import smMealQueue from '../assets/sm-mealQueue.png';
+import lgMealQueue from '../assets/lg-mealQueue.png';
+import smResults from '../assets/sm-results.png';
+import lgResults from '../assets/lg-results.png';
 
 const ICON_SIZE = 15;
 
 export interface TutorialObject {
   title: string;
   text: JSX.Element;
+  images: {
+    small: string;
+    large: string;
+  };
 }
 
 const tutorial = {
   mealPlanInfo: {
     title: 'Meal Plan Info',
+    images: {
+      small: smMealPlanInfo,
+      large: lgMealPlanInfo
+    },
     text: (
       <>
         <p>
@@ -47,6 +65,10 @@ const tutorial = {
   },
   availableMeals: {
     title: 'Available Meals',
+    images: {
+      small: smAvailableMeals,
+      large: lgAvailableMeals
+    },
     text: (
       <p>
         This table is where you can start planning your meals. It shows
@@ -63,6 +85,10 @@ const tutorial = {
   },
   mealQueue: {
     title: 'Meal Queue',
+    images: {
+      small: smMealQueue,
+      large: lgMealQueue
+    },
     text: (
       <p>
         This is your staging area for meals you want to add to certain days.
@@ -79,6 +105,10 @@ const tutorial = {
   },
   dayEditor: {
     title: 'Day Editor',
+    images: {
+      small: smDayEditor,
+      large: lgDayEditor
+    },
     text: (
       <>
         <p>
@@ -107,6 +137,10 @@ const tutorial = {
   },
   results: {
     title: 'Results',
+    images: {
+      small: smResults,
+      large: lgResults
+    },
     text: (
       <>
         <p>

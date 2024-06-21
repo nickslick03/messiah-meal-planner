@@ -73,6 +73,20 @@ const TutorialModal = ({
         centered={false}
       >
         {/* Render the text of the tutorial */}
+        {currentTutorial?.images?.small && (
+          <img
+            src={currentTutorial?.images?.small}
+            alt={currentTutorial?.title}
+            className={'block sm:hidden'}
+          />
+        )}
+        {currentTutorial?.images?.large && (
+          <img
+            src={currentTutorial?.images?.large}
+            alt={currentTutorial?.title}
+            className={'hidden sm:block'}
+          />
+        )}
         {currentTutorial?.text}
       </ModalContainer>
     )
