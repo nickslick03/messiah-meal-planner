@@ -15,6 +15,7 @@ import 'chart.js/auto';
 import { WEEKDAYS } from '../../static/constants';
 import { userMealsToStackedChart } from '../../lib/mealChartFormat';
 import Divider from '../other/Divider';
+import { TooltipItem } from 'chart.js/auto';
 
 interface ResultsProps {
   isUnderBalance: boolean;
@@ -22,47 +23,7 @@ interface ResultsProps {
   grandTotal: number;
 }
 
-const barChartOptions = {
-  responsive: true,
-  maintainAspectRatio: false,
-  plugins: {
-    title: {
-      display: true,
-      text: 'Meals by Weekday'
-    }
-  },
-  scales: {
-    x: {
-      stacked: true
-    },
-    y: {
-      beginAtZero: true,
-      stacked: true,
-      ticks: {
-        callback: function (tickValue: string | number) {
-          const value =
-            typeof tickValue === 'string' ? parseFloat(tickValue) : tickValue;
-          return value.toLocaleString('en-US', {
-            style: 'currency',
-            currency: 'USD'
-          });
-        }
-      }
-    }
-  }
-};
-
-const pieChartOptions = {
-  responsive: true,
-  maintainAspectRatio: false,
-  plugins: {
-    title: {
-      display: true,
-      text: 'Meals by Weekly Price'
-    }
-  }
-};
-
+/** The background color for charts. */
 const backgroundColor = [
   'rgba(54, 162, 235, 0.2)',
   'rgba(75, 192, 192, 0.2)',
@@ -72,6 +33,7 @@ const backgroundColor = [
   'rgba(201, 203, 207, 0.2)'
 ];
 
+/** The border color for charts. */
 const borderColor = [
   'rgb(54, 162, 235)',
   'rgb(75, 192, 192)',
@@ -131,12 +93,113 @@ const Results = ({ isUnderBalance, difference, grandTotal }: ResultsProps) => {
       datasets: [
         {
           data: priceMap,
-          backgroundColor: borderColor,
+          backgroundColor: backgroundColor,
+          borderColor: borderColor,
           hoverOffset: 4
         }
       ]
     };
   }, [userSelectedMeals.value]);
+
+  /** The options for the pie chart:
+   *    Adds the title
+   *    Makes it responsive to screen size changes
+   *    Sets the tooltips to display currency and percentage
+   */
+  const pieChartOptions = useMemo(
+    () => ({
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        title: {
+          display: true,
+          text: 'Meals by Weekly Price'
+        },
+        tooltip: {
+          callbacks: {
+            label: (tooltipItem: TooltipItem<'pie'>) => {
+              if (!tooltipItem) return '';
+
+              const dataset = pieChartData.datasets[tooltipItem.datasetIndex];
+              if (!dataset) return '';
+
+              const tooltipValue = dataset.data[tooltipItem.dataIndex];
+              const total = dataset.data
+                .filter((item) => !isNaN(item))
+                .reduce((a, b) => a + b, 0);
+              const tooltipPercentage = Math.round(
+                (tooltipItem.parsed * 100) / total
+              );
+
+              return `${tooltipValue.toLocaleString('en-US', {
+                style: 'currency',
+                currency: 'USD'
+              })} (${tooltipPercentage}%)`;
+            }
+          }
+        }
+      }
+    }),
+    [pieChartData.datasets]
+  );
+
+  /**
+   * The options for the bar chart:
+   *    Adds the title
+   *    Makes it responsive to screen size changes
+   *    Configures it as stacked
+   *    Sets the ticks to display currency
+   */
+  const barChartOptions = useMemo(
+    () => ({
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        title: {
+          display: true,
+          text: 'Meals by Weekday'
+        },
+        tooltip: {
+          callbacks: {
+            label: (tooltipItem: TooltipItem<'bar'>) => {
+              if (!tooltipItem) return '';
+              const dataset = barChartData.datasets[tooltipItem.datasetIndex];
+              if (!dataset) return '';
+              return dataset.data[tooltipItem.dataIndex].toLocaleString(
+                'en-US',
+                {
+                  style: 'currency',
+                  currency: 'USD'
+                }
+              );
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          stacked: true
+        },
+        y: {
+          beginAtZero: true,
+          stacked: true,
+          ticks: {
+            callback: function (tickValue: string | number) {
+              const value =
+                typeof tickValue === 'string'
+                  ? parseFloat(tickValue)
+                  : tickValue;
+              return value.toLocaleString('en-US', {
+                style: 'currency',
+                currency: 'USD'
+              });
+            }
+          }
+        }
+      }
+    }),
+    [barChartData.datasets]
+  );
 
   return (
     <SectionContainer title='Results'>
