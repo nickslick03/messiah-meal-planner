@@ -68,7 +68,11 @@ const Results = ({ isUnderBalance, difference, grandTotal }: ResultsProps) => {
 
   /** The data for the bar chart, splits up weekly meal prices by location. */
   const barChartData = useMemo(() => {
-    const locationMap = userMealsToStackedChart(userSelectedMeals.value);
+    const locationMap = userMealsToStackedChart(
+      userSelectedMeals.value,
+      meals,
+      customMeals.value
+    );
     return {
       labels: [...WEEKDAYS],
       datasets: mealLocations.map((location, i) => ({
@@ -79,11 +83,15 @@ const Results = ({ isUnderBalance, difference, grandTotal }: ResultsProps) => {
         borderWidth: 1
       }))
     };
-  }, [userSelectedMeals.value]);
+  }, [customMeals.value, userSelectedMeals.value]);
 
   /** The data for the pie chart, splits up weekly meal prices by location. */
   const pieChartData = useMemo(() => {
-    const locationMap = userMealsToStackedChart(userSelectedMeals.value);
+    const locationMap = userMealsToStackedChart(
+      userSelectedMeals.value,
+      meals,
+      customMeals.value
+    );
     const priceMap: number[] = [];
     locationMap.forEach((prices) =>
       priceMap.push(prices.reduce((p, c) => p + c))
@@ -99,7 +107,7 @@ const Results = ({ isUnderBalance, difference, grandTotal }: ResultsProps) => {
         }
       ]
     };
-  }, [userSelectedMeals.value]);
+  }, [customMeals.value, userSelectedMeals.value]);
 
   /** The options for the pie chart:
    *    Adds the title
