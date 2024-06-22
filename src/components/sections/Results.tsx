@@ -79,7 +79,8 @@ const Results = ({
     const locationMap = userMealsToStackedChart(
       userSelectedMeals.value,
       meals,
-      customMeals.value
+      customMeals.value,
+      isDiscount.value ?? false
     );
     return {
       labels: [...WEEKDAYS],
@@ -91,14 +92,15 @@ const Results = ({
         borderWidth: 1
       }))
     };
-  }, [customMeals.value, userSelectedMeals.value]);
+  }, [customMeals.value, userSelectedMeals.value, isDiscount.value]);
 
   /** The data for the pie chart, splits up weekly meal prices by location. */
   const pieChartData = useMemo(() => {
     const locationMap = userMealsToStackedChart(
       userSelectedMeals.value,
       meals,
-      customMeals.value
+      customMeals.value,
+      isDiscount.value ?? false
     );
     const priceMap: number[] = [];
     locationMap.forEach((prices) =>
@@ -115,7 +117,7 @@ const Results = ({
         }
       ]
     };
-  }, [customMeals.value, userSelectedMeals.value]);
+  }, [customMeals.value, userSelectedMeals.value, isDiscount.value]);
 
   /** The options for the pie chart:
    *    Adds the title
