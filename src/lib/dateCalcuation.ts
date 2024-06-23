@@ -59,9 +59,18 @@ export function getWeekdaysBetween(start: Date, end: Date, weekOff = false) {
   return weekdays;
 }
 
+/**
+ * Returns an array of all dates between the start and end dates, inclusive.
+ * @param start The start date. Must be before the end date
+ * @param end The end date
+ * @returns An array of dates between the start and end dates. If the start date is after the end date, returns an empty array.
+ */
 export const getAllDatesBetween = (start: Date, end: Date): Date[] =>
   start > end
     ? []
     : [new Date(start)].concat(
-        getAllDatesBetween(new Date(start.setDate(start.getDate() + 1)), end)
+        getAllDatesBetween(
+          new Date(start.getFullYear(), start.getMonth(), start.getDate() + 1),
+          end
+        )
       );
