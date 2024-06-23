@@ -65,7 +65,7 @@ const DayEditor = () => {
   const discount = useContext(MealPlanCtx);
 
   const mealDayTotal = useMemo(
-    () => getMealDayTotal(dayMealList, 1, discount.value),
+    () => getMealDayTotal(dayMealList, 1, discount.value ?? false),
     [dayMealList, discount.value]
   );
 
@@ -73,7 +73,11 @@ const DayEditor = () => {
   const numOfWeekdays = useMemo(
     () =>
       startDate.value !== null && endDate.value !== null
-        ? getWeekdaysBetween(startDate.value, endDate.value, weekOff.value)
+        ? getWeekdaysBetween(
+            startDate.value,
+            endDate.value,
+            weekOff.value ?? false
+          )
         : Array(7).fill(0),
     [startDate, endDate, weekOff]
   );
