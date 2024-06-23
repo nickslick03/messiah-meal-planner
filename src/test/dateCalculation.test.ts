@@ -108,4 +108,21 @@ describe('getAllDatesBetween', () => {
       new Date('06/08/2024')
     ]);
   });
+  it('should handle the end of the month and year correctly', () => {
+    expect(
+      getAllDatesBetween(new Date('05/31/2024'), new Date('06/02/2024'))
+    ).toEqual([
+      new Date('05/31/2024'),
+      new Date('06/01/2024'),
+      new Date('06/02/2024')
+    ]);
+    expect(
+      getAllDatesBetween(new Date('12/30/2023'), new Date('01/02/2024'))
+    ).toEqual([
+      new Date('12/30/2023'),
+      new Date('12/31/2023'),
+      new Date('01/01/2024'),
+      new Date('01/02/2024')
+    ]);
+  });
 });
