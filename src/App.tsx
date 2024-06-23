@@ -64,10 +64,6 @@ function App() {
   );
   const [areDetailsEntered, setAreDetailsEntered] = useState(false);
 
-  useEffect(() => {
-    console.log({ startDate, endDate });
-  });
-
   // Remove dangling meal references from mealQueue and userSelectedMeals
   useEffect(() => {
     const newMealQueue = mealQueue.filter((mr) =>
