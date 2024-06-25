@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { TutorialObject } from '../../static/tutorial';
 import SectionHeader from './SectionHeader';
 import { FiHelpCircle } from 'react-icons/fi';
 import TutorialModal from '../modals/TutorialModal';
+import usePersistentState from '../../hooks/usePersistentState';
 
 // Prop types
 interface SectionContainerProps {
@@ -24,6 +25,15 @@ const SectionContainer = ({
   title,
   tutorial
 }: SectionContainerProps): JSX.Element => {
+  const [isNewUser, setIsNewUser] = usePersistentState('isNewUser', true);
+
+  useEffect(() => {
+    if (isNewUser && tutorial?.title === 'Available Meals') {
+      setTutorialVisible(true);
+      setIsNewUser(false);
+    }
+  }, [isNewUser, setIsNewUser, tutorial?.title]);
+
   const [tutorialVisible, setTutorialVisible] = useState(false);
 
   return (

@@ -25,6 +25,7 @@ const AvailableMeals = () => {
   // State variable to track the current custom meal editing data
   const [currentCustomData, setCurrentCustomData] = useState<Meal>();
 
+  // State variable to track the ID of the next custom meal
   const [newCustomMealID, setNewCustomMealID] = useState<string>();
 
   /**
