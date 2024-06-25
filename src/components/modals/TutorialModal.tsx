@@ -72,6 +72,7 @@ const TutorialModal = ({
         confirmDisabled={isLastTutorial}
         centered={false}
       >
+      <div className='flex justify-center mb-4'>
         {/* Render the text of the tutorial */}
         {currentTutorial?.images?.small && (
           <img
@@ -84,9 +85,10 @@ const TutorialModal = ({
           <img
             src={currentTutorial?.images?.large}
             alt={currentTutorial?.title}
-            className={'hidden sm:block'}
+            className={'hidden sm:block max-w-lg'}
           />
-        )}
+        )}        
+      </div>
         {currentTutorial?.text}
       </ModalContainer>
     )

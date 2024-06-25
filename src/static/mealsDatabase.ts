@@ -421,4 +421,6 @@ const meals: Meal[] = [
   }
 ].map((m) => ({ ...m, id: generateId(m.location, m.name) }));
 
+export const mealLocations = [...(new Set(meals.map((m) => m.location)))];
+
 export default meals;
