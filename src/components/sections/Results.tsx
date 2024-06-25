@@ -1,41 +1,223 @@
 import { useContext, useMemo } from 'react';
 import SectionContainer from '../containers/SectionContainer';
 import DotLeader from '../other/DotLeader';
-import { BalanceCtx, MealPlanCtx, UserSelectedMealsCtx, CustomMealsCtx } from '../../static/context';
+import {
+  BalanceCtx,
+  MealPlanCtx,
+  UserSelectedMealsCtx,
+  CustomMealsCtx,
+  IsBreakCtx
+} from '../../static/context';
 import formatCurrency from '../../lib/formatCurrency';
 import { getMealTotal } from '../../lib/calculationEngine';
-import meals from '../../static/mealsDatabase';
+import meals, { mealLocations } from '../../static/mealsDatabase';
+import { Bar, Pie } from 'react-chartjs-2';
+import 'chart.js/auto';
+import { WEEKDAYS } from '../../static/constants';
+import { userMealsToStackedChart } from '../../lib/mealChartFormat';
+import Divider from '../other/Divider';
+import { TooltipItem } from 'chart.js/auto';
 
 interface ResultsProps {
-  grandTotal: number;
   isUnderBalance: boolean;
   difference: number;
+  grandTotal: number;
+  dayWhenRunOut: Date;
 }
+
+/** The background color for charts. */
+const backgroundColor = [
+  'rgba(54, 162, 235, 0.2)',
+  'rgba(75, 192, 192, 0.2)',
+  'rgba(255, 205, 86, 0.2)',
+  'rgba(255, 99, 132, 0.2)',
+  'rgba(153, 102, 255, 0.2)',
+  'rgba(201, 203, 207, 0.2)'
+];
+
+/** The border color for charts. */
+const borderColor = [
+  'rgb(54, 162, 235)',
+  'rgb(75, 192, 192)',
+  'rgb(255, 205, 86)',
+  'rgb(255, 99, 132)',
+  'rgb(153, 102, 255)',
+  'rgb(201, 203, 207)'
+];
 
 /**
  * Renders the results of the meal planning.
  */
 const Results = ({
-  grandTotal,
   isUnderBalance,
-  difference
+  difference,
+  grandTotal,
+  dayWhenRunOut
 }: ResultsProps) => {
+  // Load all necessary contexts
   const balance = useContext(BalanceCtx);
   const userMeals = useContext(UserSelectedMealsCtx);
   const isDiscount = useContext(MealPlanCtx);
   const customMeals = useContext(CustomMealsCtx);
+  const userSelectedMeals = useContext(UserSelectedMealsCtx);
+  const isBreak = useContext(IsBreakCtx);
 
   /** The meal total for one week. */
-  const weekTotal = useMemo(() => 
-    getMealTotal(
-      userMeals.value, 
-      Array<number>(7).fill(1),
-      isDiscount.value,
-      [...meals, ...customMeals.value]),
-    [customMeals.value, isDiscount.value, userMeals.value]);
+  const weekTotal = useMemo(
+    () =>
+      getMealTotal(
+        userMeals.value,
+        Array<number>(7).fill(1),
+        isDiscount.value || false,
+        [...meals, ...customMeals.value]
+      ),
+    [customMeals.value, isDiscount.value, userMeals.value]
+  );
+
+  /** The data for the bar chart, splits up weekly meal prices by location. */
+  const barChartData = useMemo(() => {
+    const locationMap = userMealsToStackedChart(
+      userSelectedMeals.value,
+      meals,
+      customMeals.value,
+      isDiscount.value ?? false
+    );
+    return {
+      labels: [...WEEKDAYS],
+      datasets: mealLocations.map((location, i) => ({
+        label: location,
+        data: locationMap.get(location) ?? [],
+        backgroundColor: backgroundColor[i],
+        borderColor: borderColor[i],
+        borderWidth: 1
+      }))
+    };
+  }, [customMeals.value, userSelectedMeals.value, isDiscount.value]);
+
+  /** The data for the pie chart, splits up weekly meal prices by location. */
+  const pieChartData = useMemo(() => {
+    const locationMap = userMealsToStackedChart(
+      userSelectedMeals.value,
+      meals,
+      customMeals.value,
+      isDiscount.value ?? false
+    );
+    const priceMap: number[] = [];
+    locationMap.forEach((prices) =>
+      priceMap.push(prices.reduce((p, c) => p + c))
+    );
+    return {
+      labels: mealLocations,
+      datasets: [
+        {
+          data: priceMap,
+          backgroundColor: backgroundColor,
+          borderColor: borderColor,
+          hoverOffset: 4
+        }
+      ]
+    };
+  }, [customMeals.value, userSelectedMeals.value, isDiscount.value]);
+
+  /** The options for the pie chart:
+   *    Adds the title
+   *    Makes it responsive to screen size changes
+   *    Sets the tooltips to display currency and percentage
+   */
+  const pieChartOptions = useMemo(
+    () => ({
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        title: {
+          display: true,
+          text: 'Meals by Weekly Price'
+        },
+        tooltip: {
+          callbacks: {
+            label: (tooltipItem: TooltipItem<'pie'>) => {
+              if (!tooltipItem) return '';
+
+              const dataset = pieChartData.datasets[tooltipItem.datasetIndex];
+              if (!dataset) return '';
+
+              const tooltipValue = dataset.data[tooltipItem.dataIndex];
+              const total = dataset.data
+                .filter((item) => !isNaN(item))
+                .reduce((a, b) => a + b, 0);
+              const tooltipPercentage = Math.round(
+                (tooltipItem.parsed * 100) / total
+              );
+
+              return `${formatCurrency(tooltipValue)} (${tooltipPercentage}%)`;
+            }
+          }
+        }
+      }
+    }),
+    [pieChartData.datasets]
+  );
+
+  /**
+   * The options for the bar chart:
+   *    Adds the title
+   *    Makes it responsive to screen size changes
+   *    Configures it as stacked
+   *    Sets the ticks to display currency
+   */
+  const barChartOptions = useMemo(
+    () => ({
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        title: {
+          display: true,
+          text: 'Meals by Weekday'
+        },
+        tooltip: {
+          callbacks: {
+            label: (tooltipItem: TooltipItem<'bar'>) => {
+              if (!tooltipItem) return '';
+              const dataset = barChartData.datasets[tooltipItem.datasetIndex];
+              if (!dataset) return '';
+              return formatCurrency(dataset.data[tooltipItem.dataIndex]);
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          stacked: true
+        },
+        y: {
+          beginAtZero: true,
+          stacked: true,
+          ticks: {
+            callback: function (tickValue: string | number) {
+              const value =
+                typeof tickValue === 'string'
+                  ? parseFloat(tickValue)
+                  : tickValue;
+              return formatCurrency(value);
+            }
+          }
+        }
+      }
+    }),
+    [barChartData.datasets]
+  );
 
   return (
     <SectionContainer title='Results'>
+      <div className='flex flex-row flex-wrap w-full justify-evenly my-4'>
+        <div className='relative my-4 w-full lg:w-[45%] min-h-[250px] sm:min-h-[300px]'>
+          <Bar data={barChartData} options={barChartOptions} />
+        </div>
+        <div className='relative my-4 w-full lg:w-[45%] min-h-[250px] sm:min-h-[300px]'>
+          <Pie data={pieChartData} options={pieChartOptions} />
+        </div>
+      </div>
+      <Divider />
       <DotLeader
         info={[
           {
@@ -53,7 +235,23 @@ const Results = ({
             value: `${formatCurrency(grandTotal)}`,
             resultsStyle: 'text-messiah-red'
           }
-        ]}
+        ].concat(
+          !isUnderBalance
+            ? [
+                {
+                  title:
+                    'Date When Money Runs Out' +
+                    (isBreak.value
+                      ? ' (Assuming Your Break Is Over Before This)'
+                      : ''),
+                  value: `${
+                    dayWhenRunOut.getMonth() + 1
+                  }/${dayWhenRunOut.getDate()}/${dayWhenRunOut.getFullYear()}`,
+                  resultsStyle: 'text-black'
+                }
+              ]
+            : []
+        )}
       />
       <div
         className={`${

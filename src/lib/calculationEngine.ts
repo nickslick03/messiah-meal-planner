@@ -1,7 +1,11 @@
 import Meal from '../types/Meal';
-import { UserSelectedMealsObjectType } from '../types/userSelectedMealsObject';
+import {
+  UserSelectedMealsObjectType,
+  Weekday
+} from '../types/userSelectedMealsObject';
 import { DISCOUNTS } from '../static/discounts';
 import { WEEKDAYS } from '../static/constants';
+import { getAllDatesBetween } from './dateCalcuation';
 
 /**
  * Applies a discount to the meal price based on the location.
@@ -54,4 +58,45 @@ export function getMealTotal(
     total += getMealDayTotal(mealList, weekdays[i], discount);
   });
   return total;
+}
+
+/**
+ * Calculates the date that the user will run out of funds, or the last date if they won't.
+ * @param userMeals The object representing the user selected meals
+ * @param discount A boolean flag indicating whether to apply a discount to the meal prices.
+ * @param searchMealList An array of meals to search from.
+ * @param startDate The start date of the timeframe
+ */
+export function calculateDateWhenRunOut(
+  userMeals: UserSelectedMealsObjectType,
+  discount: boolean,
+  searchMealList: Meal[],
+  startDate: Date,
+  endDate: Date,
+  startingBalance: number,
+  weekOff = false
+): Date {
+  const allDates = weekOff
+    ? getAllDatesBetween(startDate, endDate).slice(7)
+    : getAllDatesBetween(startDate, endDate);
+  const allWeekdays: Weekday[] = allDates.map(
+    (date) => WEEKDAYS[new Date(date).getDay()]
+  );
+  let total = 0;
+  let resultDate = allDates[allDates.length - 1]; // Default to the last date if no early return
+
+  allWeekdays.some((day, i) => {
+    const mealList = userMeals[day].map(
+      (mr: { id: string | undefined }) =>
+        searchMealList.find((m) => m.id === mr.id) as Meal
+    );
+    total += getMealDayTotal(mealList, 1, discount);
+    if (total >= startingBalance) {
+      resultDate = allDates[i];
+      return true; // Stops iteration
+    }
+    return false;
+  });
+
+  return resultDate;
 }
