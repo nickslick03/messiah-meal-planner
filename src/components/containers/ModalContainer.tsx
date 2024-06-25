@@ -11,6 +11,7 @@ interface ModalContainerProps {
   onConfirm?: () => void;
   onCancel?: () => void;
   confirmDisabled?: boolean;
+  centered?: boolean;
 }
 
 /**
@@ -23,6 +24,7 @@ interface ModalContainerProps {
  * @param {() => void} onConfirm - Event handler for when the confirm button is clicked
  * @param {() => void} onCancel - Event handler for when the cancel button is clicked
  * @param {boolean} confirmDisabled - boolean for whether the confirm button is disabled
+ * @param {boolean} centered - boolean for whether the modal content should be centered
  * @returns {JSX.Element} JSX for rendering a modal
  */
 const ModalContainer = ({
@@ -32,7 +34,8 @@ const ModalContainer = ({
   cancelText = 'Cancel',
   onConfirm,
   onCancel,
-  confirmDisabled = true
+  confirmDisabled = true,
+  centered = true
 }: ModalContainerProps): JSX.Element => {
   // Keep track of whether or not the modal is visible
   const [isVisible, setIsVisible] = useState(true);
@@ -52,7 +55,7 @@ const ModalContainer = ({
       {/* Fullscreen translucent black div to disable everything and focus attention on the modal */}
       <div className='h-screen w-screen bg-opacity-50 bg-slate-900 fixed top-0 left-0 flex items-center justify-center z-10'>
         {/* The actual modal component */}
-        <div className='text-center  bg-white w-full h-full max-w-[500px] max-h-[500px] rounded-lg p-5 mx-4 flex flex-col sm:w-5/6 sm:h-5/6'>
+        <div className='text-center bg-white w-full h-[80%] sm:w-auto sm:h-auto rounded-lg p-5 m-4 flex flex-col sm:min-w-[500px] sm:min-h-[500px] sm:max-w-[800px] sm:max-h-[800px]'>
           {
             /* Title goes here */
             title !== null && title !== undefined ? (
@@ -62,7 +65,15 @@ const ModalContainer = ({
             )
           }
           {/* Content goes here */}
-          <div className='flex-grow flex justify-center mt-4'>{children}</div>
+          <div
+            className={`overflow-y-scroll flex-grow flex flex-col ${
+              centered
+                ? 'justify-center'
+                : 'justify-start align-center text-left'
+            } mt-4`}
+          >
+            {children}
+          </div>
           {/* Confirm and cancel buttons */}
           <div className='flex-shrink flex flex-row justify-center'>
             <Button
@@ -75,7 +86,7 @@ const ModalContainer = ({
         </div>
       </div>
     </div>
-  )
+  );
 };
 
 export default ModalContainer;
