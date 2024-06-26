@@ -9,6 +9,7 @@ import {
   StartDateCtx
 } from '../../static/context';
 import { dateInputToDate, getDaysBetween } from '../../lib/dateCalcuation';
+import tutorial from '../../static/tutorial';
 
 /**
  * Renders a component for displaying and managing meal plan information.
@@ -42,7 +43,7 @@ const MealPlanInfo = ({
   }, [startDate, endDate, mealPlan, isBreak, balance, onEnterDetails]);
 
   return (
-    <SectionContainer title='Meal Plan Info'>
+    <SectionContainer title='Meal Plan Info' tutorial={tutorial.mealPlanInfo}>
       <div className='mt-4 flex flex-col gap-4'>
         <Input
           label={'Start Date:'}

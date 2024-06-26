@@ -20,6 +20,7 @@ import DaySelector from '../form_elements/DaySelector';
 import { Weekday } from '../../types/userSelectedMealsObject';
 import mapUserMeals from '../../lib/mapUserMeals';
 import dereferenceMeal from '../../lib/dereferenceMeal';
+import tutorial from '../../static/tutorial';
 
 /**
  * Renders a meal table for meals added to given days an an option to remove meals from that day.
@@ -120,6 +121,7 @@ const DayEditor = () => {
       buttonOnClick={removeMeal}
       createNotification={(name) => `Removed ${name} from ${weekday}`}
       searchable={false}
+      tutorial={tutorial.dayEditor}
     >
       <Divider />
       <DotLeader

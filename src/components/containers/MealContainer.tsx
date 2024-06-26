@@ -3,6 +3,7 @@ import MealTable from '../containers/table/MealTable';
 import React from 'react';
 import { IoAdd, IoRemove } from 'react-icons/io5';
 import Meal from '../../types/Meal';
+import { TutorialObject } from '../../static/tutorial';
 
 interface MealContainerProps {
   title?: string;
@@ -16,6 +17,7 @@ interface MealContainerProps {
   onCustomClick?: (data: Meal) => void;
   newCustomMealID?: string;
   searchable?: boolean;
+  tutorial?: TutorialObject;
 }
 
 /**
@@ -30,6 +32,7 @@ interface MealContainerProps {
  * @param {() => void} onCustomClick - The click event handler for editing a custom meal
  * @param {string | undefined} newCustomMealID - The ID of the newly added custom meal to scroll to
  * @param {boolean} searchable - Whether the table should be searchable
+ * @param {TutorialObject} tutorial - The tutorial object for the section
  * @return {JSX.Element} The Available Meals section component.
  */
 const MealContainer = ({
@@ -42,10 +45,11 @@ const MealContainer = ({
   createNotification,
   onCustomClick,
   newCustomMealID,
-  searchable = true
+  searchable = true,
+  tutorial
 }: MealContainerProps) => {
   return (
-    <SectionContainer title={title}>
+    <SectionContainer title={title} tutorial={tutorial}>
       {daySelector ?? <></>}
       <MealTable
         data={meals}
