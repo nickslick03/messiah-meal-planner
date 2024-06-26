@@ -28,7 +28,7 @@ const SectionContainer = ({
   const [isNewUser, setIsNewUser] = usePersistentState('isNewUser', true);
 
   useEffect(() => {
-    if (isNewUser && tutorial?.title === 'Available Meals') {
+    if (isNewUser && tutorial?.title === 'Meal Plan Info') {
       setTutorialVisible(true);
       setIsNewUser(false);
     }
