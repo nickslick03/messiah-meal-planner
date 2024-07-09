@@ -17,6 +17,7 @@ import { WEEKDAYS } from '../../static/constants';
 import { userMealsToStackedChart } from '../../lib/mealChartFormat';
 import Divider from '../other/Divider';
 import { TooltipItem } from 'chart.js/auto';
+import tutorial from '../../static/tutorial';
 
 interface ResultsProps {
   isUnderBalance: boolean;
@@ -208,7 +209,7 @@ const Results = ({
   );
 
   return (
-    <SectionContainer title='Results'>
+    <SectionContainer title='Results' tutorial={tutorial.results}>
       <div className='flex flex-row flex-wrap w-full justify-evenly my-4'>
         <div className='relative my-4 w-full lg:w-[45%] min-h-[250px] sm:min-h-[300px]'>
           <Bar data={barChartData} options={barChartOptions} />
