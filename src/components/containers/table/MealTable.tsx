@@ -102,124 +102,126 @@ const MealTable = ({
   const daySelectorId = `dayselector-${uuid()}`;
 
   return (
-    <div id={daySelectorId} className='relative w-full'>
-      <div
-        className={`${
-          data.length === 0 ? 'hidden' : ''
-        } mt-4 mb-1 flex gap-2 items-center w-full relative`}
-      >
-        {/* Search bar */}
+    <>
+      <div id={daySelectorId} className='relative w-full'>
         <div
-          className={
-            searchable
-              ? 'w-full flex flex-row gap-2 items-center relative'
-              : 'hidden'
-          }
+          className={`${
+            data.length === 0 ? 'hidden' : ''
+          } mt-4 mb-1 flex gap-2 items-center w-full relative`}
         >
-          <div className='flex-grow'>
-            <Input
-              type='text'
-              value={searchKey}
-              setValue={setSearchKey}
-              validator={(s) => s}
-              placeholder='Search for meals...'
-              cssClasses='w-full border-[2px] border-messiah-blue rounded-lg p-2 px-3 h-full'
+          {/* Search bar */}
+          <div
+            className={
+              searchable
+                ? 'w-full flex flex-row gap-2 items-center relative'
+                : 'hidden'
+            }
+          >
+            <div className='flex-grow'>
+              <Input
+                type='text'
+                value={searchKey}
+                setValue={setSearchKey}
+                validator={(s) => s}
+                placeholder='Search for meals...'
+                cssClasses='w-full border-[2px] border-messiah-blue rounded-lg p-2 px-3 h-full'
+              />
+            </div>
+
+            {/* Custom meal filter */}
+            <div className='text-sm h-full bg-gray-300 rounded-lg flex flex-row relative z-5'>
+              <button
+                id={`dayselector-${daySelectorId}-0`}
+                onClick={() => setCustomOnly(false)}
+                className={`relative flex flex-row items-center justify-center h-full rounded-lg p-[5px] ${
+                  customOnly
+                    ? 'sm:hover:bg-messiah-light-blue-hover'
+                    : 'bg-transparent hover:bg-transparent active:bg-transparent'
+                } transition duration-50 z-20`}
+              >
+                <FaListUl className='p-2' size={30} />
+                <span className='hidden sm:inline'>All&nbsp;</span>
+              </button>
+              <button
+                id={`dayselector-${daySelectorId}-1`}
+                onClick={() => setCustomOnly(true)}
+                className={`relative flex flex-row items-center justify-center h-full rounded-lg p-[5px] ${
+                  customOnly
+                    ? 'bg-transparent hover:bg-transparent active:bg-transparent'
+                    : 'sm:hover:bg-messiah-light-blue-hover'
+                } transition duration-50 z-20`}
+              >
+                <FaUser className='p-2' size={30} />
+                <span className='hidden sm:inline'>Custom Only&nbsp;</span>
+              </button>
+            </div>
+            <Highlighter
+              selectedIndex={customOnly ? 1 : 0}
+              daySelectorId={daySelectorId}
+              offsetTop={-16}
             />
           </div>
-
-          {/* Custom meal filter */}
-          <div className='text-sm h-full bg-gray-300 rounded-lg flex flex-row relative z-5'>
-            <button
-              id={`dayselector-${daySelectorId}-0`}
-              onClick={() => setCustomOnly(false)}
-              className={`relative flex flex-row items-center justify-center h-full rounded-lg p-[5px] ${
-                customOnly
-                  ? 'sm:hover:bg-messiah-light-blue-hover'
-                  : 'bg-transparent hover:bg-transparent active:bg-transparent'
-              } transition duration-50 z-20`}
-            >
-              <FaListUl className='p-2' size={30} />
-              <span className='hidden sm:inline'>All&nbsp;</span>
-            </button>
-            <button
-              id={`dayselector-${daySelectorId}-1`}
-              onClick={() => setCustomOnly(true)}
-              className={`relative flex flex-row items-center justify-center h-full rounded-lg p-[5px] ${
-                customOnly
-                  ? 'bg-transparent hover:bg-transparent active:bg-transparent'
-                  : 'sm:hover:bg-messiah-light-blue-hover'
-              } transition duration-50 z-20`}
-            >
-              <FaUser className='p-2' size={30} />
-              <span className='hidden sm:inline'>Custom Only&nbsp;</span>
-            </button>
-          </div>
-          <Highlighter
-            selectedIndex={customOnly ? 1 : 0}
-            daySelectorId={daySelectorId}
-            offsetTop={-16}
-          />
         </div>
+        <div
+          className={`overflow-y-scroll flex-grow max-h-[400px] w-full ${
+            filteredAndSortedData.length > 0 ? '' : 'hidden'
+          }`}
+        >
+          <table className='w-full [&_tr>td:nth-child(-n+2)]:text-left [&_tr>td:nth-child(n+3)]:text-right relative'>
+            {/* Table header */}
+            <thead className='sticky top-0 bg-white drop-shadow-dark'>
+              <tr>
+                {headers.map((header, index) =>
+                  header !== null ? (
+                    <TableCell
+                      key={index}
+                      data={header}
+                      importance={newImportanceIndex(
+                        header === sortColumn ? 5 : 4
+                      )}
+                      isHeader={true}
+                      onCustomClick={
+                        !['Add', 'Del'].includes(header)
+                          ? () => handleSortClick(header as SortBy)
+                          : undefined
+                      }
+                      sortState={
+                        header !== sortColumn ? 0 : sortDirection ? 1 : 2
+                      }
+                    />
+                  ) : (
+                    <Fragment key={index}></Fragment>
+                  )
+                )}
+              </tr>
+            </thead>
+            {/* Table body */}
+            <tbody>
+              {filteredAndSortedData.map((row, index) => (
+                <TableRow
+                  key={index}
+                  data={row}
+                  buttonIcon={buttonIcon}
+                  buttonOnClick={() => handleButtonClick(row)}
+                  onCustomClick={onCustomClick}
+                  newCustomMealID={newCustomMealID}
+                />
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p
+          className={`p-6 w-full flex items-center justify-center text-gray-400 ${
+            filteredAndSortedData.length > 0 ? 'hidden' : ''
+          }`}
+        >
+          {data.length === 0
+            ? 'No meals to display.'
+            : 'Your search returned no results.'}
+        </p>
       </div>
-      <div
-        className={`overflow-y-scroll flex-grow max-h-[400px] w-full ${
-          filteredAndSortedData.length > 0 ? '' : 'hidden'
-        }`}
-      >
-        <table className='w-full [&_tr>td:nth-child(-n+2)]:text-left [&_tr>td:nth-child(n+3)]:text-right relative'>
-          {/* Table header */}
-          <thead className='sticky top-0 bg-white drop-shadow-dark'>
-            <tr>
-              {headers.map((header, index) =>
-                header !== null ? (
-                  <TableCell
-                    key={index}
-                    data={header}
-                    importance={newImportanceIndex(
-                      header === sortColumn ? 5 : 4
-                    )}
-                    isHeader={true}
-                    onCustomClick={
-                      !['Add', 'Del'].includes(header)
-                        ? () => handleSortClick(header as SortBy)
-                        : undefined
-                    }
-                    sortState={
-                      header !== sortColumn ? 0 : sortDirection ? 1 : 2
-                    }
-                  />
-                ) : (
-                  <Fragment key={index}></Fragment>
-                )
-              )}
-            </tr>
-          </thead>
-          {/* Table body */}
-          <tbody>
-            {filteredAndSortedData.map((row, index) => (
-              <TableRow
-                key={index}
-                data={row}
-                buttonIcon={buttonIcon}
-                buttonOnClick={() => handleButtonClick(row)}
-                onCustomClick={onCustomClick}
-                newCustomMealID={newCustomMealID}
-              />
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <p
-        className={`p-6 w-full flex items-center justify-center text-gray-400 ${
-          filteredAndSortedData.length > 0 ? 'hidden' : ''
-        }`}
-      >
-        {data.length === 0
-          ? 'No meals to display.'
-          : 'Your search returned no results.'}
-      </p>
       <Notification message={message} />
-    </div>
+    </>
   );
 };
 
