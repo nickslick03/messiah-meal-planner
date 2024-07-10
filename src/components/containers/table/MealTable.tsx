@@ -132,7 +132,11 @@ const MealTable = ({
             <button
               id={`dayselector-${daySelectorId}-0`}
               onClick={() => setCustomOnly(false)}
-              className={`relative flex flex-row items-center justify-center h-full rounded-lg p-[5px] sm:hover:bg-messiah-light-blue-hover sm:active:bg-messiah-light-blue-active bg-transparent transition duration-50 z-20`}
+              className={`relative flex flex-row items-center justify-center h-full rounded-lg p-[5px] ${
+                customOnly
+                  ? 'sm:hover:bg-messiah-light-blue-hover'
+                  : 'bg-transparent hover:bg-transparent active:bg-transparent'
+              } transition duration-50 z-20`}
             >
               <FaListUl className='p-2' size={30} />
               <span className='hidden sm:inline'>All&nbsp;</span>
@@ -140,7 +144,11 @@ const MealTable = ({
             <button
               id={`dayselector-${daySelectorId}-1`}
               onClick={() => setCustomOnly(true)}
-              className={`relative flex flex-row items-center justify-center h-full rounded-lg p-[5px] sm:hover:bg-messiah-light-blue-hover sm:active:bg-messiah-light-blue-active bg-transparent transition duration-50 z-20`}
+              className={`relative flex flex-row items-center justify-center h-full rounded-lg p-[5px] ${
+                customOnly
+                  ? 'bg-transparent hover:bg-transparent active:bg-transparent'
+                  : 'sm:hover:bg-messiah-light-blue-hover'
+              } transition duration-50 z-20`}
             >
               <FaUser className='p-2' size={30} />
               <span className='hidden sm:inline'>Custom Only&nbsp;</span>
