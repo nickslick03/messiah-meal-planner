@@ -202,7 +202,7 @@ const MealTable = ({
         </table>
       </div>
       <p
-        className={`p-6 text-gray-400 ${
+        className={`p-6 w-full flex items-center justify-center text-gray-400 ${
           filteredAndSortedData.length > 0 ? 'hidden' : ''
         }`}
       >
