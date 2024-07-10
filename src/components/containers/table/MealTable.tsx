@@ -152,6 +152,38 @@ const MealTable = ({
               offsetTop={-16}
             />
           </div>
+          {/* Custom meal filter */}
+          <div className='text-sm h-full bg-gray-300 rounded-lg flex flex-row relative z-5'>
+            <button
+              id={`dayselector-${daySelectorId}-0`}
+              onClick={() => setCustomOnly(false)}
+              className={`relative flex flex-row items-center justify-center h-full rounded-lg p-[5px] ${
+                customOnly
+                  ? 'sm:hover:bg-messiah-light-blue-hover'
+                  : 'bg-transparent hover:bg-transparent active:bg-transparent'
+              } transition duration-50 z-20`}
+            >
+              <FaListUl className='p-2' size={30} />
+              <span className='hidden sm:inline'>All&nbsp;</span>
+            </button>
+            <button
+              id={`dayselector-${daySelectorId}-1`}
+              onClick={() => setCustomOnly(true)}
+              className={`relative flex flex-row items-center justify-center h-full rounded-lg p-[5px] ${
+                customOnly
+                  ? 'bg-transparent hover:bg-transparent active:bg-transparent'
+                  : 'sm:hover:bg-messiah-light-blue-hover'
+              } transition duration-50 z-20`}
+            >
+              <FaUser className='p-2' size={30} />
+              <span className='hidden sm:inline'>Custom Only&nbsp;</span>
+            </button>
+          </div>
+          <Highlighter
+            selectedIndex={customOnly ? 1 : 0}
+            daySelectorId={daySelectorId}
+            offsetTop={-16}
+          />
         </div>
         <div
           className={`overflow-y-scroll flex-grow max-h-[400px] w-full ${filteredAndSortedData.length > 0 ? '' : 'hidden'
