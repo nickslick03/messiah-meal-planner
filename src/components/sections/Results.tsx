@@ -210,11 +210,12 @@ const Results = ({
 
   return (
     <SectionContainer title='Results' tutorial={tutorial.results}>
-      <div className='flex flex-row flex-wrap w-full justify-evenly my-4'>
-        <div className='relative my-4 w-full lg:w-[45%] min-h-[250px] sm:min-h-[300px]'>
+      <div className='text-gray-400 mt-4 mb-1'>(Charts are based on the total for 1 week)</div>
+      <div className='flex flex-row flex-wrap w-full justify-evenly mb-4'>
+        <div className='relative mb-4 w-full lg:w-[45%] min-h-[250px] sm:min-h-[300px]'>
           <Bar data={barChartData} options={barChartOptions} />
         </div>
-        <div className='relative my-4 w-full lg:w-[45%] min-h-[250px] sm:min-h-[300px]'>
+        <div className='relative mb-4 w-full lg:w-[45%] min-h-[250px] sm:min-h-[300px]'>
           <Pie data={pieChartData} options={pieChartOptions} />
         </div>
       </div>
