@@ -1,12 +1,6 @@
-import {
-  useContext,
-  useRef,
-  useState,
-  useEffect,
-} from 'react';
+import { useContext, useRef, useState, useEffect } from 'react';
 import { BalanceCtx } from '../../static/context';
 import formatCurrency from '../../lib/formatCurrency';
-
 
 interface ResultsBarProps {
   grandTotal: number;
@@ -35,10 +29,10 @@ const ResultsBar = ({
   const [isAtBottom, setIsAtBottom] = useState(false);
 
   useEffect(() => {
-    (new IntersectionObserver(
+    new IntersectionObserver(
       ([e]) => setIsAtBottom(e.intersectionRatio === 1),
       { threshold: [1] }
-    )).observe(ref.current!);
+    ).observe(ref.current!);
   }, []);
 
   return (
@@ -46,20 +40,27 @@ const ResultsBar = ({
       id={'resultsBar'}
       ref={ref}
       className={`sticky w-full bottom-[-1px] p-2 bg-messiah-light-blue drop-shadow-dark 
-      rounded-t-xl flex gap-6 justify-around text-center bg-opacity-80 backdrop-blur-sm ${
+      rounded-t-xl flex gap-6 justify-around text-center bg-opacity-80 z-50 backdrop-blur-sm ${
         isAtBottom ? 'rounded-bl-xl rounded-br-xl' : ''
-      }`}>
+      }`}
+    >
       <div className='hidden sm:block'>
         <span className='font-bold'>Starting Balance: </span>
-        <span className='text-messiah-green'>{formatCurrency(balance.value ?? 0)}</span>
+        <span className='text-messiah-green'>
+          {formatCurrency(balance.value ?? 0)}
+        </span>
       </div>
       <div>
         <span className='font-bold'>Grand Total: </span>
         <span className='text-messiah-red'>{formatCurrency(grandTotal)}</span>
       </div>
       <div>
-        <span className='font-bold'>$ {isUnderBalance ? 'Extra' : 'Short'}: </span>
-        <span className={isUnderBalance ? 'text-messiah-green' : 'text-messiah-red'}>
+        <span className='font-bold'>
+          $ {isUnderBalance ? 'Extra' : 'Short'}:{' '}
+        </span>
+        <span
+          className={isUnderBalance ? 'text-messiah-green' : 'text-messiah-red'}
+        >
           {formatCurrency(difference)}
         </span>
       </div>
