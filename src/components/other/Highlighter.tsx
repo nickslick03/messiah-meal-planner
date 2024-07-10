@@ -29,6 +29,8 @@ const Highlighter: React.FC<HighlighterProps> = ({
   }>({ top: 0, height: 0, width: 0, left: 0 });
   const highlightRef = useRef<HTMLDivElement>(null);
 
+  const [renderNumber, setRenderNumber] = useState(0);
+
   const updateHighlightPosition = useCallback(() => {
     const button = document.getElementById(
       `dayselector-${daySelectorId}-${selectedIndex}`
@@ -50,8 +52,20 @@ const Highlighter: React.FC<HighlighterProps> = ({
     }
   }, [daySelectorId, selectedIndex, offsetTop, offsetLeft]);
 
+  // Initial render to set position without transition
   useEffect(() => {
     updateHighlightPosition();
+    setRenderNumber(renderNumber < 2 ? renderNumber + 1 : renderNumber); // Disable initial render flag
+  }, [renderNumber, updateHighlightPosition]);
+
+  // Enable transition after initial render
+  useEffect(() => {
+    if (renderNumber >= 2) {
+      updateHighlightPosition();
+    }
+  }, [renderNumber, updateHighlightPosition]);
+
+  useEffect(() => {
     window.addEventListener('resize', updateHighlightPosition);
     return () => {
       window.removeEventListener('resize', updateHighlightPosition);
@@ -62,7 +76,9 @@ const Highlighter: React.FC<HighlighterProps> = ({
     <div className='absolute inset-0 pointer-events-none z-0'>
       <div
         ref={highlightRef}
-        className='absolute bg-messiah-light-blue rounded-lg transition-all duration-300 z-6'
+        className={`absolute bg-messiah-light-blue rounded-lg ${
+          renderNumber >= 2 ? 'transition-all duration-300' : 'transition-none'
+        } z-6`}
         style={{
           top: highlightStyle.top,
           height: highlightStyle.height,
