@@ -1,32 +1,26 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 
-/**
- * Props for the Highlighter component.
- */
 interface HighlighterProps {
-  /**
-   * The index of the selected day in the day selector.
-   */
   selectedIndex: number;
-
-  /**
-   * The id of the day selector.
-   */
   daySelectorId: string;
+  offsetTop?: number; // Optional offset for top
+  offsetLeft?: number; // Optional offset for left
 }
 
 /**
- * Highlighter component that highlights the selected day in a day selector by creating a div that follows the selected day button.
- *
- * @param props - The props for the Highlighter component.
- * @param props.selectedIndex - The index of the selected day in the day selector.
- * @param props.daySelectorId - The id of the day selector.
- * @returns The Highlighter component with a div that follows the selected day button.
+ * Component for highlighting the selected day in a day selector
+ * @param {number} selectedIndex - Index of the selected day
+ * @param {string} daySelectorId - ID of the day selector
+ * @param {number} [offsetTop=0] - Optional offset for top
+ * @param {number} [offsetLeft=0] - Optional offset for left
+ * @returns {JSX.Element} The Highlighter component
  */
 const Highlighter: React.FC<HighlighterProps> = ({
   selectedIndex,
-  daySelectorId
-}: HighlighterProps) => {
+  daySelectorId,
+  offsetTop = 0, // Default to 0 if not provided
+  offsetLeft = 0 // Default to 0 if not provided
+}) => {
   const [highlightStyle, setHighlightStyle] = useState<{
     top: number;
     height: number;
@@ -35,30 +29,40 @@ const Highlighter: React.FC<HighlighterProps> = ({
   }>({ top: 0, height: 0, width: 0, left: 0 });
   const highlightRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
+  const updateHighlightPosition = useCallback(() => {
     const button = document.getElementById(
       `dayselector-${daySelectorId}-${selectedIndex}`
     );
-    const daySelector = document.getElementById(daySelectorId);
-    if (button && highlightRef.current && daySelector) {
+    const parent = document.getElementById(daySelectorId);
+
+    if (button && parent && highlightRef.current) {
       const buttonRect = button.getBoundingClientRect();
-      const parentRect = daySelector.getBoundingClientRect();
+      const parentRect = parent.getBoundingClientRect();
+
       if (buttonRect && parentRect) {
         setHighlightStyle({
-          top: buttonRect.top - parentRect.top,
+          top: buttonRect.top - parentRect.top + offsetTop,
           height: buttonRect.height,
           width: buttonRect.width,
-          left: buttonRect.left - parentRect.left
+          left: buttonRect.left - parentRect.left + offsetLeft
         });
       }
     }
-  }, [daySelectorId, selectedIndex]);
+  }, [daySelectorId, selectedIndex, offsetTop, offsetLeft]);
+
+  useEffect(() => {
+    updateHighlightPosition();
+    window.addEventListener('resize', updateHighlightPosition);
+    return () => {
+      window.removeEventListener('resize', updateHighlightPosition);
+    };
+  }, [updateHighlightPosition]);
 
   return (
-    <div className='absolute inset-0 pointer-events-none'>
+    <div className='absolute inset-0 pointer-events-none z-0'>
       <div
         ref={highlightRef}
-        className={`absolute bg-messiah-light-blue rounded-lg transition-all duration-300 z-0`}
+        className='absolute bg-messiah-light-blue rounded-lg transition-all duration-300 z-6'
         style={{
           top: highlightStyle.top,
           height: highlightStyle.height,

@@ -1,14 +1,16 @@
-import Meal from '../../../types/Meal';
-import { newImportanceIndex } from '../../../types/ImportanceIndex';
-import TableRow from './TableRow';
-import TableCell from './TableCell';
-import Notification from '../../other/Notification';
 import { Fragment, useMemo, useState } from 'react';
-import sortMeals from '../../../lib/sortMeals';
-import SortBy from '../../../types/SortBy';
-import Input from '../../form_elements/Input';
-import { filterMeals } from '../../../lib/filterMeals';
 import { FaListUl, FaUser } from 'react-icons/fa';
+import { v4 as uuid } from 'uuid';
+import Highlighter from '../../other/Highlighter';
+import Input from '../../form_elements/Input';
+import Notification from '../../other/Notification';
+import TableCell from './TableCell';
+import TableRow from './TableRow';
+import sortMeals from '../../../lib/sortMeals';
+import { filterMeals } from '../../../lib/filterMeals';
+import { newImportanceIndex } from '../../../types/ImportanceIndex';
+import SortBy from '../../../types/SortBy';
+import Meal from '../../../types/Meal';
 
 interface MealTableProps {
   data: Array<Meal>;
@@ -21,19 +23,6 @@ interface MealTableProps {
   searchable?: boolean;
 }
 
-/**
- * Renders a table component for displaying meal data with an optional button
- *
- * @param {Array<Meal>} data - The array of meal objects to be displayed in the table
- * @param {string} buttonTitle - The title of the optional button column
- * @param {JSX.Element} buttonIcon - The icon for the optional button
- * @param {(Meal) => void} buttonOnClick - The click event handler for the optional button
- * @param {(string) => string} notificationMessage - A function that takes in the meal name and returns the notification message when the meal button is clicked.
- * @param {() => void} onCustomClick - The click event handler for editing a custom meal
- * @param {string | undefined} newCustomMealID - The ID of the newly added custom meal to scroll to
- * @param {boolean} searchable - Whether the table should be searchable
- * @return {JSX.Element} The rendered table component
- */
 const MealTable = ({
   data,
   buttonIcon,
@@ -45,19 +34,10 @@ const MealTable = ({
   searchable = true
 }: MealTableProps): JSX.Element => {
   const headers = ['Place', 'Name', 'Price', buttonTitle ?? null];
-
-  /** State variable to store sort direction */
   const [sortDirection, setSortDirection] = useState(true);
-
-  /** State variable to store sort column */
   const [sortColumn, setSortColumn] = useState<SortBy>('Place');
-
-  /** State variable to store search key. */
   const [searchKey, setSearchKey] = useState<string | null>('');
-
   const [customOnly, setCustomOnly] = useState(false);
-
-  /** The notification message */
   const [message, setMessage] = useState({ text: '' });
 
   const handleButtonClick = (row: Meal) => {
@@ -65,7 +45,6 @@ const MealTable = ({
     setMessage({ text: createNotification(row.name) });
   };
 
-  /** The sorted and filtered meal list. */
   const filteredAndSortedData = useMemo(() => {
     const customFilteredMeals = customOnly
       ? data.filter((meal) => meal.isCustom)
@@ -81,25 +60,27 @@ const MealTable = ({
     );
   }, [data, sortColumn, sortDirection, searchKey, customOnly]);
 
-  /** Handles the header click which sorts the meal table. */
   const handleSortClick = (header: SortBy) => {
     setSortColumn(header);
     setSortDirection(sortColumn === header ? !sortDirection : true);
   };
 
+  const daySelectorId = `dayselector-${uuid()}`;
+
   return (
-    <>
+    <div id={daySelectorId} className='relative w-full'>
       <div
         className={`${
           data.length === 0 ? 'hidden' : ''
-        } mt-4 mb-1 flex gap-2 items-center w-full`}
+        } mt-4 mb-1 flex gap-2 items-center w-full relative`}
       >
         <div
           className={
-            searchable ? 'w-full flex flex-row gap-2 items-center' : 'hidden'
+            searchable
+              ? 'w-full flex flex-row gap-2 items-center relative'
+              : 'hidden'
           }
         >
-          {/* Search bar */}
           <div className='flex-grow'>
             <Input
               type='text'
@@ -110,27 +91,29 @@ const MealTable = ({
               cssClasses='w-full border-[2px] border-messiah-blue rounded-lg p-2 px-3 h-full'
             />
           </div>
-          {/* Custom meal filtering toggle */}
-          <div className='text-sm h-full bg-gray-300 rounded-lg flex flex-row'>
+          <div className='text-sm h-full bg-gray-300 rounded-lg flex flex-row relative z-5'>
             <button
+              id={`dayselector-${daySelectorId}-0`}
               onClick={() => setCustomOnly(false)}
-              className={`flex flex-row items-center justify-center h-full rounded-lg p-[5px] sm:hover:bg-messiah-light-blue-hover sm:active:bg-messiah-light-blue-active ${
-                customOnly ? '' : 'bg-messiah-light-blue'
-              } transition duration-50`}
+              className={`relative flex flex-row items-center justify-center h-full rounded-lg p-[5px] sm:hover:bg-messiah-light-blue-hover sm:active:bg-messiah-light-blue-active bg-transparent transition duration-50 z-20`}
             >
               <FaListUl className='p-2' size={30} />
-              <span className={'hidden sm:inline'}>All&nbsp;</span>
+              <span className='hidden sm:inline'>All&nbsp;</span>
             </button>
             <button
+              id={`dayselector-${daySelectorId}-1`}
               onClick={() => setCustomOnly(true)}
-              className={`flex flex-row items-center justify-center h-full rounded-lg p-[5px] sm:hover:bg-messiah-light-blue-hover sm:active:bg-messiah-light-blue-active ${
-                customOnly ? 'bg-messiah-light-blue' : ''
-              } transition duration-50`}
+              className={`relative flex flex-row items-center justify-center h-full rounded-lg p-[5px] sm:hover:bg-messiah-light-blue-hover sm:active:bg-messiah-light-blue-active bg-transparent transition duration-50 z-20`}
             >
               <FaUser className='p-2' size={30} />
-              <span className={'hidden sm:inline'}>Custom Only&nbsp;</span>
+              <span className='hidden sm:inline'>Custom Only&nbsp;</span>
             </button>
           </div>
+          <Highlighter
+            selectedIndex={customOnly ? 1 : 0}
+            daySelectorId={daySelectorId}
+            offsetTop={-16}
+          />
         </div>
       </div>
       <div
@@ -139,7 +122,6 @@ const MealTable = ({
         }`}
       >
         <table className='w-full [&_tr>td:nth-child(-n+2)]:text-left [&_tr>td:nth-child(n+3)]:text-right relative'>
-          {/* Table header */}
           <thead className='sticky top-0 bg-white drop-shadow-dark'>
             <tr>
               {headers.map((header, index) =>
@@ -166,7 +148,6 @@ const MealTable = ({
               )}
             </tr>
           </thead>
-          {/* Table body */}
           <tbody>
             {filteredAndSortedData.map((row, index) => (
               <TableRow
@@ -191,7 +172,7 @@ const MealTable = ({
           : 'Your search returned no results.'}
       </p>
       <Notification message={message} />
-    </>
+    </div>
   );
 };
 
