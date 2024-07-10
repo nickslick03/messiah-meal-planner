@@ -113,6 +113,7 @@ const DayEditor = () => {
               .map((_, day) => day === weekdayIndex)}
             onChange={setWeekdayIndex}
             numOfMeals={numOfMeals}
+            slideHighlight
           />
         </div>
       }
