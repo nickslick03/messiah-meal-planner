@@ -23,6 +23,19 @@ interface MealTableProps {
   searchable?: boolean;
 }
 
+/**
+ * Renders a table component for displaying meal data with an optional button
+ *
+ * @param {Array<Meal>} data - The array of meal objects to be displayed in the table
+ * @param {string} buttonTitle - The title of the optional button column
+ * @param {JSX.Element} buttonIcon - The icon for the optional button
+ * @param {(Meal) => void} buttonOnClick - The click event handler for the optional button
+ * @param {(string) => string} notificationMessage - A function that takes in the meal name and returns the notification message when the meal button is clicked.
+ * @param {() => void} onCustomClick - The click event handler for editing a custom meal
+ * @param {string | undefined} newCustomMealID - The ID of the newly added custom meal to scroll to
+ * @param {boolean} searchable - Whether the table should be searchable
+ * @return {JSX.Element} The rendered table component
+ */
 const MealTable = ({
   data,
   buttonIcon,
