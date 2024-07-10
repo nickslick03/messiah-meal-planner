@@ -47,17 +47,34 @@ const MealTable = ({
   searchable = true
 }: MealTableProps): JSX.Element => {
   const headers = ['Place', 'Name', 'Price', buttonTitle ?? null];
+
+  /** State variable to store sort direction */
   const [sortDirection, setSortDirection] = useState(true);
+
+  /** State variable to store sort column */
   const [sortColumn, setSortColumn] = useState<SortBy>('Place');
+
+  /** State variable to store search key. */
   const [searchKey, setSearchKey] = useState<string | null>('');
+
+  /** State variable to store whether only custom meals should be displayed */
   const [customOnly, setCustomOnly] = useState(false);
+
+  /** State variable to store notification message. */
   const [message, setMessage] = useState({ text: '' });
 
+  /**
+   * Creates a notification on button click
+   * @param row - The meal object to be filtered
+   */
   const handleButtonClick = (row: Meal) => {
     buttonOnClick(row);
     setMessage({ text: createNotification(row.name) });
   };
 
+  /**
+   * Filters and sorts the meal data based on the search key and sort direction
+   */
   const filteredAndSortedData = useMemo(() => {
     const customFilteredMeals = customOnly
       ? data.filter((meal) => meal.isCustom)
@@ -73,6 +90,10 @@ const MealTable = ({
     );
   }, [data, sortColumn, sortDirection, searchKey, customOnly]);
 
+  /**
+   * Set sort column and sort direction
+   * @param header - The column to sort by
+   */
   const handleSortClick = (header: SortBy) => {
     setSortColumn(header);
     setSortDirection(sortColumn === header ? !sortDirection : true);
@@ -87,6 +108,7 @@ const MealTable = ({
           data.length === 0 ? 'hidden' : ''
         } mt-4 mb-1 flex gap-2 items-center w-full relative`}
       >
+        {/* Search bar */}
         <div
           className={
             searchable
@@ -104,6 +126,8 @@ const MealTable = ({
               cssClasses='w-full border-[2px] border-messiah-blue rounded-lg p-2 px-3 h-full'
             />
           </div>
+
+          {/* Custom meal filter */}
           <div className='text-sm h-full bg-gray-300 rounded-lg flex flex-row relative z-5'>
             <button
               id={`dayselector-${daySelectorId}-0`}
@@ -135,6 +159,7 @@ const MealTable = ({
         }`}
       >
         <table className='w-full [&_tr>td:nth-child(-n+2)]:text-left [&_tr>td:nth-child(n+3)]:text-right relative'>
+          {/* Table header */}
           <thead className='sticky top-0 bg-white drop-shadow-dark'>
             <tr>
               {headers.map((header, index) =>
@@ -161,6 +186,7 @@ const MealTable = ({
               )}
             </tr>
           </thead>
+          {/* Table body */}
           <tbody>
             {filteredAndSortedData.map((row, index) => (
               <TableRow
