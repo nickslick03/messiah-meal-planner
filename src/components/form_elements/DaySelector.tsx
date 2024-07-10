@@ -35,8 +35,8 @@ const DaySelector = ({
               square && 'w-10'
             } rounded-lg flex flex-col items-center justify-center ${
               daysSelected[i]
-                ? 'bg-messiah-light-blue sm:hover:bg-messiah-light-blue-hover sm:active:bg-messiah-light-blue-active'
-                : 'bg-gray-300 sm:hover:bg-gray-200 sm:active:bg-gray-400'
+                ? 'bg-messiah-light-blue sm:hover:bg-messiah-light-blue-hover sm:active:bg-messiah-light-blue-active transition duration-50'
+                : 'bg-gray-300 sm:hover:bg-gray-200 sm:active:bg-gray-400 transition duration-50'
             }`}
             onClick={() => onChange(i)}
           >

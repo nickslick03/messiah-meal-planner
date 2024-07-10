@@ -17,7 +17,7 @@ const ButtonCell = ({
   <td className='text-center'>
     <button
       className='bg-messiah-light-blue hover:bg-messiah-light-blue-hover active:bg-messiah-light-blue-active
-      text-black text-lg font-bold w-8 h-8 m-2 rounded-full text-center'
+      text-black text-lg font-bold w-8 h-8 m-2 rounded-full text-center transition duration-50'
       onClick={onClick}
     >
       <div className='flex justify-center items-center'>{icon}</div>

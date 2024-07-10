@@ -106,7 +106,7 @@ const CustomMealAddModal = ({
         {startingData && (
           <Button
             onClick={onDelete ?? (() => {})}
-            style='bg-messiah-red border-messiah-red hover:bg-messiah-red-hover hover:border-messiah-red-hover active:bg-messiah-red-active active:border-messiah-red-active text-white'
+            style='bg-messiah-red border-messiah-red hover:bg-messiah-red-hover hover:border-messiah-red-hover active:bg-messiah-red-active active:border-messiah-red-active text-white  transition duration-50'
             icon={<FaTrash />}
             title='Delete Meal'
           ></Button>

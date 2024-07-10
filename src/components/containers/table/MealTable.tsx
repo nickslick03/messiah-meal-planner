@@ -83,8 +83,8 @@ const MealTable = ({
 
   /** Handles the header click which sorts the meal table. */
   const handleSortClick = (header: SortBy) => {
-      setSortColumn(header);
-      setSortDirection(sortColumn === header ? !sortDirection : true);
+    setSortColumn(header);
+    setSortDirection(sortColumn === header ? !sortDirection : true);
   };
 
   return (
@@ -116,7 +116,7 @@ const MealTable = ({
               onClick={() => setCustomOnly(false)}
               className={`flex flex-row items-center justify-center h-full rounded-lg p-[5px] sm:hover:bg-messiah-light-blue-hover sm:active:bg-messiah-light-blue-active ${
                 customOnly ? '' : 'bg-messiah-light-blue'
-              }`}
+              } transition duration-50`}
             >
               <FaListUl className='p-2' size={30} />
               <span className={'hidden sm:inline'}>All&nbsp;</span>
@@ -125,7 +125,7 @@ const MealTable = ({
               onClick={() => setCustomOnly(true)}
               className={`flex flex-row items-center justify-center h-full rounded-lg p-[5px] sm:hover:bg-messiah-light-blue-hover sm:active:bg-messiah-light-blue-active ${
                 customOnly ? 'bg-messiah-light-blue' : ''
-              }`}
+              } transition duration-50`}
             >
               <FaUser className='p-2' size={30} />
               <span className={'hidden sm:inline'}>Custom Only&nbsp;</span>
