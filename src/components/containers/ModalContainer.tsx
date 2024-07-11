@@ -53,10 +53,12 @@ const ModalContainer = ({
   return (
     <div className={isVisible ? '' : 'hidden'}>
       {/* Fullscreen translucent black div to disable everything and focus attention on the modal */}
-      <div className='h-screen w-screen bg-opacity-50 bg-slate-900 fixed top-0 left-0 flex items-center justify-center z-10'>
+      <div className='h-screen w-screen bg-opacity-50 bg-slate-900 fixed top-0 left-0 flex items-center justify-center z-50'>
         {/* The actual modal component */}
-        <div className='text-center bg-white w-full p-5 m-4 flex flex-col rounded-lg
-          h-[80%] sm:w-auto sm:h-auto sm:min-w-[500px] sm:min-h-[500px] sm:max-w-[800px] sm:max-h-screen'>
+        <div
+          className='text-center bg-white w-full p-5 m-4 flex flex-col rounded-lg
+          h-[80%] sm:w-auto sm:h-auto sm:min-w-[500px] sm:min-h-[500px] sm:max-w-[800px] sm:max-h-screen'
+        >
           {
             /* Title goes here */
             title !== null && title !== undefined ? (

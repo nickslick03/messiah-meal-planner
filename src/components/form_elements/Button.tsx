@@ -27,8 +27,8 @@ const Button = ({
   <button
     className={
       (frame
-        ? 'bg-white text-black text-lg border-2 border-messiah-light-blue hover:border-messiah-light-blue-hover active:border-messiah-light-blue-active m-2 p-2 rounded-lg flex-shrink'
-        : 'text-black bg-messiah-light-blue hover:bg-messiah-light-blue-hover active:bg-messiah-light-blue-active text-lg border-2 border-messiah-light-blue m-2 rounded-lg p-2 ') +
+        ? 'bg-white text-black text-lg border-2 border-messiah-light-blue hover:border-messiah-light-blue-hover active:border-messiah-light-blue-active m-2 p-2 rounded-lg flex-shrink transition duration-50'
+        : 'text-black bg-messiah-light-blue hover:bg-messiah-light-blue-hover active:bg-messiah-light-blue-active text-lg border-2 border-messiah-light-blue m-2 rounded-lg p-2 transition duration-50 ') +
       (disabled ? 'opacity-30 pointer-events-none select-none' : ' ') +
       style
     }

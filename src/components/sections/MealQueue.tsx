@@ -166,6 +166,7 @@ const MealQueue = () => {
             })
           }
           square={true}
+          slideHighlight={false}
         />
       </div>
       {offendedLocations.map((location, i) => (
