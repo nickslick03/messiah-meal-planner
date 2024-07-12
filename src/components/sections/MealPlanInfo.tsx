@@ -6,7 +6,8 @@ import {
   EndDateCtx,
   IsBreakCtx,
   MealPlanCtx,
-  StartDateCtx
+  StartDateCtx,
+  WeeksOffCtx
 } from '../../static/context';
 import { dateInputToDate, getDaysBetween } from '../../lib/dateCalcuation';
 import tutorial from '../../static/tutorial';
@@ -26,15 +27,17 @@ const MealPlanInfo = ({
   const endDate = useContext(EndDateCtx);
   const mealPlan = useContext(MealPlanCtx);
   const isBreak = useContext(IsBreakCtx);
+  const weeksOff = useContext(WeeksOffCtx);
   const balance = useContext(BalanceCtx);
 
   useEffect(() => {
     if (
-      startDate.value !== null &&
-      endDate.value !== null &&
-      balance.value !== null &&
-      mealPlan.value !== null &&
-      isBreak.value !== null
+      [startDate, 
+        endDate, 
+        balance, 
+        mealPlan, 
+        isBreak, 
+        weeksOff].every(ctx => ctx.value !== null)
     ) {
       onEnterDetails(true);
     } else {
@@ -44,7 +47,7 @@ const MealPlanInfo = ({
 
   return (
     <SectionContainer title='Meal Plan Info' tutorial={tutorial.mealPlanInfo}>
-      <div className='mt-4 flex flex-col gap-4'>
+      <div className='mt-4 flex flex-col items-start gap-4'>
         <Input
           label={'Start Date:'}
           type={'date'}
@@ -100,6 +103,18 @@ const MealPlanInfo = ({
             "You can't take a 1-week break if your meal plan is less than 1 week long."
           }
         />
+        <Input 
+          label={'Number of weeks off: '}
+          type={'number'}
+          value={weeksOff.value}
+          setValue={weeksOff.setValue}
+          validator={(str) =>
+            !isNaN(parseFloat(str)) && parseFloat(str) > 0
+              ? parseFloat(str)
+              : null
+          }
+          invalidMessage={'Number of weeks off must be a positive number.'}
+          />
         <Input
           label={'Starting Balance: $'}
           type={'number'}
