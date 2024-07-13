@@ -251,7 +251,9 @@ const Results = ({
       />
       <div
         className={`${
-          isUnderBalance ? 'text-messiah-green' : 'text-messiah-red'
+          isUnderBalance 
+            ? 'text-messiah-green' 
+            : 'text-messiah-red'
         } text-xl font-bold mt-4 text-center`}
       >
         {isUnderBalance
