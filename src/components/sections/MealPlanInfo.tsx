@@ -49,7 +49,7 @@ const MealPlanInfo = ({
 
   return (
     <SectionContainer title='Meal Plan Info' tutorial={tutorial.mealPlanInfo}>
-      <div className='mt-4 flex flex-col items-start gap-4 w-max'>
+      <div className='mt-4 flex flex-col items-start gap-4 w-min'>
         <Input
           label={'Start Date:'}
           type={'date'}
@@ -111,15 +111,15 @@ const MealPlanInfo = ({
           value={weeksOff.value}
           setValue={weeksOff.setValue}
           validator={(str) => {
-            const isValidNumber = !isNaN(parseFloat(str)) && parseFloat(str) > 0;
+            const isValidNumber = !isNaN(parseFloat(str)) && parseFloat(str) >= 0;
             setWeeksOffInvalidMsg(isValidNumber 
-              ? 'Number of weeks off cannot be greater than the distance between start and end date.' 
-              : 'Number of weeks off must be a positive number.');
+              ? 'Number of weeks off cannot be greater than the distance between the start and end date.' 
+              : 'Number of weeks off must be a non-negative number.');
             return isValidNumber 
               && 
               (startDate.value === null 
                 || endDate.value === null
-                || Math.min(getDaysBetween(startDate.value, endDate.value)) >= parseFloat(str))
+                || Math.min(getDaysBetween(startDate.value, endDate.value)) >= parseFloat(str) * 7)
               ? parseFloat(str)
               : null
           }}

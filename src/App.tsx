@@ -98,10 +98,13 @@ function App() {
   /** The grand total of all the meals from the start date to the end date. */
   const grandTotal = useMemo(
     () =>
-      startDate !== null && endDate !== null && balance !== null
+      startDate !== null 
+      && endDate !== null 
+      && balance !== null
+      && weeksOff !== null
         ? getMealTotal(
             userSelectedMeals,
-            getWeekdaysBetween(startDate, endDate, isBreak ?? false),
+            getWeekdaysBetween(startDate, endDate, weeksOff),
             mealPlan ?? false,
             [...meals, ...customMeals]
           )
@@ -113,7 +116,8 @@ function App() {
       isBreak,
       mealPlan,
       startDate,
-      userSelectedMeals
+      userSelectedMeals,
+      weeksOff
     ]
   );
 

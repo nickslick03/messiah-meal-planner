@@ -86,13 +86,16 @@ describe('getWeekdaysBetween', () => {
 
   it('should work with weekOff set to true', () => {
     expect(
-      getWeekdaysBetween(new Date('06/08/2024'), new Date('06/28/2024'), true)
+      getWeekdaysBetween(new Date('06/08/2024'), new Date('06/28/2024'), 1)
     ).toEqual([2, 2, 2, 2, 2, 2, 2]);
     expect(
-      getWeekdaysBetween(new Date('06/08/2024'), new Date('06/22/2024'), true)
+      getWeekdaysBetween(new Date('06/08/2024'), new Date('06/28/2024'), 2)
+    ).toEqual([1, 1, 1, 1, 1, 1, 1]);
+    expect(
+      getWeekdaysBetween(new Date('06/08/2024'), new Date('06/22/2024'), 1)
     ).toEqual([1, 1, 1, 1, 1, 1, 2]);
     expect(
-      getWeekdaysBetween(new Date('06/05/2024'), new Date('06/05/2024'), true)
+      getWeekdaysBetween(new Date('06/05/2024'), new Date('06/05/2024'), 1)
     ).toEqual([0, 0, 0, 0, 0, 0, 0]);
   });
 });
