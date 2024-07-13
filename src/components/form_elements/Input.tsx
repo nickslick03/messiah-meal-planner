@@ -74,9 +74,7 @@ const Input = <T,>({
   const titleAttribute = useMemo(
     () =>
       label
-        ? label[label.length - 1].match(/[\s:]/)
-          ? label.substring(0, label.length - 1)
-          : label
+        ? label.replace(/[^(\s|\w)]/g, '').trim()
         : 'input',
     [label]
   );
