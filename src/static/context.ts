@@ -12,10 +12,6 @@ interface ContextType<T> {
   setValue: Dispatch<SetStateAction<T>>;
 }
 
-export const IsBreakCtx = createContext<ContextType<boolean | null>>({
-  value: false,
-  setValue: () => {}
-});
 export const WeeksOffCtx = createContext<ContextType<number | null>>({
   value: null,
   setValue: () => {}

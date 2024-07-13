@@ -6,7 +6,6 @@ import {
   MealPlanCtx,
   UserSelectedMealsCtx,
   CustomMealsCtx,
-  IsBreakCtx
 } from '../../static/context';
 import formatCurrency from '../../lib/formatCurrency';
 import { getMealTotal } from '../../lib/calculationEngine';
@@ -61,8 +60,7 @@ const Results = ({
   const isDiscount = useContext(MealPlanCtx);
   const customMeals = useContext(CustomMealsCtx);
   const userSelectedMeals = useContext(UserSelectedMealsCtx);
-  const isBreak = useContext(IsBreakCtx);
-
+  
   /** The meal total for one week. */
   const weekTotal = useMemo(
     () =>
@@ -241,11 +239,7 @@ const Results = ({
           !isUnderBalance
             ? [
                 {
-                  title:
-                    'Date When Money Runs Out' +
-                    (isBreak.value
-                      ? ' (Assuming Your Break Is Over Before This)'
-                      : ''),
+                  title: 'Date When Money Runs Out',
                   value: `${
                     dayWhenRunOut.getMonth() + 1
                   }/${dayWhenRunOut.getDate()}/${dayWhenRunOut.getFullYear()}`,

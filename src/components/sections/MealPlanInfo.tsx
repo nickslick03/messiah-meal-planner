@@ -4,7 +4,6 @@ import Input from '../form_elements/Input';
 import {
   BalanceCtx,
   EndDateCtx,
-  IsBreakCtx,
   MealPlanCtx,
   StartDateCtx,
   WeeksOffCtx
@@ -26,7 +25,6 @@ const MealPlanInfo = ({
   const startDate = useContext(StartDateCtx);
   const endDate = useContext(EndDateCtx);
   const mealPlan = useContext(MealPlanCtx);
-  const isBreak = useContext(IsBreakCtx);
   const weeksOff = useContext(WeeksOffCtx);
   const balance = useContext(BalanceCtx);
 
@@ -38,14 +36,13 @@ const MealPlanInfo = ({
         endDate, 
         balance, 
         mealPlan, 
-        isBreak, 
         weeksOff].every(ctx => ctx.value !== null)
     ) {
       onEnterDetails(true);
     } else {
       onEnterDetails(false);
     }
-  }, [startDate, endDate, mealPlan, isBreak, balance, onEnterDetails]);
+  }, [startDate, endDate, mealPlan, balance, weeksOff, onEnterDetails]);
 
   return (
     <SectionContainer title='Meal Plan Info' tutorial={tutorial.mealPlanInfo}>
@@ -84,26 +81,6 @@ const MealPlanInfo = ({
           value={mealPlan.value}
           setValue={mealPlan.setValue}
           validator={(str) => str === 'true'}
-        />
-        <Input
-          label={'Account for 1-Week Break:'}
-          type={'checkbox'}
-          value={isBreak.value}
-          setValue={isBreak.setValue}
-          validator={(str) =>
-            str === 'true' &&
-            getDaysBetween(
-              startDate.value ?? new Date(),
-              endDate.value ?? new Date()
-            ) >= 7
-              ? true
-              : str === 'false'
-              ? false
-              : null
-          }
-          invalidMessage={
-            "You can't take a 1-week break if your meal plan is less than 1 week long."
-          }
         />
         <Input 
           label={'Number of weeks off: '}
