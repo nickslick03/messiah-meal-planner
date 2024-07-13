@@ -145,7 +145,7 @@ function App() {
         startDate ?? new Date(),
         endDate ?? new Date(),
         balance ?? 0,
-        isBreak ?? false
+        weeksOff ?? 0
       ),
     [
       userSelectedMeals,
@@ -154,7 +154,8 @@ function App() {
       startDate,
       endDate,
       balance,
-      isBreak
+      isBreak,
+      weeksOff
     ]
   );
 

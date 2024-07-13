@@ -150,7 +150,7 @@ describe('calculateDateWhenRunOut', () => {
       )
     ).toStrictEqual(new Date('06/08/2024'));
   });
-  it('should work with a week off', () => {
+  it('should work with a week or two off', () => {
     expect(
       calculateDateWhenRunOut(
         userMeals,
@@ -159,8 +159,19 @@ describe('calculateDateWhenRunOut', () => {
         new Date('05/05/2024'),
         new Date('06/08/2024'),
         100,
-        true
+        1
       )
     ).toStrictEqual(new Date('05/24/2024'));
+    expect(
+      calculateDateWhenRunOut(
+        userMeals,
+        true,
+        meals,
+        new Date('05/05/2024'),
+        new Date('06/08/2024'),
+        100,
+        2
+      )
+    ).toStrictEqual(new Date('05/31/2024'));
   });
 });
