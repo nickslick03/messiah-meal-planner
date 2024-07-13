@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import SectionContainer from '../containers/SectionContainer';
 import Input from '../form_elements/Input';
 import {
@@ -30,6 +30,8 @@ const MealPlanInfo = ({
   const weeksOff = useContext(WeeksOffCtx);
   const balance = useContext(BalanceCtx);
 
+  const [ weeksOffInvalidMsg, setWeeksOffInvalidMsg ] = useState('');
+
   useEffect(() => {
     if (
       [startDate, 
@@ -47,7 +49,7 @@ const MealPlanInfo = ({
 
   return (
     <SectionContainer title='Meal Plan Info' tutorial={tutorial.mealPlanInfo}>
-      <div className='mt-4 flex flex-col items-start gap-4'>
+      <div className='mt-4 flex flex-col items-start gap-4 w-max'>
         <Input
           label={'Start Date:'}
           type={'date'}
@@ -108,12 +110,20 @@ const MealPlanInfo = ({
           type={'number'}
           value={weeksOff.value}
           setValue={weeksOff.setValue}
-          validator={(str) =>
-            !isNaN(parseFloat(str)) && parseFloat(str) > 0
+          validator={(str) => {
+            const isValidNumber = !isNaN(parseFloat(str)) && parseFloat(str) > 0;
+            setWeeksOffInvalidMsg(isValidNumber 
+              ? 'Number of weeks off cannot be greater than the distance between start and end date.' 
+              : 'Number of weeks off must be a positive number.');
+            return isValidNumber 
+              && 
+              (startDate.value === null 
+                || endDate.value === null
+                || Math.min(getDaysBetween(startDate.value, endDate.value)) >= parseFloat(str))
               ? parseFloat(str)
               : null
-          }
-          invalidMessage={'Number of weeks off must be a positive number.'}
+          }}
+          invalidMessage={weeksOffInvalidMsg}
           />
         <Input
           label={'Starting Balance: $'}

@@ -101,7 +101,7 @@ const Input = <T,>({
   return (
     <div className='text-left w-full'>
       <label
-        className={`${importanceStyle} w-full flex flex-row flex-wrap gap-2 items-center`}
+        className={`${importanceStyle} w-max flex flex-row flex-wrap gap-2 items-center`}
       >
         {label || ''}
         {type === 'checkbox' ? (
