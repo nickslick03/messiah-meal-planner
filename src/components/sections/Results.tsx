@@ -6,6 +6,7 @@ import {
   MealPlanCtx,
   UserSelectedMealsCtx,
   CustomMealsCtx,
+  WeeksOffCtx,
 } from '../../static/context';
 import formatCurrency from '../../lib/formatCurrency';
 import { getMealTotal } from '../../lib/calculationEngine';
@@ -56,6 +57,7 @@ const Results = ({
 }: ResultsProps) => {
   // Load all necessary contexts
   const balance = useContext(BalanceCtx);
+  const weeksOff = useContext(WeeksOffCtx);
   const userMeals = useContext(UserSelectedMealsCtx);
   const isDiscount = useContext(MealPlanCtx);
   const customMeals = useContext(CustomMealsCtx);
@@ -239,7 +241,10 @@ const Results = ({
           !isUnderBalance
             ? [
                 {
-                  title: 'Date When Money Runs Out',
+                  title: `Date When Money Runs Out 
+                  ${weeksOff.value
+                    ? '(Assuming the weeks off are before this)'
+                    : ''}`,
                   value: `${
                     dayWhenRunOut.getMonth() + 1
                   }/${dayWhenRunOut.getDate()}/${dayWhenRunOut.getFullYear()}`,
