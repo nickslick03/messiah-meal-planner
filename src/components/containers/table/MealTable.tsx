@@ -11,13 +11,16 @@ import { filterMeals } from '../../../lib/filterMeals';
 import { newImportanceIndex } from '../../../types/ImportanceIndex';
 import SortBy from '../../../types/SortBy';
 import Meal from '../../../types/Meal';
+import { Weekday } from '../../../types/userSelectedMealsObject';
 
 interface MealTableProps {
   data: Array<Meal>;
   buttonIcon?: JSX.Element;
   buttonTitle?: string;
   buttonOnClick: (meal: Meal) => void;
+  buttonOnClickDay?: (day: Weekday, meal: Meal) => void;
   createNotification: (name: string) => string;
+  createDayNotification?: (day: Weekday, name: string) => string;
   onCustomClick?: (data: Meal) => void;
   newCustomMealID?: string;
   searchable?: boolean;
@@ -30,7 +33,9 @@ interface MealTableProps {
  * @param {string} buttonTitle - The title of the optional button column
  * @param {JSX.Element} buttonIcon - The icon for the optional button
  * @param {(Meal) => void} buttonOnClick - The click event handler for the optional button
- * @param {(string) => string} notificationMessage - A function that takes in the meal name and returns the notification message when the meal button is clicked.
+ * @param {(day: Weekday) => void} buttonOnClickDay - The click event handler for the optional day button
+ * @param {() => string} createNotification - A function that takes in the meal name and returns the notification message
+ * @param {() => string} createDayNotification - A function that takes in the meal name and returns the notification message for adding direct to day
  * @param {() => void} onCustomClick - The click event handler for editing a custom meal
  * @param {string | undefined} newCustomMealID - The ID of the newly added custom meal to scroll to
  * @param {boolean} searchable - Whether the table should be searchable
@@ -41,7 +46,9 @@ const MealTable = ({
   buttonIcon,
   buttonTitle,
   buttonOnClick,
+  buttonOnClickDay,
   createNotification,
+  createDayNotification,
   onCustomClick,
   newCustomMealID,
   searchable = true
@@ -70,6 +77,13 @@ const MealTable = ({
   const handleButtonClick = (row: Meal) => {
     buttonOnClick(row);
     setMessage({ text: createNotification(row.name) });
+  };
+
+  const handleDayButtonClick = (day: Weekday, row: Meal) => {
+    buttonOnClickDay?.(day, row);
+    setMessage({
+      text: createDayNotification ? createDayNotification(day, row.name) : ''
+    });
   };
 
   /**
@@ -167,9 +181,9 @@ const MealTable = ({
             filteredAndSortedData.length > 0 ? '' : 'hidden'
           }`}
         >
-          <table className='w-full [&_tr>td:nth-child(-n+2)]:text-left [&_tr>td:nth-child(n+3)]:text-right relative'>
+          <table className='w-full [&_tr>td:nth-child(-n+2)]:text-left [&_tr>td:nth-child(n+3)]:text-center relative'>
             {/* Table header */}
-            <thead className='sticky top-0 bg-white drop-shadow-dark'>
+            <thead className='sticky top-0 bg-white drop-shadow-dark z-10'>
               <tr>
                 {headers.map((header, index) =>
                   header !== null ? (
@@ -203,6 +217,9 @@ const MealTable = ({
                   data={row}
                   buttonIcon={buttonIcon}
                   buttonOnClick={() => handleButtonClick(row)}
+                  buttonOnClickDay={(day: Weekday) =>
+                    handleDayButtonClick(day, row)
+                  }
                   onCustomClick={onCustomClick}
                   newCustomMealID={newCustomMealID}
                 />
