@@ -74,9 +74,7 @@ const Input = <T,>({
   const titleAttribute = useMemo(
     () =>
       label
-        ? label[label.length - 1].match(/[\s:]/)
-          ? label.substring(0, label.length - 1)
-          : label
+        ? label.replace(/[^(\s|\w)]/g, '').trim()
         : 'input',
     [label]
   );
@@ -99,9 +97,9 @@ const Input = <T,>({
   };
 
   return (
-    <div className='text-left flex items-center w-full'>
+    <div className='text-left w-full'>
       <label
-        className={`${importanceStyle} w-full flex flex-row flex-wrap gap-2 items-center`}
+        className={`${importanceStyle} w-max flex flex-row flex-wrap gap-2 items-center`}
       >
         {label || ''}
         {type === 'checkbox' ? (

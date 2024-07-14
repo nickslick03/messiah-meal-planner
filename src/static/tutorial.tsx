@@ -50,10 +50,9 @@ const tutorial = {
             Dining Dollars plan, with the discount.
           </li>
           <li>
-            <strong>Account for 1-Week Break:</strong> Check this if your plan
-            time frame includes Fall or Spring break and you will not be on
-            campus during that break. It will subtract one week from your total
-            cost.
+            <strong>Number of Weeks off:</strong> Enter the number of weeks you
+            will not be on campus (e.g. fall break, spring break). It will reduce 
+            the number of weeks when calculating the total cost.
           </li>
           <li>
             <strong>Starting Balance:</strong> Enter the amount you will have in

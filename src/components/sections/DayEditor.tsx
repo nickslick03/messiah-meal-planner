@@ -3,10 +3,10 @@ import { WEEKDAYS } from '../../static/constants';
 import DotLeader from '../other/DotLeader';
 import {
   EndDateCtx,
-  IsBreakCtx,
   MealPlanCtx,
   StartDateCtx,
-  UserSelectedMealsCtx
+  UserSelectedMealsCtx,
+  WeeksOffCtx
 } from '../../static/context';
 import Divider from '../other/Divider';
 import MealContainer from '../containers/MealContainer';
@@ -32,6 +32,7 @@ const DayEditor = () => {
   // Load all necessary contexts
   const userSelectedMeals = useContext(UserSelectedMealsCtx);
   const customMeals = useContext(CustomMealsCtx);
+  const weeksOff = useContext(WeeksOffCtx);
 
   // Dereference the userSelectedMeals context
   const userSelectedMealsValue = useMemo(
@@ -62,7 +63,6 @@ const DayEditor = () => {
 
   const startDate = useContext(StartDateCtx);
   const endDate = useContext(EndDateCtx);
-  const weekOff = useContext(IsBreakCtx);
   const discount = useContext(MealPlanCtx);
 
   const mealDayTotal = useMemo(
@@ -77,10 +77,10 @@ const DayEditor = () => {
         ? getWeekdaysBetween(
             startDate.value,
             endDate.value,
-            weekOff.value ?? false
+            weeksOff.value ?? 0
           )
         : Array(7).fill(0),
-    [startDate, endDate, weekOff]
+    [startDate, endDate, weeksOff]
   );
 
   /** The total number of meals for each weekday (starting on Sunday). */

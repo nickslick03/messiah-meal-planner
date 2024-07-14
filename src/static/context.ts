@@ -12,11 +12,10 @@ interface ContextType<T> {
   setValue: Dispatch<SetStateAction<T>>;
 }
 
-export const IsBreakCtx = createContext<ContextType<boolean | null>>({
-  value: false,
+export const WeeksOffCtx = createContext<ContextType<number | null>>({
+  value: null,
   setValue: () => {}
-});
-
+})
 export const MealPlanCtx = createContext<ContextType<boolean | null>>({
   value: false,
   setValue: () => {}

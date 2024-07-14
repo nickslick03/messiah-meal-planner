@@ -7,9 +7,9 @@ import {
   StartDateCtx,
   EndDateCtx,
   UserSelectedMealsCtx,
-  IsBreakCtx,
   MealQueueCtx,
-  CustomMealsCtx
+  CustomMealsCtx,
+  WeeksOffCtx
 } from './static/context';
 import { useState, useEffect, useMemo } from 'react';
 import Meal from './types/Meal';
@@ -28,9 +28,9 @@ import { getMealTotal, calculateDateWhenRunOut } from './lib/calculationEngine';
 import { getWeekdaysBetween } from './lib/dateCalcuation';
 
 function App() {
-  const [isBreak, setIsBreak] = usePersistentState<boolean | null>(
-    'isBreak',
-    false
+  const [weeksOff, setWeeksOff] = usePersistentState<number | null>(
+    'weeksOff',
+    null
   );
   const [mealPlan, setMealPlan] = usePersistentState<boolean | null>(
     'isDD',
@@ -93,22 +93,25 @@ function App() {
   /** The grand total of all the meals from the start date to the end date. */
   const grandTotal = useMemo(
     () =>
-      startDate !== null && endDate !== null && balance !== null
+      startDate !== null
+        && endDate !== null
+        && balance !== null
+        && weeksOff !== null
         ? getMealTotal(
-            userSelectedMeals,
-            getWeekdaysBetween(startDate, endDate, isBreak ?? false),
-            mealPlan ?? false,
-            [...meals, ...customMeals]
-          )
+          userSelectedMeals,
+          getWeekdaysBetween(startDate, endDate, weeksOff),
+          mealPlan ?? false,
+          [...meals, ...customMeals]
+        )
         : 0,
     [
       balance,
       customMeals,
       endDate,
-      isBreak,
       mealPlan,
       startDate,
-      userSelectedMeals
+      userSelectedMeals,
+      weeksOff
     ]
   );
 
@@ -136,7 +139,7 @@ function App() {
         startDate ?? new Date(),
         endDate ?? new Date(),
         balance ?? 0,
-        isBreak ?? false
+        weeksOff ?? 0
       ),
     [
       userSelectedMeals,
@@ -145,12 +148,12 @@ function App() {
       startDate,
       endDate,
       balance,
-      isBreak
+      weeksOff
     ]
   );
 
   return (
-    <IsBreakCtx.Provider value={{ value: isBreak, setValue: setIsBreak }}>
+    <WeeksOffCtx.Provider value={{ value: weeksOff, setValue: setWeeksOff }}>
       <MealPlanCtx.Provider value={{ value: mealPlan, setValue: setMealPlan }}>
         <BalanceCtx.Provider value={{ value: balance, setValue: setBalance }}>
           <StartDateCtx.Provider
@@ -210,7 +213,7 @@ function App() {
           </StartDateCtx.Provider>
         </BalanceCtx.Provider>
       </MealPlanCtx.Provider>
-    </IsBreakCtx.Provider>
+    </WeeksOffCtx.Provider>
   );
 }
 

@@ -39,14 +39,14 @@ export function getDaysBetween(start: Date, end: Date) {
  * (if the dates are on the same day, the element at that weekday will equal 1).
  * @param start The start date. Must be before the end date
  * @param end The end date
- * @param weekOff If true, subtracts each element in the array by 1.
+ * @param weeksOff The number of weeks the student is taking off of the meal plan timeframe.
  * @returns An array were each element represents a day in the week ([0] == Sunday, [6] == Saturday)
  * and each element is the number of weekdays in between the two dates, inclusive.
  * If the start date is after the end date, returns an array were each element is zero.
  */
-export function getWeekdaysBetween(start: Date, end: Date, weekOff = false) {
+export function getWeekdaysBetween(start: Date, end: Date, weeksOff = 0) {
   const daysBetween = getDaysBetween(start, end);
-  const fullWeeks = Math.floor(daysBetween / 7) - (weekOff ? 1 : 0);
+  const fullWeeks = Math.floor(daysBetween / 7) - weeksOff;
 
   if (daysBetween === -1 || fullWeeks < 0) return Array(7).fill(0);
 
