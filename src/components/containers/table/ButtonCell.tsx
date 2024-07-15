@@ -91,7 +91,7 @@ const ButtonCell = ({
           <button
             {...handleLongPress}
             className={`bg-messiah-light-blue hover:bg-messiah-light-blue-hover active:bg-messiah-light-blue-active
-                 text-black text-lg font-bold w-8 h-8 my-2 mx-0 select-none ${
+                 text-black text-lg font-bold w-8 h-8 my-2 mx-0 select-none z-10 ${
                    isRounded
                      ? 'rounded-full rounded-tl-none rounded-bl-none'
                      : 'rounded-full'

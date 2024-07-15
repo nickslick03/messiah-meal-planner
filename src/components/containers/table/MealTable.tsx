@@ -183,7 +183,7 @@ const MealTable = ({
         >
           <table className='w-full [&_tr>td:nth-child(-n+2)]:text-left [&_tr>td:nth-child(n+3)]:text-center relative'>
             {/* Table header */}
-            <thead className='sticky top-0 bg-white drop-shadow-dark z-10'>
+            <thead className='sticky top-0 bg-white drop-shadow-dark z-20'>
               <tr>
                 {headers.map((header, index) =>
                   header !== null ? (
