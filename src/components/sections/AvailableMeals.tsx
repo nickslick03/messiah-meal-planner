@@ -2,11 +2,16 @@ import meals from '../../static/mealsDatabase';
 import Meal from '../../types/Meal';
 import MealContainer from '../containers/MealContainer';
 import CustomMeal from '../other/CustomMeal';
-import { CustomMealsCtx, MealQueueCtx } from '../../static/context';
+import {
+  CustomMealsCtx,
+  MealQueueCtx,
+  UserSelectedMealsCtx
+} from '../../static/context';
 import { useContext, useEffect, useState } from 'react';
 import { v4 as uuid } from 'uuid';
 import tutorial from '../../static/tutorial';
 import CustomMealAddModal from '../modals/CustomMealAddModal';
+import { Weekday } from '../../types/userSelectedMealsObject';
 
 /**
  * Renders the Available Meals section with a table of meals to add and a button
@@ -18,6 +23,7 @@ const AvailableMeals = () => {
   // Load all necessary contexts
   const mealQueue = useContext(MealQueueCtx);
   const customMeals = useContext(CustomMealsCtx);
+  const userSelectedMeals = useContext(UserSelectedMealsCtx);
 
   // State variable to determine whether or not the custom meal modal should be open
   const [isEditingCustomMeal, setIsEditingCustomMeal] = useState(false);
@@ -68,13 +74,31 @@ const AvailableMeals = () => {
     ]);
   };
 
+  /**
+   * Adds a meal directly to the selected day.
+   *
+   * @param {Weekday} day - The day to add the meal to.
+   * @param {Meal} meal - The meal to be added to the day.
+   */
+  const addToDay = (day: Weekday, meal: Meal) => {
+    userSelectedMeals.setValue({
+      ...userSelectedMeals.value,
+      [day]: [
+        ...(userSelectedMeals.value[day] ?? []),
+        { ...meal, instanceId: uuid() }
+      ]
+    });
+  };
+
   return (
     <MealContainer
       title='Available Meals'
       addOrRemove='Add'
       meals={[...meals, ...customMeals.value]}
       buttonOnClick={addToQueue}
+      buttonOnClickDay={addToDay}
       createNotification={(name) => `Added ${name} to meal queue`}
+      createDayNotification={(day, name) => `Added ${name} directly to ${day}`}
       onCustomClick={(data: Meal) => {
         // If the custom data isn't changed, useEffect won't be triggered, but we don't have any new state
         // so all we need to do is show the modal

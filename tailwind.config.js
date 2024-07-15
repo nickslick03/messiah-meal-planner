@@ -16,6 +16,9 @@ export default {
         'messiah-red-active': 'hsl(359, 50%, 33%)',
         'messiah-green': 'hsl(173, 83%, 25%)'
       },
+      overflow: {
+        visible: 'visible'
+      },
       fontFamily: {
         inter: ['Inter', 'monospace']
       },
