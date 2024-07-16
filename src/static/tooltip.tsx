@@ -12,7 +12,7 @@ import lgResults from '../assets/lg-results.png';
 
 const ICON_SIZE = 15;
 
-export interface TutorialObject {
+export interface TooltipObject {
   title: string;
   text: JSX.Element;
   images: {
@@ -21,7 +21,7 @@ export interface TutorialObject {
   };
 }
 
-const tutorial = {
+const tooltip = {
   mealPlanInfo: {
     title: 'Meal Plan Info',
     images: {
@@ -183,4 +183,4 @@ const tutorial = {
   }
 };
 
-export default tutorial;
+export default tooltip;

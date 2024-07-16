@@ -17,7 +17,7 @@ import { WEEKDAYS } from '../../static/constants';
 import { userMealsToStackedChart } from '../../lib/mealChartFormat';
 import Divider from '../other/Divider';
 import { TooltipItem } from 'chart.js/auto';
-import tutorial from '../../static/tutorial';
+import tooltip from '../../static/tooltip';
 
 interface ResultsProps {
   isUnderBalance: boolean;
@@ -209,7 +209,7 @@ const Results = ({
   );
 
   return (
-    <SectionContainer title='Results' tutorial={tutorial.results}>
+    <SectionContainer title='Results' tooltip={tooltip.results}>
       <div className='text-gray-400 mt-4 mb-1'>(Charts are based on the total for 1 week)</div>
       <div className='flex flex-row flex-wrap w-full justify-evenly mb-4'>
         <div className='relative mb-4 w-full lg:w-[45%] min-h-[250px] sm:min-h-[300px]'>

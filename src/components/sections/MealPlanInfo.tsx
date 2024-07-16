@@ -9,7 +9,7 @@ import {
   WeeksOffCtx
 } from '../../static/context';
 import { dateInputToDate, getDaysBetween } from '../../lib/dateCalcuation';
-import tutorial from '../../static/tutorial';
+import tooltip from '../../static/tooltip';
 
 /**
  * Renders a component for displaying and managing meal plan information.
@@ -45,7 +45,7 @@ const MealPlanInfo = ({
   }, [startDate, endDate, mealPlan, balance, weeksOff, onEnterDetails]);
 
   return (
-    <SectionContainer title='Meal Plan Info' tutorial={tutorial.mealPlanInfo}>
+    <SectionContainer title='Meal Plan Info' tooltip={tooltip.mealPlanInfo}>
       <div className='mt-4 flex flex-col items-start gap-4 w-min'>
         <Input
           label={'Start Date:'}

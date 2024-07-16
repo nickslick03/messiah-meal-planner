@@ -9,7 +9,7 @@ import {
 } from '../../static/context';
 import { useContext, useEffect, useState } from 'react';
 import { v4 as uuid } from 'uuid';
-import tutorial from '../../static/tutorial';
+import tooltip from '../../static/tooltip';
 import CustomMealAddModal from '../modals/CustomMealAddModal';
 import { Weekday } from '../../types/userSelectedMealsObject';
 
@@ -107,7 +107,7 @@ const AvailableMeals = () => {
       }}
       newCustomMealID={newCustomMealID}
       searchable
-      tutorial={tutorial.availableMeals}
+      tooltip={tooltip.availableMeals}
     >
       {
         // This cannot work with only the 'visible' property because otherwise it will not re-render

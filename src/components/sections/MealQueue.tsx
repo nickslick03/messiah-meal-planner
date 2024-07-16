@@ -15,7 +15,7 @@ import { CustomMealsCtx } from '../../static/context';
 import DaySelector from '../form_elements/DaySelector';
 import mapUserMeals from '../../lib/mapUserMeals';
 import dereferenceMeal from '../../lib/dereferenceMeal';
-import tutorial from '../../static/tutorial';
+import tooltip from '../../static/tooltip';
 
 /**
  * Renders the Meal Queue section, where meals in the queue can be added to different days of the week.
@@ -150,7 +150,7 @@ const MealQueue = () => {
       buttonOnClick={removeMealFromQueue}
       createNotification={(name) => `Removed ${name} from meal queue`}
       searchable={false}
-      tutorial={tutorial.mealQueue}
+      tooltip={tooltip.mealQueue}
     >
       <div className='mb-4' />
       <p className='mb-2'>Add these meals to:</p>
