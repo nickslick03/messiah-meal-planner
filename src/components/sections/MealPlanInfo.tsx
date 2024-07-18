@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import SectionContainer from '../containers/SectionContainer';
 import Input from '../form_elements/Input';
 import {
@@ -6,6 +6,7 @@ import {
   EndDateCtx,
   MealPlanCtx,
   StartDateCtx,
+  TutorialDivsCtx,
   WeeksOffCtx
 } from '../../static/context';
 import { dateInputToDate, getDaysBetween } from '../../lib/dateCalcuation';
@@ -27,6 +28,14 @@ const MealPlanInfo = ({
   const mealPlan = useContext(MealPlanCtx);
   const weeksOff = useContext(WeeksOffCtx);
   const balance = useContext(BalanceCtx);
+  const tutorialRefs = useContext(TutorialDivsCtx);
+
+  const ref = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if(ref.current !== null)
+      tutorialRefs.setValue(ref, 'Meal Plan Info');
+  }, [ref]);
 
   const [ weeksOffInvalidMsg, setWeeksOffInvalidMsg ] = useState('');
 
@@ -45,77 +54,79 @@ const MealPlanInfo = ({
   }, [startDate, endDate, mealPlan, balance, weeksOff, onEnterDetails]);
 
   return (
-    <SectionContainer title='Meal Plan Info' tooltip={tooltip.mealPlanInfo}>
-      <div className='mt-4 flex flex-col items-start gap-4 w-min'>
-        <Input
-          label={'Start Date:'}
-          type={'date'}
-          value={startDate.value}
-          setValue={startDate.setValue}
-          validator={(str) =>
-            !isNaN(Date.parse(str)) &&
-            (endDate.value === null || +dateInputToDate(str) <= +endDate.value)
-              ? dateInputToDate(str)
-              : null
-          }
-          invalidMessage={'Start date must be before end date.'}
-        />
-        <Input
-          label={'End Date:'}
-          type={'date'}
-          value={endDate.value}
-          setValue={endDate.setValue}
-          validator={(str) =>
-            !isNaN(Date.parse(str)) &&
-            (startDate.value === null ||
-              +dateInputToDate(str) >= +startDate.value)
-              ? dateInputToDate(str)
-              : null
-          }
-          invalidMessage={'End date must be after start date.'}
-        />
-
-        <Input
-          label={'Dining Dollars Discount:'}
-          type={'checkbox'}
-          value={mealPlan.value}
-          setValue={mealPlan.setValue}
-          validator={(str) => str === 'true'}
-        />
-        <Input 
-          label={'Number of weeks off: '}
-          type={'number'}
-          value={weeksOff.value}
-          setValue={weeksOff.setValue}
-          validator={(str) => {
-            const isValidNumber = !isNaN(parseFloat(str)) && parseFloat(str) >= 0;
-            setWeeksOffInvalidMsg(isValidNumber 
-              ? 'Number of weeks off cannot be greater than the distance between the start and end date.' 
-              : 'Number of weeks off must be a non-negative number.');
-            return isValidNumber 
-              && 
-              (startDate.value === null 
-                || endDate.value === null
-                || Math.min(getDaysBetween(startDate.value, endDate.value)) >= parseFloat(str) * 7)
-              ? parseFloat(str)
-              : null
-          }}
-          invalidMessage={weeksOffInvalidMsg}
+    <div ref={ref}>
+      <SectionContainer title='Meal Plan Info' tooltip={tooltip.mealPlanInfo} id="meal-plan-info">
+        <div className='mt-4 flex flex-col items-start gap-4 w-min'>
+          <Input
+            label={'Start Date:'}
+            type={'date'}
+            value={startDate.value}
+            setValue={startDate.setValue}
+            validator={(str) =>
+              !isNaN(Date.parse(str)) &&
+              (endDate.value === null || +dateInputToDate(str) <= +endDate.value)
+                ? dateInputToDate(str)
+                : null
+            }
+            invalidMessage={'Start date must be before end date.'}
           />
-        <Input
-          label={'Starting Balance: $'}
-          type={'number'}
-          value={balance.value}
-          setValue={balance.setValue}
-          validator={(str) =>
-            !isNaN(parseFloat(str)) && parseFloat(str) > 0
-              ? parseFloat(str)
-              : null
-          }
-          invalidMessage={'Starting balance must be a positive number.'}
-        />
-      </div>
-    </SectionContainer>
+          <Input
+            label={'End Date:'}
+            type={'date'}
+            value={endDate.value}
+            setValue={endDate.setValue}
+            validator={(str) =>
+              !isNaN(Date.parse(str)) &&
+              (startDate.value === null ||
+                +dateInputToDate(str) >= +startDate.value)
+                ? dateInputToDate(str)
+                : null
+            }
+            invalidMessage={'End date must be after start date.'}
+          />
+
+          <Input
+            label={'Dining Dollars Discount:'}
+            type={'checkbox'}
+            value={mealPlan.value}
+            setValue={mealPlan.setValue}
+            validator={(str) => str === 'true'}
+          />
+          <Input 
+            label={'Number of weeks off: '}
+            type={'number'}
+            value={weeksOff.value}
+            setValue={weeksOff.setValue}
+            validator={(str) => {
+              const isValidNumber = !isNaN(parseFloat(str)) && parseFloat(str) >= 0;
+              setWeeksOffInvalidMsg(isValidNumber 
+                ? 'Number of weeks off cannot be greater than the distance between the start and end date.' 
+                : 'Number of weeks off must be a non-negative number.');
+              return isValidNumber 
+                && 
+                (startDate.value === null 
+                  || endDate.value === null
+                  || Math.min(getDaysBetween(startDate.value, endDate.value)) >= parseFloat(str) * 7)
+                ? parseFloat(str)
+                : null
+            }}
+            invalidMessage={weeksOffInvalidMsg}
+            />
+          <Input
+            label={'Starting Balance: $'}
+            type={'number'}
+            value={balance.value}
+            setValue={balance.setValue}
+            validator={(str) =>
+              !isNaN(parseFloat(str)) && parseFloat(str) > 0
+                ? parseFloat(str)
+                : null
+            }
+            invalidMessage={'Starting balance must be a positive number.'}
+          />
+        </div>
+      </SectionContainer>
+    </div>
   );
 };
 

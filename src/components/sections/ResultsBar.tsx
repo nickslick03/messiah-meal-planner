@@ -40,7 +40,7 @@ const ResultsBar = ({
       id={'resultsBar'}
       ref={ref}
       className={`sticky w-full bottom-[-1px] p-2 bg-messiah-light-blue drop-shadow-dark 
-      rounded-t-xl flex gap-6 justify-around text-center bg-opacity-80 z-50 backdrop-blur-sm ${
+      rounded-t-xl flex gap-6 justify-around text-center bg-opacity-80 z-40 backdrop-blur-sm ${
         isAtBottom ? 'rounded-bl-xl rounded-br-xl' : ''
       }`}
     >

@@ -21,6 +21,7 @@ interface MealContainerProps {
   newCustomMealID?: string;
   searchable?: boolean;
   tooltip?: TooltipObject;
+  id: string;
 }
 
 /**
@@ -53,10 +54,11 @@ const MealContainer = ({
   onCustomClick,
   newCustomMealID,
   searchable = true,
-  tooltip
+  tooltip,
+  id
 }: MealContainerProps) => {
   return (
-    <SectionContainer title={title} tooltip={tooltip}>
+    <SectionContainer title={title} tooltip={tooltip} id={id}>
       {daySelector ?? <></>}
       <MealTable
         data={meals}

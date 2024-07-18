@@ -10,6 +10,7 @@ interface SectionContainerProps {
   children?: React.ReactNode;
   title?: string;
   tooltip?: TooltipObject;
+  id: string;
 }
 
 /**
@@ -18,12 +19,14 @@ interface SectionContainerProps {
  * @param {React.ReactNode} children - The children components to render inside the section container
  * @param {string} title - The title of the section container
  * @param {TooltipObject} tooltip - The tooltip object for the section
+ * @param id - The element's id
  * @returns {JSX.Element} The rendered section container
  */
 const SectionContainer = ({
   children = <></>,
   title,
-  tooltip
+  tooltip,
+  id
 }: SectionContainerProps): JSX.Element => {
   const [isNewUser, setIsNewUser] = usePersistentState('isNewUser', true);
 
@@ -37,7 +40,10 @@ const SectionContainer = ({
   const [tooltipVisible, setTooltipVisible] = useState(false);
 
   return (
-    <section className='relative border-4 border-messiah-blue rounded-xl p-4 flex flex-col justify-center items-center w-full shadow-md mb-4'>
+    <section 
+      className='relative border-4 border-messiah-blue bg-white rounded-xl p-4 
+      flex flex-col justify-center items-center w-full shadow-md mb-4' 
+      id={id}>
       {title === undefined ? '' : <SectionHeader text={title} />}
       <button
         className='absolute top-5 right-5'

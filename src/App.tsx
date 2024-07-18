@@ -9,9 +9,10 @@ import {
   UserSelectedMealsCtx,
   MealQueueCtx,
   CustomMealsCtx,
-  WeeksOffCtx
+  WeeksOffCtx,
+  TutorialDivsCtx
 } from './static/context';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import Meal from './types/Meal';
 import MealReference from './types/MealReference';
 import DayEditor from './components/sections/DayEditor';
@@ -26,6 +27,8 @@ import usePersistentState from './hooks/usePersistentState';
 import meals from './static/mealsDatabase';
 import { getMealTotal, calculateDateWhenRunOut } from './lib/calculationEngine';
 import { getWeekdaysBetween } from './lib/dateCalcuation';
+import Tutorial from './components/modals/Tutorial';
+import tutorialSteps from './static/tutorialSteps';
 
 function App() {
   const [weeksOff, setWeeksOff] = usePersistentState<number | null>(
@@ -62,6 +65,15 @@ function App() {
     'customMeals',
     []
   );
+  const tutorialDivs = useRef<(HTMLDivElement | null)[]>(Array(tutorialSteps.length).fill(null));
+  const addRef = (ref: React.RefObject<HTMLDivElement | null>, title: string) => {
+    if (ref.current === null)
+      return;
+    const index = tutorialSteps.findIndex(step => step.title === title);
+    if (index === -1)
+      throw new Error(`Title ${title} is not part of the tutorial`);
+    tutorialDivs.current[index] = ref.current;
+  }
   const [areDetailsEntered, setAreDetailsEntered] = useState(false);
 
   // Remove dangling meal references from mealQueue and userSelectedMeals
@@ -153,67 +165,70 @@ function App() {
   );
 
   return (
-    <WeeksOffCtx.Provider value={{ value: weeksOff, setValue: setWeeksOff }}>
-      <MealPlanCtx.Provider value={{ value: mealPlan, setValue: setMealPlan }}>
-        <BalanceCtx.Provider value={{ value: balance, setValue: setBalance }}>
-          <StartDateCtx.Provider
-            value={{ value: startDate, setValue: setStartDate }}
-          >
-            <EndDateCtx.Provider
-              value={{ value: endDate, setValue: setEndDate }}
+    <TutorialDivsCtx.Provider value={{ value: tutorialDivs.current, setValue: addRef }}>
+      <WeeksOffCtx.Provider value={{ value: weeksOff, setValue: setWeeksOff }}>
+        <MealPlanCtx.Provider value={{ value: mealPlan, setValue: setMealPlan }}>
+          <BalanceCtx.Provider value={{ value: balance, setValue: setBalance }}>
+            <StartDateCtx.Provider
+              value={{ value: startDate, setValue: setStartDate }}
             >
-              <UserSelectedMealsCtx.Provider
-                value={{
-                  value: userSelectedMeals,
-                  setValue: setUserSelectedMeals
-                }}
+              <EndDateCtx.Provider
+                value={{ value: endDate, setValue: setEndDate }}
               >
-                <MealQueueCtx.Provider
-                  value={{ value: mealQueue, setValue: setMealQueue }}
+                <UserSelectedMealsCtx.Provider
+                  value={{
+                    value: userSelectedMeals,
+                    setValue: setUserSelectedMeals
+                  }}
                 >
-                  <CustomMealsCtx.Provider
-                    value={{ value: customMeals, setValue: setCustomMeals }}
+                  <MealQueueCtx.Provider
+                    value={{ value: mealQueue, setValue: setMealQueue }}
                   >
-                    <ScreenContainer>
-                      <header className='bg-messiah-blue rounded-xl border-4 border-white shadow-md w-full mb-4'>
-                        <h1 className='font-semibold text-4xl text-white text-center p-8'>
-                          Messiah Meal Planner
-                        </h1>
-                      </header>
-                      <MealPlanInfo onEnterDetails={setAreDetailsEntered} />
-                      {areDetailsEntered ? (
-                        <>
-                          <AvailableMeals />
-                          <MealQueue />
-                          <DayEditor />
-                          <Results
-                            grandTotal={grandTotal}
-                            isUnderBalance={isUnderBalance}
-                            difference={difference}
-                            dayWhenRunOut={dayWhenRunOut}
-                          />
-                          <ResultsBar
-                            grandTotal={grandTotal}
-                            isUnderBalance={isUnderBalance}
-                            difference={difference}
-                          />
-                        </>
-                      ) : (
-                        <div className='flex flex-col items-center'>
-                          <p className='text-gray-400'>
-                            Enter meal plan info to continue planning.
-                          </p>
-                        </div>
-                      )}
-                    </ScreenContainer>
-                  </CustomMealsCtx.Provider>
-                </MealQueueCtx.Provider>
-              </UserSelectedMealsCtx.Provider>
-            </EndDateCtx.Provider>
-          </StartDateCtx.Provider>
-        </BalanceCtx.Provider>
-      </MealPlanCtx.Provider>
-    </WeeksOffCtx.Provider>
+                    <CustomMealsCtx.Provider
+                      value={{ value: customMeals, setValue: setCustomMeals }}
+                    >
+                      <Tutorial areDetailsEntered={areDetailsEntered} />
+                      <ScreenContainer>
+                        <header className='bg-messiah-blue rounded-xl border-4 border-white shadow-md w-full mb-4'>
+                          <h1 className='font-semibold text-4xl text-white text-center p-8'>
+                            Messiah Meal Planner
+                          </h1>
+                        </header>
+                        <MealPlanInfo onEnterDetails={setAreDetailsEntered} />
+                        {areDetailsEntered ? (
+                          <>
+                            <AvailableMeals />
+                            <MealQueue />
+                            <DayEditor />
+                            <Results
+                              grandTotal={grandTotal}
+                              isUnderBalance={isUnderBalance}
+                              difference={difference}
+                              dayWhenRunOut={dayWhenRunOut}
+                            />
+                            <ResultsBar
+                              grandTotal={grandTotal}
+                              isUnderBalance={isUnderBalance}
+                              difference={difference}
+                            />
+                          </>
+                        ) : (
+                          <div className='flex flex-col items-center'>
+                            <p className='text-gray-400'>
+                              Enter meal plan info to continue planning.
+                            </p>
+                          </div>
+                        )}
+                      </ScreenContainer>
+                    </CustomMealsCtx.Provider>
+                  </MealQueueCtx.Provider>
+                </UserSelectedMealsCtx.Provider>
+              </EndDateCtx.Provider>
+            </StartDateCtx.Provider>
+          </BalanceCtx.Provider>
+        </MealPlanCtx.Provider>
+      </WeeksOffCtx.Provider>
+    </TutorialDivsCtx.Provider>
   );
 }
 
