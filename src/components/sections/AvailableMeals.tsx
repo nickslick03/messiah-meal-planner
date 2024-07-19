@@ -93,29 +93,32 @@ const AvailableMeals = () => {
   };
 
   return (
-    <MealContainer
-      title='Available Meals'
-      addOrRemove='Add'
-      meals={[...meals, ...customMeals.value]}
-      buttonOnClick={addToQueue}
-      buttonOnClickDay={addToDay}
-      createNotification={(name) => `Added ${name} to meal queue`}
-      createDayNotification={(day, name) => `Added ${name} directly to ${day}`}
-      onCustomClick={(data: Meal) => {
-        // If the custom data isn't changed, useEffect won't be triggered, but we don't have any new state
-        // so all we need to do is show the modal
-        if (currentCustomData === data) setIsEditingCustomMeal(true);
-        else setCurrentCustomData(data);
-      }}
-      newCustomMealID={newCustomMealID}
-      searchable
-      tooltip={tooltip.availableMeals}
-      setRef={(ref) => tutorialRefs.setValue(ref, "Available Meals")}
-    >
+    <>
+      <MealContainer
+        title='Available Meals'
+        addOrRemove='Add'
+        meals={[...meals, ...customMeals.value]}
+        buttonOnClick={addToQueue}
+        buttonOnClickDay={addToDay}
+        createNotification={(name) => `Added ${name} to meal queue`}
+        createDayNotification={(day, name) => `Added ${name} directly to ${day}`}
+        onCustomClick={(data: Meal) => {
+          // If the custom data isn't changed, useEffect won't be triggered, but we don't have any new state
+          // so all we need to do is show the modal
+          if (currentCustomData === data) setIsEditingCustomMeal(true);
+          else setCurrentCustomData(data);
+        }}
+        newCustomMealID={newCustomMealID}
+        searchable
+        tooltip={tooltip.availableMeals}
+        setRef={(ref) => tutorialRefs.setValue(ref, "Available Meals")}
+      >
+        <CustomMeal setNewCustomMealID={setNewCustomMealID} />
+      </MealContainer>
       {
-        // This cannot work with only the 'visible' property because otherwise it will not re-render
-        // when we change its data
-        isEditingCustomMeal ? (
+      // This cannot work with only the 'visible' property because otherwise it will not re-render
+      // when we change its data  
+      isEditingCustomMeal ? (
           <CustomMealAddModal
             startingData={currentCustomData}
             onConfirm={onUpdateCustomMeal}
@@ -136,8 +139,7 @@ const AvailableMeals = () => {
           <></>
         )
       }
-      <CustomMeal setNewCustomMealID={setNewCustomMealID} />
-    </MealContainer>
+    </>
   );
 };
 
