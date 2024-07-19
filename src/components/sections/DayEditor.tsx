@@ -1,11 +1,11 @@
-import { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { useContext, useMemo, useState } from 'react';
 import { WEEKDAYS } from '../../static/constants';
 import DotLeader from '../other/DotLeader';
 import {
   EndDateCtx,
   MealPlanCtx,
   StartDateCtx,
-  TutorialDivsCtx,
+  TutorialElementsCtx,
   UserSelectedMealsCtx,
   WeeksOffCtx
 } from '../../static/context';
@@ -34,14 +34,7 @@ const DayEditor = () => {
   const userSelectedMeals = useContext(UserSelectedMealsCtx);
   const customMeals = useContext(CustomMealsCtx);
   const weeksOff = useContext(WeeksOffCtx);
-  const tutorialRefs = useContext(TutorialDivsCtx);
-
-  const ref = useRef<HTMLDivElement | null>(null);
-  
-  useEffect(() => {
-    if(ref.current !== null)
-      tutorialRefs.setValue(ref, 'Day Editor');
-  }, [ref]);
+  const tutorialRefs = useContext(TutorialElementsCtx);
 
   // Dereference the userSelectedMeals context
   const userSelectedMealsValue = useMemo(
@@ -112,52 +105,50 @@ const DayEditor = () => {
   };
 
   return (
-    <div ref={ref}>
-      <MealContainer
-        id={'day-editor'}
-        title='Day Editor'
-        daySelector={
-          <div className='w-full bg-gray-300 rounded-lg mt-4'>
-            <DaySelector
-              daysSelected={new Array(7)
-                .fill(false)
-                .map((_, day) => day === weekdayIndex)}
-              onChange={setWeekdayIndex}
-              numOfMeals={numOfMeals}
-              slideHighlight
-            />
-          </div>
-        }
-        addOrRemove='Del'
-        meals={dayMealList}
-        buttonOnClick={removeMeal}
-        createNotification={(name) => `Removed ${name} from ${weekday}`}
-        searchable={false}
-        tooltip={tooltip.dayEditor}
-      >
-        <Divider />
-        <DotLeader
-          info={[
-            {
-              title: `Total for One ${weekday}`,
-              value: `${formatCurrency(mealDayTotal)}`,
-              resultsStyle: 'text-messiah-red'
-            },
-            {
-              title: `Number of ${weekday}(s)`,
-              value: `${numOfWeekdays[weekdayIndex]}`
-            },
-            {
-              title: `Total of All ${weekday}s`,
-              value: `${formatCurrency(
-                mealDayTotal * numOfWeekdays[weekdayIndex] // Convert from Monday to Sunday start
-              )}`,
-              resultsStyle: 'text-messiah-red'
-            }
-          ]}
-        />
-      </MealContainer>
-    </div>
+    <MealContainer
+      title='Day Editor'
+      daySelector={
+        <div className='w-full bg-gray-300 rounded-lg mt-4'>
+          <DaySelector
+            daysSelected={new Array(7)
+              .fill(false)
+              .map((_, day) => day === weekdayIndex)}
+            onChange={setWeekdayIndex}
+            numOfMeals={numOfMeals}
+            slideHighlight
+          />
+        </div>
+      }
+      addOrRemove='Del'
+      meals={dayMealList}
+      buttonOnClick={removeMeal}
+      createNotification={(name) => `Removed ${name} from ${weekday}`}
+      searchable={false}
+      tooltip={tooltip.dayEditor}
+      setRef={(ref) => tutorialRefs.setValue(ref, "Day Editor")}
+    >
+      <Divider />
+      <DotLeader
+        info={[
+          {
+            title: `Total for One ${weekday}`,
+            value: `${formatCurrency(mealDayTotal)}`,
+            resultsStyle: 'text-messiah-red'
+          },
+          {
+            title: `Number of ${weekday}(s)`,
+            value: `${numOfWeekdays[weekdayIndex]}`
+          },
+          {
+            title: `Total of All ${weekday}s`,
+            value: `${formatCurrency(
+              mealDayTotal * numOfWeekdays[weekdayIndex] // Convert from Monday to Sunday start
+            )}`,
+            resultsStyle: 'text-messiah-red'
+          }
+        ]}
+      />
+    </MealContainer>
   );
 };
 

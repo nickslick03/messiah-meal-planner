@@ -54,11 +54,11 @@ export const CustomMealsCtx = createContext<ContextType<Meal[]>>({
 });
 
 interface TutorialDivs {
-  value: (HTMLDivElement | null)[];
-  setValue: (ref: React.RefObject<HTMLDivElement | null>, title: string) => void;
+  value: (HTMLElement | null)[];
+  setValue: (ref: HTMLElement | null, title: string) => void;
 }
 
-export const TutorialDivsCtx = createContext<TutorialDivs>({
+export const TutorialElementsCtx = createContext<TutorialDivs>({
   value: [],
   setValue: () => {}
 });

@@ -1,16 +1,15 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { TooltipObject } from '../../static/tooltip';
 import SectionHeader from './SectionHeader';
 import { FiHelpCircle } from 'react-icons/fi';
 import TooltipModal from '../modals/TooltipModal';
-import usePersistentState from '../../hooks/usePersistentState';
 
 // Prop types
 interface SectionContainerProps {
   children?: React.ReactNode;
   title?: string;
   tooltip?: TooltipObject;
-  id: string;
+  setRef?: (ref: HTMLElement | null) => void;
 }
 
 /**
@@ -19,14 +18,14 @@ interface SectionContainerProps {
  * @param {React.ReactNode} children - The children components to render inside the section container
  * @param {string} title - The title of the section container
  * @param {TooltipObject} tooltip - The tooltip object for the section
- * @param id - The element's id
+ * @param setRef - optional callback function to get the section ref
  * @returns {JSX.Element} The rendered section container
  */
 const SectionContainer = ({
   children = <></>,
   title,
   tooltip,
-  id
+  setRef = () => {}
 }: SectionContainerProps): JSX.Element => {
 
   const [tooltipVisible, setTooltipVisible] = useState(false);
@@ -35,7 +34,8 @@ const SectionContainer = ({
     <section 
       className='relative border-4 border-messiah-blue bg-white rounded-xl p-4 
       flex flex-col justify-center items-center w-full shadow-md mb-4' 
-      id={id}>
+      ref={(ref) => setRef(ref)}
+      >
       {title === undefined ? '' : <SectionHeader text={title} />}
       <button
         className='absolute top-5 right-5'

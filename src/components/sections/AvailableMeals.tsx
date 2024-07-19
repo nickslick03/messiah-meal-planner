@@ -5,10 +5,10 @@ import CustomMeal from '../other/CustomMeal';
 import {
   CustomMealsCtx,
   MealQueueCtx,
-  TutorialDivsCtx,
+  TutorialElementsCtx,
   UserSelectedMealsCtx
 } from '../../static/context';
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { v4 as uuid } from 'uuid';
 import tooltip from '../../static/tooltip';
 import CustomMealAddModal from '../modals/CustomMealAddModal';
@@ -25,14 +25,7 @@ const AvailableMeals = () => {
   const mealQueue = useContext(MealQueueCtx);
   const customMeals = useContext(CustomMealsCtx);
   const userSelectedMeals = useContext(UserSelectedMealsCtx);
-  const tutorialRefs = useContext(TutorialDivsCtx);
-
-  const ref = useRef<HTMLDivElement | null>(null);
-  
-  useEffect(() => {
-    if(ref.current !== null)
-      tutorialRefs.setValue(ref, 'Available Meals');
-  }, [ref]);
+  const tutorialRefs = useContext(TutorialElementsCtx);
 
   // State variable to determine whether or not the custom meal modal should be open
   const [isEditingCustomMeal, setIsEditingCustomMeal] = useState(false);
@@ -100,53 +93,51 @@ const AvailableMeals = () => {
   };
 
   return (
-    <div ref={ref}>
-      <MealContainer
-        id={'available-meals'}
-        title='Available Meals'
-        addOrRemove='Add'
-        meals={[...meals, ...customMeals.value]}
-        buttonOnClick={addToQueue}
-        buttonOnClickDay={addToDay}
-        createNotification={(name) => `Added ${name} to meal queue`}
-        createDayNotification={(day, name) => `Added ${name} directly to ${day}`}
-        onCustomClick={(data: Meal) => {
-          // If the custom data isn't changed, useEffect won't be triggered, but we don't have any new state
-          // so all we need to do is show the modal
-          if (currentCustomData === data) setIsEditingCustomMeal(true);
-          else setCurrentCustomData(data);
-        }}
-        newCustomMealID={newCustomMealID}
-        searchable
-        tooltip={tooltip.availableMeals}
-      >
-        {
-          // This cannot work with only the 'visible' property because otherwise it will not re-render
-          // when we change its data
-          isEditingCustomMeal ? (
-            <CustomMealAddModal
-              startingData={currentCustomData}
-              onConfirm={onUpdateCustomMeal}
-              onCancel={() => {
-                setIsEditingCustomMeal(false);
-              }}
-              onDelete={() => {
-                customMeals.setValue(
-                  customMeals.value.filter(
-                    (val) => val.id !== currentCustomData?.id
-                  )
-                );
-                setIsEditingCustomMeal(false);
-              }}
-              visible={isEditingCustomMeal}
-            />
-          ) : (
-            <></>
-          )
-        }
-        <CustomMeal setNewCustomMealID={setNewCustomMealID} />
-      </MealContainer>
-    </div>
+    <MealContainer
+      title='Available Meals'
+      addOrRemove='Add'
+      meals={[...meals, ...customMeals.value]}
+      buttonOnClick={addToQueue}
+      buttonOnClickDay={addToDay}
+      createNotification={(name) => `Added ${name} to meal queue`}
+      createDayNotification={(day, name) => `Added ${name} directly to ${day}`}
+      onCustomClick={(data: Meal) => {
+        // If the custom data isn't changed, useEffect won't be triggered, but we don't have any new state
+        // so all we need to do is show the modal
+        if (currentCustomData === data) setIsEditingCustomMeal(true);
+        else setCurrentCustomData(data);
+      }}
+      newCustomMealID={newCustomMealID}
+      searchable
+      tooltip={tooltip.availableMeals}
+      setRef={(ref) => tutorialRefs.setValue(ref, "Available Meals")}
+    >
+      {
+        // This cannot work with only the 'visible' property because otherwise it will not re-render
+        // when we change its data
+        isEditingCustomMeal ? (
+          <CustomMealAddModal
+            startingData={currentCustomData}
+            onConfirm={onUpdateCustomMeal}
+            onCancel={() => {
+              setIsEditingCustomMeal(false);
+            }}
+            onDelete={() => {
+              customMeals.setValue(
+                customMeals.value.filter(
+                  (val) => val.id !== currentCustomData?.id
+                )
+              );
+              setIsEditingCustomMeal(false);
+            }}
+            visible={isEditingCustomMeal}
+          />
+        ) : (
+          <></>
+        )
+      }
+      <CustomMeal setNewCustomMealID={setNewCustomMealID} />
+    </MealContainer>
   );
 };
 

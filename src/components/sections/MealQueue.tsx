@@ -1,7 +1,7 @@
 import { WEEKDAYS } from '../../static/constants';
 import Button from '../form_elements/Button';
-import { useReducer, useContext, useMemo, useState, useRef, useEffect } from 'react';
-import { MealQueueCtx, TutorialDivsCtx, UserSelectedMealsCtx } from '../../static/context';
+import { useReducer, useContext, useMemo, useState } from 'react';
+import { MealQueueCtx, TutorialElementsCtx, UserSelectedMealsCtx } from '../../static/context';
 import MealContainer from '../containers/MealContainer';
 import Meal from '../../types/Meal';
 import {
@@ -25,14 +25,7 @@ const MealQueue = () => {
   const mealQueue = useContext(MealQueueCtx);
   const userSelectedMeals = useContext(UserSelectedMealsCtx);
   const customMeals = useContext(CustomMealsCtx);
-  const tutorialRefs = useContext(TutorialDivsCtx);
-
-  const ref = useRef<HTMLDivElement | null>(null);
-  
-  useEffect(() => {
-    if(ref.current !== null)
-      tutorialRefs.setValue(ref, 'Meal Queue');
-  }, [ref]);
+  const tutorialRefs = useContext(TutorialElementsCtx);
 
   // notification text
   const [message, setMessage] = useState({ text: '' });
@@ -151,56 +144,54 @@ const MealQueue = () => {
   );
 
   return (
-    <div ref={ref}>
-      <MealContainer
-        id={'meal-queue'}
-        title='Meal Queue'
-        meals={mealQueueValue}
-        addOrRemove='Del'
-        buttonOnClick={removeMealFromQueue}
-        createNotification={(name) => `Removed ${name} from meal queue`}
-        searchable={false}
-        tooltip={tooltip.mealQueue}
-      >
-        <div className='mb-4' />
-        <p className='mb-2'>Add these meals to:</p>
-        <div className='flex justify-center flex-wrap gap-6 w-full'>
-          <DaySelector
-            daysSelected={new Array(7)
-              .fill(false)
-              .map((_v, i) => selectedDays.indexOf(i) !== -1)}
-            onChange={(i) =>
-              selectedDaysDispatch({
-                index: i,
-                type: selectedDays.indexOf(i) === -1 ? 'add' : 'remove'
-              })
-            }
-            square={true}
-            slideHighlight={false}
-          />
-        </div>
-        {offendedLocations.map((location, i) => (
-          <p className={`text-messiah-red text-sm mt-2`} key={i}>
-            {`${location} is closed on days ${locationClosures[location]
-              .map((n) => WEEKDAYS[n])
-              .join(', ')}`}
-          </p>
-        ))}
-        <div className='flex gap-2 mt-4'>
-          <Button
-            title='Add Meals to Selected Days'
-            onClick={onAddMeals}
-            disabled={isAddMealsButtonDisabled}
-          />
-          <Button
-            title='Clear Meal Queue'
-            onClick={clearMealQueue}
-            disabled={isClearMealsButtonDisabled}
-          />
-        </div>
-        <Notification message={message} />
-      </MealContainer>
-    </div>
+    <MealContainer
+      title='Meal Queue'
+      meals={mealQueueValue}
+      addOrRemove='Del'
+      buttonOnClick={removeMealFromQueue}
+      createNotification={(name) => `Removed ${name} from meal queue`}
+      searchable={false}
+      tooltip={tooltip.mealQueue}
+      setRef={(ref) => tutorialRefs.setValue(ref, "Meal Queue")}
+    >
+      <div className='mb-4' />
+      <p className='mb-2'>Add these meals to:</p>
+      <div className='flex justify-center flex-wrap gap-6 w-full'>
+        <DaySelector
+          daysSelected={new Array(7)
+            .fill(false)
+            .map((_v, i) => selectedDays.indexOf(i) !== -1)}
+          onChange={(i) =>
+            selectedDaysDispatch({
+              index: i,
+              type: selectedDays.indexOf(i) === -1 ? 'add' : 'remove'
+            })
+          }
+          square={true}
+          slideHighlight={false}
+        />
+      </div>
+      {offendedLocations.map((location, i) => (
+        <p className={`text-messiah-red text-sm mt-2`} key={i}>
+          {`${location} is closed on days ${locationClosures[location]
+            .map((n) => WEEKDAYS[n])
+            .join(', ')}`}
+        </p>
+      ))}
+      <div className='flex gap-2 mt-4'>
+        <Button
+          title='Add Meals to Selected Days'
+          onClick={onAddMeals}
+          disabled={isAddMealsButtonDisabled}
+        />
+        <Button
+          title='Clear Meal Queue'
+          onClick={clearMealQueue}
+          disabled={isClearMealsButtonDisabled}
+        />
+      </div>
+      <Notification message={message} />
+    </MealContainer>
   );
 };
 

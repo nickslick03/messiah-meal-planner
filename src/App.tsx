@@ -10,7 +10,7 @@ import {
   MealQueueCtx,
   CustomMealsCtx,
   WeeksOffCtx,
-  TutorialDivsCtx
+  TutorialElementsCtx
 } from './static/context';
 import { useState, useEffect, useMemo, useRef } from 'react';
 import Meal from './types/Meal';
@@ -65,14 +65,14 @@ function App() {
     'customMeals',
     []
   );
-  const tutorialDivs = useRef<(HTMLDivElement | null)[]>(Array(tutorialSteps.length).fill(null));
-  const addRef = (ref: React.RefObject<HTMLDivElement | null>, title: string) => {
-    if (ref.current === null)
+  const tutorialDivs = useRef<(HTMLElement | null)[]>(Array(tutorialSteps.length).fill(null));
+  const addRef = (ref: HTMLElement | null, title: string) => {
+    if (ref === null)
       return;
     const index = tutorialSteps.findIndex(step => step.title === title);
     if (index === -1)
       throw new Error(`Title ${title} is not part of the tutorial`);
-    tutorialDivs.current[index] = ref.current;
+    tutorialDivs.current[index] = ref;
   }
   const [areDetailsEntered, setAreDetailsEntered] = useState(false);
 
@@ -165,7 +165,7 @@ function App() {
   );
 
   return (
-    <TutorialDivsCtx.Provider value={{ value: tutorialDivs.current, setValue: addRef }}>
+    <TutorialElementsCtx.Provider value={{ value: tutorialDivs.current, setValue: addRef }}>
       <WeeksOffCtx.Provider value={{ value: weeksOff, setValue: setWeeksOff }}>
         <MealPlanCtx.Provider value={{ value: mealPlan, setValue: setMealPlan }}>
           <BalanceCtx.Provider value={{ value: balance, setValue: setBalance }}>
@@ -228,7 +228,7 @@ function App() {
           </BalanceCtx.Provider>
         </MealPlanCtx.Provider>
       </WeeksOffCtx.Provider>
-    </TutorialDivsCtx.Provider>
+    </TutorialElementsCtx.Provider>
   );
 }
 

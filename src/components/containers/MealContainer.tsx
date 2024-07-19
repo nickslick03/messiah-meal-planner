@@ -18,10 +18,10 @@ interface MealContainerProps {
   createNotification: (name: string) => string;
   createDayNotification?: (day: Weekday, name: string) => string;
   onCustomClick?: (data: Meal) => void;
+  setRef?: (ref: HTMLElement | null) => void;
   newCustomMealID?: string;
   searchable?: boolean;
   tooltip?: TooltipObject;
-  id: string;
 }
 
 /**
@@ -52,13 +52,13 @@ const MealContainer = ({
   createNotification,
   createDayNotification,
   onCustomClick,
+  setRef = () => {},
   newCustomMealID,
   searchable = true,
   tooltip,
-  id
 }: MealContainerProps) => {
   return (
-    <SectionContainer title={title} tooltip={tooltip} id={id}>
+    <SectionContainer title={title} tooltip={tooltip} setRef={setRef}>
       {daySelector ?? <></>}
       <MealTable
         data={meals}

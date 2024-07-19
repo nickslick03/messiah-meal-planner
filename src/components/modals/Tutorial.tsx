@@ -2,7 +2,7 @@ import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { IMPORTANCE_CLASSES } from "../../static/constants";
 import Button from "../form_elements/Button";
 import { IoMdClose } from "react-icons/io";
-import { TutorialDivsCtx } from "../../static/context";
+import { TutorialElementsCtx } from "../../static/context";
 import tutorialSteps from "../../static/tutorialSteps";
 import usePersistentState from "../../hooks/usePersistentState";
 
@@ -15,7 +15,7 @@ const Tutorial = ({
     areDetailsEntered
 }: TutorialProps) => {
 
-    const tutorialRefs = useContext(TutorialDivsCtx);
+    const tutorialRefs = useContext(TutorialElementsCtx);
 
     const [step, setStep] = useState(0);
     const [isDone, setIsDone] = useState(true);

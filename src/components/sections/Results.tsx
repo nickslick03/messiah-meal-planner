@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useRef } from 'react';
+import { useContext, useMemo } from 'react';
 import SectionContainer from '../containers/SectionContainer';
 import DotLeader from '../other/DotLeader';
 import {
@@ -7,7 +7,7 @@ import {
   UserSelectedMealsCtx,
   CustomMealsCtx,
   WeeksOffCtx,
-  TutorialDivsCtx,
+  TutorialElementsCtx,
 } from '../../static/context';
 import formatCurrency from '../../lib/formatCurrency';
 import { getMealTotal } from '../../lib/calculationEngine';
@@ -63,14 +63,7 @@ const Results = ({
   const isDiscount = useContext(MealPlanCtx);
   const customMeals = useContext(CustomMealsCtx);
   const userSelectedMeals = useContext(UserSelectedMealsCtx);
-  const tutorialRefs = useContext(TutorialDivsCtx);
-
-  const ref = useRef<HTMLDivElement | null>(null);
-  
-  useEffect(() => {
-    if(ref.current !== null)
-      tutorialRefs.setValue(ref, 'Results');
-  }, [ref]);
+  const tutorialRefs = useContext(TutorialElementsCtx);
   
   /** The meal total for one week. */
   const weekTotal = useMemo(
@@ -218,65 +211,63 @@ const Results = ({
   );
 
   return (
-    <div ref={ref}>
-      <SectionContainer title='Results' tooltip={tooltip.results} id={'results'}>
-        <div className='text-gray-400 mt-4 mb-1'>(Charts are based on the total for 1 week)</div>
-        <div className='flex flex-row flex-wrap w-full justify-evenly mb-4'>
-          <div className='relative mb-4 w-full lg:w-[45%] min-h-[250px] sm:min-h-[300px]'>
-            <Bar data={barChartData} options={barChartOptions} />
-          </div>
-          <div className='relative mb-4 w-full lg:w-[45%] min-h-[250px] sm:min-h-[300px]'>
-            <Pie data={pieChartData} options={pieChartOptions} />
-          </div>
+    <SectionContainer title='Results' tooltip={tooltip.results} setRef={(ref) => tutorialRefs.setValue(ref, "Results")}>
+      <div className='text-gray-400 mt-4 mb-1'>(Charts are based on the total for 1 week)</div>
+      <div className='flex flex-row flex-wrap w-full justify-evenly mb-4'>
+        <div className='relative mb-4 w-full lg:w-[45%] min-h-[250px] sm:min-h-[300px]'>
+          <Bar data={barChartData} options={barChartOptions} />
         </div>
-        <Divider />
-        <DotLeader
-          info={[
-            {
-              title: 'Starting Balance',
-              value: formatCurrency(balance.value || 0),
-              resultsStyle: 'text-messiah-green'
-            },
-            {
-              title: 'Weekly Total',
-              value: `${formatCurrency(weekTotal)}`,
-              resultsStyle: 'text-messiah-red'
-            },
-            {
-              title: 'Grand Total',
-              value: `${formatCurrency(grandTotal)}`,
-              resultsStyle: 'text-messiah-red'
-            }
-          ].concat(
-            !isUnderBalance
-              ? [
-                  {
-                    title: `Date When Money Runs Out 
-                    ${weeksOff.value
-                      ? '(Assuming the weeks off are before this)'
-                      : ''}`,
-                    value: `${
-                      dayWhenRunOut.getMonth() + 1
-                    }/${dayWhenRunOut.getDate()}/${dayWhenRunOut.getFullYear()}`,
-                    resultsStyle: 'text-black'
-                  }
-                ]
-              : []
-          )}
-        />
-        <div
-          className={`${
-            isUnderBalance 
-              ? 'text-messiah-green' 
-              : 'text-messiah-red'
-          } text-xl font-bold mt-4 text-center`}
-        >
-          {isUnderBalance
-            ? `You have an extra ${formatCurrency(difference)}!`
-            : `You have overplanned by ${formatCurrency(difference)}.`}
+        <div className='relative mb-4 w-full lg:w-[45%] min-h-[250px] sm:min-h-[300px]'>
+          <Pie data={pieChartData} options={pieChartOptions} />
         </div>
-      </SectionContainer>
-    </div>
+      </div>
+      <Divider />
+      <DotLeader
+        info={[
+          {
+            title: 'Starting Balance',
+            value: formatCurrency(balance.value || 0),
+            resultsStyle: 'text-messiah-green'
+          },
+          {
+            title: 'Weekly Total',
+            value: `${formatCurrency(weekTotal)}`,
+            resultsStyle: 'text-messiah-red'
+          },
+          {
+            title: 'Grand Total',
+            value: `${formatCurrency(grandTotal)}`,
+            resultsStyle: 'text-messiah-red'
+          }
+        ].concat(
+          !isUnderBalance
+            ? [
+                {
+                  title: `Date When Money Runs Out 
+                  ${weeksOff.value
+                    ? '(Assuming the weeks off are before this)'
+                    : ''}`,
+                  value: `${
+                    dayWhenRunOut.getMonth() + 1
+                  }/${dayWhenRunOut.getDate()}/${dayWhenRunOut.getFullYear()}`,
+                  resultsStyle: 'text-black'
+                }
+              ]
+            : []
+        )}
+      />
+      <div
+        className={`${
+          isUnderBalance 
+            ? 'text-messiah-green' 
+            : 'text-messiah-red'
+        } text-xl font-bold mt-4 text-center`}
+      >
+        {isUnderBalance
+          ? `You have an extra ${formatCurrency(difference)}!`
+          : `You have overplanned by ${formatCurrency(difference)}.`}
+      </div>
+    </SectionContainer>
   );
 };
 
