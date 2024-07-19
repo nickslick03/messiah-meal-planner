@@ -4,6 +4,7 @@ import Button from "../form_elements/Button";
 import { IoMdClose } from "react-icons/io";
 import { TutorialDivsCtx } from "../../static/context";
 import tutorialSteps from "../../static/tutorialSteps";
+import usePersistentState from "../../hooks/usePersistentState";
 
 interface TutorialProps {
     /** Whether the details for the meal plan info form are complete and valid. */
@@ -17,7 +18,15 @@ const Tutorial = ({
     const tutorialRefs = useContext(TutorialDivsCtx);
 
     const [step, setStep] = useState(0);
-    const [isDone, setIsDone] = useState(false);
+    const [isDone, setIsDone] = useState(true);
+    const [isNewUser, setIsNewUser] = usePersistentState('isNewUser', true);
+
+    useEffect(() => {
+      if (isNewUser) {
+        setIsDone(false);
+        setIsNewUser(false);
+      }
+    }, [isNewUser, setIsNewUser]);
 
     const tutorialTooltipRef = useRef<HTMLDivElement | null>(null);
 

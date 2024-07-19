@@ -28,14 +28,6 @@ const SectionContainer = ({
   tooltip,
   id
 }: SectionContainerProps): JSX.Element => {
-  const [isNewUser, setIsNewUser] = usePersistentState('isNewUser', true);
-
-  useEffect(() => {
-    if (isNewUser && tooltip?.title === 'Meal Plan Info') {
-      setTooltipVisible(true);
-      setIsNewUser(false);
-    }
-  }, [isNewUser, setIsNewUser, tooltip?.title]);
 
   const [tooltipVisible, setTooltipVisible] = useState(false);
 
