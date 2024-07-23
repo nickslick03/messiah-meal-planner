@@ -1,6 +1,6 @@
 import ScreenContainer from './components/containers/ScreenContainer';
 import MealPlanInfo from './components/sections/MealPlanInfo';
-import AvailableMeals from './components/sections/AvailableMeals';
+import AvailableMealsProps from './components/sections/AvailableMeals';
 import {
   MealPlanCtx,
   BalanceCtx,
@@ -29,6 +29,7 @@ import { getMealTotal, calculateDateWhenRunOut } from './lib/calculationEngine';
 import { getWeekdaysBetween } from './lib/dateCalcuation';
 import Tutorial from './components/modals/Tutorial';
 import tutorialSteps from './static/tutorialSteps';
+import AvailableMeals from './components/sections/AvailableMeals';
 
 function App() {
   const [weeksOff, setWeeksOff] = usePersistentState<number | null>(
@@ -187,38 +188,42 @@ function App() {
                     <CustomMealsCtx.Provider
                       value={{ value: customMeals, setValue: setCustomMeals }}
                     >
-                      <Tutorial areDetailsEntered={areDetailsEntered} />
                       <ScreenContainer>
                         <header className='bg-messiah-blue rounded-xl border-4 border-white shadow-md w-full mb-4'>
                           <h1 className='font-semibold text-4xl text-white text-center p-8'>
                             Messiah Meal Planner
                           </h1>
                         </header>
-                        <MealPlanInfo onEnterDetails={setAreDetailsEntered} />
-                        {areDetailsEntered ? (
-                          <>
-                            <AvailableMeals />
-                            <MealQueue />
-                            <DayEditor />
-                            <Results
-                              grandTotal={grandTotal}
-                              isUnderBalance={isUnderBalance}
-                              difference={difference}
-                              dayWhenRunOut={dayWhenRunOut}
-                            />
-                            <ResultsBar
-                              grandTotal={grandTotal}
-                              isUnderBalance={isUnderBalance}
-                              difference={difference}
-                            />
-                          </>
-                        ) : (
-                          <div className='flex flex-col items-center'>
-                            <p className='text-gray-400'>
-                              Enter meal plan info to continue planning.
-                            </p>
-                          </div>
-                        )}
+                        <div className='flex flex-col relative gap-4'>
+                          <Tutorial areDetailsEntered={areDetailsEntered} />
+                          <MealPlanInfo onEnterDetails={setAreDetailsEntered} />
+                          {areDetailsEntered ? (
+                            <>
+                              <AvailableMeals order={1} />
+                              <MealQueue order={2} />
+                              <DayEditor order={3} />
+                              <Results
+                                order={4}
+                                grandTotal={grandTotal}
+                                isUnderBalance={isUnderBalance}
+                                difference={difference}
+                                dayWhenRunOut={dayWhenRunOut}
+                              />
+                              <ResultsBar
+                                order={5}
+                                grandTotal={grandTotal}
+                                isUnderBalance={isUnderBalance}
+                                difference={difference}
+                              />
+                            </>
+                          ) : (
+                            <div className='flex flex-col items-center'>
+                              <p className='text-gray-400'>
+                                Enter meal plan info to continue planning.
+                              </p>
+                            </div>
+                          )}
+                        </div>
                       </ScreenContainer>
                     </CustomMealsCtx.Provider>
                   </MealQueueCtx.Provider>

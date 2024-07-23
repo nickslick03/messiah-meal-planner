@@ -1,6 +1,7 @@
 
 interface TutorialStep {
-    position?: keyof DOMRect
+    position?: 'center' | 'above' | 'below',
+    order?: number,
     title: string,
     description: JSX.Element,
     action?: JSX.Element
@@ -8,13 +9,15 @@ interface TutorialStep {
 
 const tutorialSteps: TutorialStep[] = [
     {
+        position: 'center',
         title: 'Tutorial Intro',
         description: 
             <p>Welcome to the Messiah Meal Planner! This website allows you to plan your meals for the semester 
             and budget your dining dollars. Follow this tutorial to learn more about Messiah's student meal plan and how to budget for it.</p>,
     },
     {
-        position: 'bottom',
+        order: 1,
+        position: 'below',
         title: 'Meal Plan Info',
         description: 
             <div>This is where you'll enter info about the semester and your meal plan. The start and end dates of the semester
@@ -29,6 +32,7 @@ const tutorialSteps: TutorialStep[] = [
             <strong>Complete the meal plan info form.</strong>,
     },
     {
+        order: 1,
         title: 'Available Meals',
         description: 
             (<p>You'll plan your meals with a 7-day template that's repeated the number of weeks in the semester. Add meals directly to a weekday by
@@ -36,22 +40,26 @@ const tutorialSteps: TutorialStep[] = [
             to add a meal to the meal queue.</p>),
     },
     {
+        order: 2,
         title: 'Meal Queue',
         description:
             (<p>The meal queue allows you to add a group of meals to multiple days. Once meals are added to the meal queu, select the preffered days and click
             "Add to selected days".</p>),
     },
     {
+        order: 3,
         title: 'Day Editor',
         description: 
             (<p>Here, you can see and edit the meals in each week day, along with budgeting information of the selected day.</p>),
     },
     {
+        order: 4,
         title: 'Results',
         description: 
             (<p>The results section shows your meal plan stats and 2 graphs. If your starting balance is less than the grand total, you need to replan!</p>),
     },
     {
+        position: 'center',
         title: 'Conclusion',
         description: 
             (<p>If you are ever confused, click the question mark icons in the corners of each section to see an explanation. Best of luck with the semester!</p>),

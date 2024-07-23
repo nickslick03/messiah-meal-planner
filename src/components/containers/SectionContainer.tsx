@@ -10,6 +10,7 @@ interface SectionContainerProps {
   title?: string;
   tooltip?: TooltipObject;
   setRef?: (ref: HTMLElement | null) => void;
+  order?: number;
 }
 
 /**
@@ -19,13 +20,15 @@ interface SectionContainerProps {
  * @param {string} title - The title of the section container
  * @param {TooltipObject} tooltip - The tooltip object for the section
  * @param setRef - optional callback function to get the section ref
+ * @param {number} order - the order this component should appear.
  * @returns {JSX.Element} The rendered section container
  */
 const SectionContainer = ({
   children = <></>,
   title,
   tooltip,
-  setRef = () => {}
+  setRef = () => {},
+  order = 0
 }: SectionContainerProps): JSX.Element => {
 
   const [tooltipVisible, setTooltipVisible] = useState(false);
@@ -33,7 +36,10 @@ const SectionContainer = ({
   return (
     <section 
       className='relative border-4 border-messiah-blue bg-white rounded-xl p-4 
-      flex flex-col justify-center items-center w-full shadow-md mb-4' 
+      flex flex-col justify-center items-center w-full shadow-md'
+      style={{
+        "order": order
+      }} 
       ref={(ref) => setRef(ref)}
       >
       {title === undefined ? '' : <SectionHeader text={title} />}

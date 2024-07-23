@@ -25,6 +25,7 @@ interface ResultsProps {
   difference: number;
   grandTotal: number;
   dayWhenRunOut: Date;
+  order: number;
 }
 
 /** The background color for charts. */
@@ -54,7 +55,8 @@ const Results = ({
   isUnderBalance,
   difference,
   grandTotal,
-  dayWhenRunOut
+  dayWhenRunOut,
+  order
 }: ResultsProps) => {
   // Load all necessary contexts
   const balance = useContext(BalanceCtx);
@@ -211,7 +213,12 @@ const Results = ({
   );
 
   return (
-    <SectionContainer title='Results' tooltip={tooltip.results} setRef={(ref) => tutorialRefs.setValue(ref, "Results")}>
+    <SectionContainer 
+      title='Results' 
+      tooltip={tooltip.results} 
+      setRef={(ref) => tutorialRefs.setValue(ref, "Results")}
+      order={order}
+    >
       <div className='text-gray-400 mt-4 mb-1'>(Charts are based on the total for 1 week)</div>
       <div className='flex flex-row flex-wrap w-full justify-evenly mb-4'>
         <div className='relative mb-4 w-full lg:w-[45%] min-h-[250px] sm:min-h-[300px]'>

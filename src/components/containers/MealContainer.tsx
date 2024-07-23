@@ -22,6 +22,7 @@ interface MealContainerProps {
   newCustomMealID?: string;
   searchable?: boolean;
   tooltip?: TooltipObject;
+  order?: number;
 }
 
 /**
@@ -39,6 +40,7 @@ interface MealContainerProps {
  * @param {string | undefined} newCustomMealID - The ID of the newly added custom meal to scroll to
  * @param {boolean} searchable - Whether the table should be searchable
  * @param {TooltipObject} tooltip - The tooltip object for the section
+ * @param {number} order - The order this component should appear
  * @return {JSX.Element} The Available Meals section component.
  */
 const MealContainer = ({
@@ -56,9 +58,10 @@ const MealContainer = ({
   newCustomMealID,
   searchable = true,
   tooltip,
+  order = 0
 }: MealContainerProps) => {
   return (
-    <SectionContainer title={title} tooltip={tooltip} setRef={setRef}>
+    <SectionContainer title={title} tooltip={tooltip} setRef={setRef} order={order}>
       {daySelector ?? <></>}
       <MealTable
         data={meals}

@@ -14,13 +14,20 @@ import tooltip from '../../static/tooltip';
 import CustomMealAddModal from '../modals/CustomMealAddModal';
 import { Weekday } from '../../types/userSelectedMealsObject';
 
+interface AvailableMealsProps {
+  /** The order this component should appear. */
+  order: number;
+}
+
 /**
  * Renders the Available Meals section with a table of meals to add and a button
  * to add a custom meal. Displays the add custommeal modal when the button is clicked.
  *
  * @return {JSX.Element} The Available Meals section component.
  */
-const AvailableMeals = () => {
+const AvailableMeals = ({
+  order
+}: AvailableMealsProps) => {
   // Load all necessary contexts
   const mealQueue = useContext(MealQueueCtx);
   const customMeals = useContext(CustomMealsCtx);
@@ -112,6 +119,7 @@ const AvailableMeals = () => {
         searchable
         tooltip={tooltip.availableMeals}
         setRef={(ref) => tutorialRefs.setValue(ref, "Available Meals")}
+        order={order}
       >
         <CustomMeal setNewCustomMealID={setNewCustomMealID} />
       </MealContainer>

@@ -48,23 +48,28 @@ const Tutorial = ({
     }
 
     useEffect(() => {
+        const tooltip = tutorialTooltipRef!.current!;
+        const position = tutorialSteps[step].position;
+        let div: HTMLElement | null = null;
         if (tutorialRefs.value[step] !== null) {
-            const isBottom = tutorialSteps[step].position === 'bottom';
-            const div = tutorialRefs.value[step]; 
-            const top = div.offsetTop + (isBottom 
-                ? div.offsetHeight + 15 
-                : 0);
-            div.style.zIndex = "50";    
-            tutorialTooltipRef!.current!.style.top = `${top}px`;
-            tutorialTooltipRef!.current!.scrollIntoView({ 
+            div = tutorialRefs.value[step];
+            div.style.zIndex = '50';
+        }
+        if (position !== 'center') {
+            tooltip.style.position = 'static';
+            tooltip.style.transform = '';
+            tooltip.style.order = `${tutorialSteps[step].order}`;
+            (div !== null && tutorialSteps[step].position === 'below'
+                ? div
+                : tooltip
+            ).scrollIntoView({ 
                 behavior: 'smooth', 
-                block: isBottom 
-                    ? 'end' 
-                    : 'start' 
+                block: 'start' 
             });
         } else {
-            tutorialTooltipRef!.current!.style.top = "50%";
-            tutorialTooltipRef!.current!.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            tooltip.style.position = 'absolute';
+            tooltip.style.transform = 'translate(-50%, -50%)';
+            tooltip.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
     }, [step]);
 
@@ -78,9 +83,8 @@ const Tutorial = ({
             <div className={`h-screen w-full bg-opacity-50 bg-slate-900 fixed top-0 left-0 z-50 ${isDone ? 'hidden' : ''}`}>
             </div>
             <div 
-                className={`absolute max-w-[25rem] p-3 drop-shadow-md shadow-black bg-white 
-                    rounded -translate-x-1/2 gap-2 z-[55] top-1/2 left-1/2
-                    ${tutorialSteps[step].position === 'bottom' ? '' : '-translate-y-full'}
+                className={`absolute max-w-[25rem] p-3 drop-shadow-md self-center
+                    shadow-black bg-white rounded top-1/2 left-1/2 z-[55]
                     ${isDone ? 'hidden' : ''}`}
                 ref={tutorialTooltipRef}
             >
@@ -104,6 +108,14 @@ const Tutorial = ({
                         
                 </div>
                 <div className="text-center">
+                    <Button 
+                        title={'Previous'}
+                        style={`${step === 0 ? 'hidden' : ''} text-sm mb-0`}
+                        frame={true}
+                        onClick={() => {
+                            resetPrevDiv(step);
+                            if (step !== 0) setStep(step - 1);
+                        }}/>    
                     <Button 
                         title={step + 1 === tutorialSteps.length ? 'Finish' : 'Next'}
                         style="text-sm mb-0"

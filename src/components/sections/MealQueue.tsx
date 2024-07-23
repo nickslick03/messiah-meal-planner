@@ -17,10 +17,17 @@ import mapUserMeals from '../../lib/mapUserMeals';
 import dereferenceMeal from '../../lib/dereferenceMeal';
 import tooltip from '../../static/tooltip';
 
+interface MealQueueProps {
+  /** The order this component should appear. */
+  order: number;
+}
+
 /**
  * Renders the Meal Queue section, where meals in the queue can be added to different days of the week.
  */
-const MealQueue = () => {
+const MealQueue = ({
+  order
+}: MealQueueProps) => {
   // Load all necessary contexts
   const mealQueue = useContext(MealQueueCtx);
   const userSelectedMeals = useContext(UserSelectedMealsCtx);
@@ -153,6 +160,7 @@ const MealQueue = () => {
       searchable={false}
       tooltip={tooltip.mealQueue}
       setRef={(ref) => tutorialRefs.setValue(ref, "Meal Queue")}
+      order={order}
     >
       <div className='mb-4' />
       <p className='mb-2'>Add these meals to:</p>
