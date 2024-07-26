@@ -18,9 +18,11 @@ import tooltip from '../../static/tooltip';
  * @return {JSX.Element} The rendered MealPlanInfo component.
  */
 const MealPlanInfo = ({
-  onEnterDetails
+  onEnterDetails,
+  order
 }: {
   onEnterDetails: (details: boolean) => void;
+  order: number;
 }): JSX.Element => {
   // Load all necessary contexts
   const startDate = useContext(StartDateCtx);
@@ -48,9 +50,10 @@ const MealPlanInfo = ({
 
   return (
     <SectionContainer 
-      title='Meal Plan Info' 
+      title='Meal Plan Info'
       tooltip={tooltip.mealPlanInfo} 
       setRef={(ref) => tutorialRefs.setValue(ref, "Meal Plan Info")}
+      order={order}
     >
       <div className='mt-4 flex flex-col items-start gap-4 w-min'>
         <Input

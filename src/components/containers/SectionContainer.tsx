@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useContext } from 'react';
 import { TooltipObject } from '../../static/tooltip';
 import SectionHeader from './SectionHeader';
 import { FiHelpCircle } from 'react-icons/fi';
-import TooltipModal from '../modals/TooltipModal';
+import { TutorialControlCtx } from '../../static/context';
 
 // Prop types
 interface SectionContainerProps {
@@ -26,12 +26,11 @@ interface SectionContainerProps {
 const SectionContainer = ({
   children = <></>,
   title,
-  tooltip,
   setRef = () => {},
   order = 0
 }: SectionContainerProps): JSX.Element => {
 
-  const [tooltipVisible, setTooltipVisible] = useState(false);
+  const { setTutorialStep, setShowTutorial } = useContext(TutorialControlCtx);
 
   return (
     <section 
@@ -45,16 +44,14 @@ const SectionContainer = ({
       {title === undefined ? '' : <SectionHeader text={title} />}
       <button
         className='absolute top-5 right-5'
-        onClick={() => setTooltipVisible(true)}
+        onClick={() => {
+          setTutorialStep(order);
+          setShowTutorial(true);
+        }}
       >
         <FiHelpCircle size={20} color='#aaa' />
       </button>
       {children}
-      <TooltipModal
-        tooltip={tooltip}
-        setTooltipVisible={setTooltipVisible}
-        tooltipVisible={tooltipVisible}
-      />
     </section>
   );
 };

@@ -8,18 +8,27 @@ import usePersistentState from "../../hooks/usePersistentState";
 import tooltip from "../../static/tooltip";
 
 interface TutorialProps {
+    /** boolean whether to show the tutorial. */
+    show: boolean;
+    /** setter for showTutorial. */
+    setShow: React.Dispatch<React.SetStateAction<boolean>>;
+    /** The step the tutorial is on. */
+    step: number;
+    /** The setter for the step. */
+    setStep: React.Dispatch<React.SetStateAction<number>>;
     /** Whether the details for the meal plan info form are complete and valid. */
     areDetailsEntered: boolean;
 }
 
 const Tutorial = ({
-    areDetailsEntered
+    show,
+    setShow,
+    step,
+    setStep,
+    areDetailsEntered,
 }: TutorialProps) => {
 
     const tutorialRefs = useContext(TutorialElementsCtx);
-
-    const [step, setStep] = useState(0);
-    const [isDone, setIsDone] = useState(true);
     const [isNewUser, setIsNewUser] = usePersistentState('isNewUser', true);
 
     const moreDetails = useMemo(
@@ -29,7 +38,7 @@ const Tutorial = ({
 
     useEffect(() => {
       if (isNewUser) {
-        setIsDone(false);
+        setShow(true);
         setIsNewUser(false);
       }
     }, [isNewUser, setIsNewUser]);
@@ -64,39 +73,39 @@ const Tutorial = ({
         if (position !== 'center') {
             tooltip.style.position = 'static';
             tooltip.style.transform = '';
-            tooltip.style.order = `${tutorialSteps[step].order}`;
-            (div !== null && tutorialSteps[step].position === 'below'
+            tooltip.style.order = `${1 + step - tutorialSteps.slice(0, step).reduce((p, c) => p + (c.position === 'center' ? 1 : 0), 0)}`;
+            (div !== null && tutorialSteps[step].position === 'end'
                 ? div
                 : tooltip
             ).scrollIntoView({ 
                 behavior: 'smooth', 
-                block: 'start' 
+                block: tutorialSteps[step].position
             });
         } else {
             tooltip.style.position = 'absolute';
             tooltip.style.transform = 'translate(-50%, -50%)';
             tooltip.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
-    }, [step]);
+    }, [step, show]);
 
     useEffect(() => {
-        if (isDone) resetPrevDiv(step);
-    }, [isDone]);
+        if (!show) resetPrevDiv(step);
+    }, [show]);
 
     const importance = IMPORTANCE_CLASSES[4];
     return (
         <>
-            <div className={`h-screen w-full bg-opacity-50 bg-slate-900 fixed top-0 left-0 z-50 ${isDone ? 'hidden' : ''}`}>
+            <div className={`h-screen w-full bg-opacity-50 bg-slate-900 fixed top-0 left-0 z-50 ${show ? '' : 'hidden'}`}>
             </div>
             <div 
                 className={`absolute max-w-[25rem] p-3 drop-shadow-md self-center
                     shadow-black bg-white rounded top-1/2 left-1/2 z-[55]
-                    ${isDone ? 'hidden' : ''}`}
+                    ${show ? '' : 'hidden'}`}
                 ref={tutorialTooltipRef}
             >
                 <button 
                     className="absolute top-1 right-1"
-                    onClick={() => setIsDone(true)}    
+                    onClick={() => setShow(false)}    
                 >
                     <IoMdClose />
                 </button>
@@ -133,7 +142,7 @@ const Tutorial = ({
                         onClick={() => {
                             resetPrevDiv(step);
                             step + 1 === tutorialSteps.length
-                                ? setIsDone(true)
+                                ? setShow(false)
                                 : setStep(step + 1);
                         }}/>    
                 </div>    

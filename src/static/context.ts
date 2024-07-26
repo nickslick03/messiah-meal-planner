@@ -62,3 +62,13 @@ export const TutorialElementsCtx = createContext<TutorialDivs>({
   value: [],
   setValue: () => {}
 });
+
+interface TutorialControl {
+  setShowTutorial: React.Dispatch<React.SetStateAction<boolean>>;
+  setTutorialStep: React.Dispatch<React.SetStateAction<number>>;
+}
+
+export const TutorialControlCtx = createContext<TutorialControl>({
+  setShowTutorial: () => {},
+  setTutorialStep: () => {},
+});

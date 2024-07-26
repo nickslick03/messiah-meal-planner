@@ -1,6 +1,5 @@
 import ScreenContainer from './components/containers/ScreenContainer';
 import MealPlanInfo from './components/sections/MealPlanInfo';
-import AvailableMealsProps from './components/sections/AvailableMeals';
 import {
   MealPlanCtx,
   BalanceCtx,
@@ -10,7 +9,8 @@ import {
   MealQueueCtx,
   CustomMealsCtx,
   WeeksOffCtx,
-  TutorialElementsCtx
+  TutorialElementsCtx,
+  TutorialControlCtx
 } from './static/context';
 import { useState, useEffect, useMemo, useRef } from 'react';
 import Meal from './types/Meal';
@@ -75,6 +75,8 @@ function App() {
       throw new Error(`Title ${title} is not part of the tutorial`);
     tutorialDivs.current[index] = ref;
   }
+  const [ showTutorial, setShowTutorial ] = useState(false);
+  const [ tutorialStep, setTutorialStep ] = useState(0);
   const [areDetailsEntered, setAreDetailsEntered] = useState(false);
 
   // Remove dangling meal references from mealQueue and userSelectedMeals
@@ -166,74 +168,81 @@ function App() {
   );
 
   return (
-    <TutorialElementsCtx.Provider value={{ value: tutorialDivs.current, setValue: addRef }}>
-      <WeeksOffCtx.Provider value={{ value: weeksOff, setValue: setWeeksOff }}>
-        <MealPlanCtx.Provider value={{ value: mealPlan, setValue: setMealPlan }}>
-          <BalanceCtx.Provider value={{ value: balance, setValue: setBalance }}>
-            <StartDateCtx.Provider
-              value={{ value: startDate, setValue: setStartDate }}
-            >
-              <EndDateCtx.Provider
-                value={{ value: endDate, setValue: setEndDate }}
+    <TutorialControlCtx.Provider value={{ setShowTutorial, setTutorialStep }}>
+      <TutorialElementsCtx.Provider value={{ value: tutorialDivs.current, setValue: addRef }}>
+        <WeeksOffCtx.Provider value={{ value: weeksOff, setValue: setWeeksOff }}>
+          <MealPlanCtx.Provider value={{ value: mealPlan, setValue: setMealPlan }}>
+            <BalanceCtx.Provider value={{ value: balance, setValue: setBalance }}>
+              <StartDateCtx.Provider
+                value={{ value: startDate, setValue: setStartDate }}
               >
-                <UserSelectedMealsCtx.Provider
-                  value={{
-                    value: userSelectedMeals,
-                    setValue: setUserSelectedMeals
-                  }}
+                <EndDateCtx.Provider
+                  value={{ value: endDate, setValue: setEndDate }}
                 >
-                  <MealQueueCtx.Provider
-                    value={{ value: mealQueue, setValue: setMealQueue }}
+                  <UserSelectedMealsCtx.Provider
+                    value={{
+                      value: userSelectedMeals,
+                      setValue: setUserSelectedMeals
+                    }}
                   >
-                    <CustomMealsCtx.Provider
-                      value={{ value: customMeals, setValue: setCustomMeals }}
+                    <MealQueueCtx.Provider
+                      value={{ value: mealQueue, setValue: setMealQueue }}
                     >
-                      <ScreenContainer>
-                        <header className='bg-messiah-blue rounded-xl border-4 border-white shadow-md w-full mb-4'>
-                          <h1 className='font-semibold text-4xl text-white text-center p-8'>
-                            Messiah Meal Planner
-                          </h1>
-                        </header>
-                        <div className='flex flex-col relative gap-4'>
-                          <Tutorial areDetailsEntered={areDetailsEntered} />
-                          <MealPlanInfo onEnterDetails={setAreDetailsEntered} />
-                          {areDetailsEntered ? (
-                            <>
-                              <AvailableMeals order={1} />
-                              <MealQueue order={2} />
-                              <DayEditor order={3} />
-                              <Results
-                                order={4}
-                                grandTotal={grandTotal}
-                                isUnderBalance={isUnderBalance}
-                                difference={difference}
-                                dayWhenRunOut={dayWhenRunOut}
-                              />
-                              <ResultsBar
-                                order={5}
-                                grandTotal={grandTotal}
-                                isUnderBalance={isUnderBalance}
-                                difference={difference}
-                              />
-                            </>
-                          ) : (
-                            <div className='flex flex-col items-center'>
-                              <p className='text-gray-400'>
-                                Enter meal plan info to continue planning.
-                              </p>
-                            </div>
-                          )}
-                        </div>
-                      </ScreenContainer>
-                    </CustomMealsCtx.Provider>
-                  </MealQueueCtx.Provider>
-                </UserSelectedMealsCtx.Provider>
-              </EndDateCtx.Provider>
-            </StartDateCtx.Provider>
-          </BalanceCtx.Provider>
-        </MealPlanCtx.Provider>
-      </WeeksOffCtx.Provider>
-    </TutorialElementsCtx.Provider>
+                      <CustomMealsCtx.Provider
+                        value={{ value: customMeals, setValue: setCustomMeals }}
+                      >
+                        <ScreenContainer>
+                          <header className='bg-messiah-blue rounded-xl border-4 border-white shadow-md w-full mb-4'>
+                            <h1 className='font-semibold text-4xl text-white text-center p-8'>
+                              Messiah Meal Planner
+                            </h1>
+                          </header>
+                          <div className='flex flex-col relative gap-4'>
+                            <Tutorial 
+                              show={showTutorial}
+                              setShow={setShowTutorial}
+                              step={tutorialStep}
+                              setStep={setTutorialStep}
+                              areDetailsEntered={areDetailsEntered} />
+                            <MealPlanInfo onEnterDetails={setAreDetailsEntered} order={1} />
+                            {areDetailsEntered ? (
+                              <>
+                                <AvailableMeals order={2} />
+                                <MealQueue order={3} />
+                                <DayEditor order={4} />
+                                <Results
+                                  order={5}
+                                  grandTotal={grandTotal}
+                                  isUnderBalance={isUnderBalance}
+                                  difference={difference}
+                                  dayWhenRunOut={dayWhenRunOut}
+                                />
+                                <ResultsBar
+                                  order={6}
+                                  grandTotal={grandTotal}
+                                  isUnderBalance={isUnderBalance}
+                                  difference={difference}
+                                />
+                              </>
+                            ) : (
+                              <div className='flex flex-col items-center order-1'>
+                                <p className='text-gray-400'>
+                                  Enter meal plan info to continue planning.
+                                </p>
+                              </div>
+                            )}
+                          </div>
+                        </ScreenContainer>
+                      </CustomMealsCtx.Provider>
+                    </MealQueueCtx.Provider>
+                  </UserSelectedMealsCtx.Provider>
+                </EndDateCtx.Provider>
+              </StartDateCtx.Provider>
+            </BalanceCtx.Provider>
+          </MealPlanCtx.Provider>
+        </WeeksOffCtx.Provider>
+      </TutorialElementsCtx.Provider>
+    </TutorialControlCtx.Provider>
   );
 }
 
