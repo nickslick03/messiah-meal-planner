@@ -5,6 +5,7 @@ import { IoMdClose } from "react-icons/io";
 import { TutorialElementsCtx } from "../../static/context";
 import tutorialSteps from "../../static/tutorialSteps";
 import usePersistentState from "../../hooks/usePersistentState";
+import tooltip from "../../static/tooltip";
 
 interface TutorialProps {
     /** Whether the details for the meal plan info form are complete and valid. */
@@ -20,6 +21,11 @@ const Tutorial = ({
     const [step, setStep] = useState(0);
     const [isDone, setIsDone] = useState(true);
     const [isNewUser, setIsNewUser] = usePersistentState('isNewUser', true);
+
+    const moreDetails = useMemo(
+        () => Object.values(tooltip).find(info => info.title === tutorialSteps[step].title)?.text,
+        [step]);
+    const [showDetails, setShowDetails] = useState(false);
 
     useEffect(() => {
       if (isNewUser) {
@@ -103,10 +109,14 @@ const Tutorial = ({
                 <div className="text-sm flex-1 px-1 mb-1">
                     {tutorialSteps[step].description}{' '}
                     {tutorialSteps[step].action ?? ''}
-                </div>
-                <div className="text-center text-xs text-gray-500">
-                        
-                </div>
+                    {showDetails ? moreDetails : ''}
+                    <div 
+                        className={`${moreDetails ? '' : 'hidden'} text-indigo-900 underline text-sm cursor-pointer`}
+                        onClick={() => setShowDetails(!showDetails)}
+                    >
+                        {showDetails ? 'less details' : 'more details...'}
+                    </div>
+                </div> 
                 <div className="text-center">
                     <Button 
                         title={'Previous'}
