@@ -125,18 +125,18 @@ const Tutorial = ({
                     ${show ? '' : 'hidden'}`}
         ref={tutorialTooltipRef}
       >
-        <button
-          className='absolute top-1 right-1'
-          onClick={() => setShow(false)}
-        >
-          <IoMdClose />
-        </button>
-        <h2 className={`${importance} text-xl text-center mb-2`}>
+        <h2 className={`${importance} text-xl text-center mb-2 relative`}>
           {tutorialSteps[step].title}
           <span className='font-thin text-gray-500'>
             {' '}
             ({step + 1}/{tutorialSteps.length})
           </span>
+          <button
+            className='absolute top-1 right-1'
+            onClick={() => setShow(false)}
+          >
+            <IoMdClose />
+          </button>
         </h2>
         <div className='text-sm flex-1 px-1 mb-1'>
           {tutorialSteps[step].description}
