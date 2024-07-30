@@ -78,6 +78,10 @@ const AvailableMeals = ({ order }: AvailableMealsProps) => {
    * Also removes the custom meal from the meal queue and any days it has been added to.
    */
   const onDeleteCustomMeal = () => {
+    const shouldDelete = confirm(
+      "This custom meal will be deleted from your available meals, your meal queue, and any days you've added it to. You can't undo this action. Delete this meal?"
+    );
+    if (!shouldDelete) return;
     customMeals.setValue(
       customMeals.value.filter((val) => val.id !== currentCustomData?.id)
     );
