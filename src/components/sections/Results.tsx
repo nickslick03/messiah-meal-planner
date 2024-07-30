@@ -7,6 +7,7 @@ import {
   UserSelectedMealsCtx,
   CustomMealsCtx,
   WeeksOffCtx,
+  TutorialElementsCtx,
 } from '../../static/context';
 import formatCurrency from '../../lib/formatCurrency';
 import { getMealTotal } from '../../lib/calculationEngine';
@@ -17,13 +18,14 @@ import { WEEKDAYS } from '../../static/constants';
 import { userMealsToStackedChart } from '../../lib/mealChartFormat';
 import Divider from '../other/Divider';
 import { TooltipItem } from 'chart.js/auto';
-import tutorial from '../../static/tutorial';
+import tooltip from '../../static/tooltip';
 
 interface ResultsProps {
   isUnderBalance: boolean;
   difference: number;
   grandTotal: number;
   dayWhenRunOut: Date;
+  order: number;
 }
 
 /** The background color for charts. */
@@ -53,7 +55,8 @@ const Results = ({
   isUnderBalance,
   difference,
   grandTotal,
-  dayWhenRunOut
+  dayWhenRunOut,
+  order
 }: ResultsProps) => {
   // Load all necessary contexts
   const balance = useContext(BalanceCtx);
@@ -62,6 +65,7 @@ const Results = ({
   const isDiscount = useContext(MealPlanCtx);
   const customMeals = useContext(CustomMealsCtx);
   const userSelectedMeals = useContext(UserSelectedMealsCtx);
+  const tutorialRefs = useContext(TutorialElementsCtx);
   
   /** The meal total for one week. */
   const weekTotal = useMemo(
@@ -209,7 +213,12 @@ const Results = ({
   );
 
   return (
-    <SectionContainer title='Results' tutorial={tutorial.results}>
+    <SectionContainer 
+      title='Results' 
+      tooltip={tooltip.results} 
+      setRef={(ref) => tutorialRefs.setValue(ref, "Results")}
+      order={order}
+    >
       <div className='text-gray-400 mt-4 mb-1'>(Charts are based on the total for 1 week)</div>
       <div className='flex flex-row flex-wrap w-full justify-evenly mb-4'>
         <div className='relative mb-4 w-full lg:w-[45%] min-h-[250px] sm:min-h-[300px]'>

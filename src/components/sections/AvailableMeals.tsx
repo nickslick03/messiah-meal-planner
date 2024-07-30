@@ -5,13 +5,19 @@ import CustomMeal from '../other/CustomMeal';
 import {
   CustomMealsCtx,
   MealQueueCtx,
+  TutorialElementsCtx,
   UserSelectedMealsCtx
 } from '../../static/context';
 import { useContext, useEffect, useState } from 'react';
 import { v4 as uuid } from 'uuid';
-import tutorial from '../../static/tutorial';
+import tooltip from '../../static/tooltip';
 import CustomMealAddModal from '../modals/CustomMealAddModal';
 import { Weekday } from '../../types/userSelectedMealsObject';
+
+interface AvailableMealsProps {
+  /** The order this component should appear. */
+  order: number;
+}
 
 /**
  * Renders the Available Meals section with a table of meals to add and a button
@@ -19,11 +25,14 @@ import { Weekday } from '../../types/userSelectedMealsObject';
  *
  * @return {JSX.Element} The Available Meals section component.
  */
-const AvailableMeals = () => {
+const AvailableMeals = ({
+  order
+}: AvailableMealsProps) => {
   // Load all necessary contexts
   const mealQueue = useContext(MealQueueCtx);
   const customMeals = useContext(CustomMealsCtx);
   const userSelectedMeals = useContext(UserSelectedMealsCtx);
+  const tutorialRefs = useContext(TutorialElementsCtx);
 
   // State variable to determine whether or not the custom meal modal should be open
   const [isEditingCustomMeal, setIsEditingCustomMeal] = useState(false);
@@ -91,28 +100,33 @@ const AvailableMeals = () => {
   };
 
   return (
-    <MealContainer
-      title='Available Meals'
-      addOrRemove='Add'
-      meals={[...meals, ...customMeals.value]}
-      buttonOnClick={addToQueue}
-      buttonOnClickDay={addToDay}
-      createNotification={(name) => `Added ${name} to meal queue`}
-      createDayNotification={(day, name) => `Added ${name} directly to ${day}`}
-      onCustomClick={(data: Meal) => {
-        // If the custom data isn't changed, useEffect won't be triggered, but we don't have any new state
-        // so all we need to do is show the modal
-        if (currentCustomData === data) setIsEditingCustomMeal(true);
-        else setCurrentCustomData(data);
-      }}
-      newCustomMealID={newCustomMealID}
-      searchable
-      tutorial={tutorial.availableMeals}
-    >
+    <>
+      <MealContainer
+        title='Available Meals'
+        addOrRemove='Add'
+        meals={[...meals, ...customMeals.value]}
+        buttonOnClick={addToQueue}
+        buttonOnClickDay={addToDay}
+        createNotification={(name) => `Added ${name} to meal queue`}
+        createDayNotification={(day, name) => `Added ${name} directly to ${day}`}
+        onCustomClick={(data: Meal) => {
+          // If the custom data isn't changed, useEffect won't be triggered, but we don't have any new state
+          // so all we need to do is show the modal
+          if (currentCustomData === data) setIsEditingCustomMeal(true);
+          else setCurrentCustomData(data);
+        }}
+        newCustomMealID={newCustomMealID}
+        searchable
+        tooltip={tooltip.availableMeals}
+        setRef={(ref) => tutorialRefs.setValue(ref, "Available Meals")}
+        order={order}
+      >
+        <CustomMeal setNewCustomMealID={setNewCustomMealID} />
+      </MealContainer>
       {
-        // This cannot work with only the 'visible' property because otherwise it will not re-render
-        // when we change its data
-        isEditingCustomMeal ? (
+      // This cannot work with only the 'visible' property because otherwise it will not re-render
+      // when we change its data  
+      isEditingCustomMeal ? (
           <CustomMealAddModal
             startingData={currentCustomData}
             onConfirm={onUpdateCustomMeal}
@@ -133,8 +147,7 @@ const AvailableMeals = () => {
           <></>
         )
       }
-      <CustomMeal setNewCustomMealID={setNewCustomMealID} />
-    </MealContainer>
+    </>
   );
 };
 

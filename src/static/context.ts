@@ -52,3 +52,23 @@ export const CustomMealsCtx = createContext<ContextType<Meal[]>>({
   value: [],
   setValue: () => {}
 });
+
+interface TutorialDivs {
+  value: (HTMLElement | null)[];
+  setValue: (ref: HTMLElement | null, title: string) => void;
+}
+
+export const TutorialElementsCtx = createContext<TutorialDivs>({
+  value: [],
+  setValue: () => {}
+});
+
+interface TutorialControl {
+  setShowTutorial: React.Dispatch<React.SetStateAction<boolean>>;
+  setTutorialStep: React.Dispatch<React.SetStateAction<number>>;
+}
+
+export const TutorialControlCtx = createContext<TutorialControl>({
+  setShowTutorial: () => {},
+  setTutorialStep: () => {},
+});

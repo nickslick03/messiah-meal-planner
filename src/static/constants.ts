@@ -23,3 +23,5 @@ export const WEEKDAYS = [
   'Friday',
   'Saturday'
 ] as const;
+
+export const TUTORIAL_ICON_SIZE = 15;

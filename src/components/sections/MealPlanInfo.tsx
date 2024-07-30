@@ -6,10 +6,11 @@ import {
   EndDateCtx,
   MealPlanCtx,
   StartDateCtx,
+  TutorialElementsCtx,
   WeeksOffCtx
 } from '../../static/context';
 import { dateInputToDate, getDaysBetween } from '../../lib/dateCalcuation';
-import tutorial from '../../static/tutorial';
+import tooltip from '../../static/tooltip';
 
 /**
  * Renders a component for displaying and managing meal plan information.
@@ -17,9 +18,11 @@ import tutorial from '../../static/tutorial';
  * @return {JSX.Element} The rendered MealPlanInfo component.
  */
 const MealPlanInfo = ({
-  onEnterDetails
+  onEnterDetails,
+  order
 }: {
   onEnterDetails: (details: boolean) => void;
+  order: number;
 }): JSX.Element => {
   // Load all necessary contexts
   const startDate = useContext(StartDateCtx);
@@ -27,6 +30,7 @@ const MealPlanInfo = ({
   const mealPlan = useContext(MealPlanCtx);
   const weeksOff = useContext(WeeksOffCtx);
   const balance = useContext(BalanceCtx);
+  const tutorialRefs = useContext(TutorialElementsCtx);
 
   const [ weeksOffInvalidMsg, setWeeksOffInvalidMsg ] = useState('');
 
@@ -45,7 +49,12 @@ const MealPlanInfo = ({
   }, [startDate, endDate, mealPlan, balance, weeksOff, onEnterDetails]);
 
   return (
-    <SectionContainer title='Meal Plan Info' tutorial={tutorial.mealPlanInfo}>
+    <SectionContainer 
+      title='Meal Plan Info'
+      tooltip={tooltip.mealPlanInfo} 
+      setRef={(ref) => tutorialRefs.setValue(ref, "Meal Plan Info")}
+      order={order}
+    >
       <div className='mt-4 flex flex-col items-start gap-4 w-min'>
         <Input
           label={'Start Date:'}

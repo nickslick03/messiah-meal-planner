@@ -1,6 +1,5 @@
 import ScreenContainer from './components/containers/ScreenContainer';
 import MealPlanInfo from './components/sections/MealPlanInfo';
-import AvailableMeals from './components/sections/AvailableMeals';
 import {
   MealPlanCtx,
   BalanceCtx,
@@ -9,9 +8,11 @@ import {
   UserSelectedMealsCtx,
   MealQueueCtx,
   CustomMealsCtx,
-  WeeksOffCtx
+  WeeksOffCtx,
+  TutorialElementsCtx,
+  TutorialControlCtx
 } from './static/context';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import Meal from './types/Meal';
 import MealReference from './types/MealReference';
 import DayEditor from './components/sections/DayEditor';
@@ -26,6 +27,9 @@ import usePersistentState from './hooks/usePersistentState';
 import meals from './static/mealsDatabase';
 import { getMealTotal, calculateDateWhenRunOut } from './lib/calculationEngine';
 import { getWeekdaysBetween } from './lib/dateCalcuation';
+import Tutorial from './components/modals/Tutorial';
+import tutorialSteps from './static/tutorialSteps';
+import AvailableMeals from './components/sections/AvailableMeals';
 
 function App() {
   const [weeksOff, setWeeksOff] = usePersistentState<number | null>(
@@ -62,6 +66,17 @@ function App() {
     'customMeals',
     []
   );
+  const tutorialDivs = useRef<(HTMLElement | null)[]>(Array(tutorialSteps.length).fill(null));
+  const addRef = (ref: HTMLElement | null, title: string) => {
+    if (ref === null)
+      return;
+    const index = tutorialSteps.findIndex(step => step.title === title);
+    if (index === -1)
+      throw new Error(`Title ${title} is not part of the tutorial`);
+    tutorialDivs.current[index] = ref;
+  }
+  const [ showTutorial, setShowTutorial ] = useState(false);
+  const [ tutorialStep, setTutorialStep ] = useState(0);
   const [areDetailsEntered, setAreDetailsEntered] = useState(false);
 
   // Remove dangling meal references from mealQueue and userSelectedMeals
@@ -153,67 +168,81 @@ function App() {
   );
 
   return (
-    <WeeksOffCtx.Provider value={{ value: weeksOff, setValue: setWeeksOff }}>
-      <MealPlanCtx.Provider value={{ value: mealPlan, setValue: setMealPlan }}>
-        <BalanceCtx.Provider value={{ value: balance, setValue: setBalance }}>
-          <StartDateCtx.Provider
-            value={{ value: startDate, setValue: setStartDate }}
-          >
-            <EndDateCtx.Provider
-              value={{ value: endDate, setValue: setEndDate }}
-            >
-              <UserSelectedMealsCtx.Provider
-                value={{
-                  value: userSelectedMeals,
-                  setValue: setUserSelectedMeals
-                }}
+    <TutorialControlCtx.Provider value={{ setShowTutorial, setTutorialStep }}>
+      <TutorialElementsCtx.Provider value={{ value: tutorialDivs.current, setValue: addRef }}>
+        <WeeksOffCtx.Provider value={{ value: weeksOff, setValue: setWeeksOff }}>
+          <MealPlanCtx.Provider value={{ value: mealPlan, setValue: setMealPlan }}>
+            <BalanceCtx.Provider value={{ value: balance, setValue: setBalance }}>
+              <StartDateCtx.Provider
+                value={{ value: startDate, setValue: setStartDate }}
               >
-                <MealQueueCtx.Provider
-                  value={{ value: mealQueue, setValue: setMealQueue }}
+                <EndDateCtx.Provider
+                  value={{ value: endDate, setValue: setEndDate }}
                 >
-                  <CustomMealsCtx.Provider
-                    value={{ value: customMeals, setValue: setCustomMeals }}
+                  <UserSelectedMealsCtx.Provider
+                    value={{
+                      value: userSelectedMeals,
+                      setValue: setUserSelectedMeals
+                    }}
                   >
-                    <ScreenContainer>
-                      <header className='bg-messiah-blue rounded-xl border-4 border-white shadow-md w-full mb-4'>
-                        <h1 className='font-semibold text-4xl text-white text-center p-8'>
-                          Messiah Meal Planner
-                        </h1>
-                      </header>
-                      <MealPlanInfo onEnterDetails={setAreDetailsEntered} />
-                      {areDetailsEntered ? (
-                        <>
-                          <AvailableMeals />
-                          <MealQueue />
-                          <DayEditor />
-                          <Results
-                            grandTotal={grandTotal}
-                            isUnderBalance={isUnderBalance}
-                            difference={difference}
-                            dayWhenRunOut={dayWhenRunOut}
-                          />
-                          <ResultsBar
-                            grandTotal={grandTotal}
-                            isUnderBalance={isUnderBalance}
-                            difference={difference}
-                          />
-                        </>
-                      ) : (
-                        <div className='flex flex-col items-center'>
-                          <p className='text-gray-400'>
-                            Enter meal plan info to continue planning.
-                          </p>
-                        </div>
-                      )}
-                    </ScreenContainer>
-                  </CustomMealsCtx.Provider>
-                </MealQueueCtx.Provider>
-              </UserSelectedMealsCtx.Provider>
-            </EndDateCtx.Provider>
-          </StartDateCtx.Provider>
-        </BalanceCtx.Provider>
-      </MealPlanCtx.Provider>
-    </WeeksOffCtx.Provider>
+                    <MealQueueCtx.Provider
+                      value={{ value: mealQueue, setValue: setMealQueue }}
+                    >
+                      <CustomMealsCtx.Provider
+                        value={{ value: customMeals, setValue: setCustomMeals }}
+                      >
+                        <ScreenContainer>
+                          <header className='bg-messiah-blue rounded-xl border-4 border-white shadow-md w-full mb-4'>
+                            <h1 className='font-semibold text-4xl text-white text-center p-8'>
+                              Messiah Meal Planner
+                            </h1>
+                          </header>
+                          <div className='flex flex-col relative gap-4'>
+                            <Tutorial 
+                              show={showTutorial}
+                              setShow={setShowTutorial}
+                              step={tutorialStep}
+                              setStep={setTutorialStep}
+                              areDetailsEntered={areDetailsEntered} />
+                            <MealPlanInfo onEnterDetails={setAreDetailsEntered} order={1} />
+                            {areDetailsEntered ? (
+                              <>
+                                <AvailableMeals order={2} />
+                                <MealQueue order={3} />
+                                <DayEditor order={4} />
+                                <Results
+                                  order={5}
+                                  grandTotal={grandTotal}
+                                  isUnderBalance={isUnderBalance}
+                                  difference={difference}
+                                  dayWhenRunOut={dayWhenRunOut}
+                                />
+                                <ResultsBar
+                                  order={6}
+                                  grandTotal={grandTotal}
+                                  isUnderBalance={isUnderBalance}
+                                  difference={difference}
+                                />
+                              </>
+                            ) : (
+                              <div className='flex flex-col items-center order-1'>
+                                <p className='text-gray-400'>
+                                  Enter meal plan info to continue planning.
+                                </p>
+                              </div>
+                            )}
+                          </div>
+                        </ScreenContainer>
+                      </CustomMealsCtx.Provider>
+                    </MealQueueCtx.Provider>
+                  </UserSelectedMealsCtx.Provider>
+                </EndDateCtx.Provider>
+              </StartDateCtx.Provider>
+            </BalanceCtx.Provider>
+          </MealPlanCtx.Provider>
+        </WeeksOffCtx.Provider>
+      </TutorialElementsCtx.Provider>
+    </TutorialControlCtx.Provider>
   );
 }
 

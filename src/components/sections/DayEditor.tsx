@@ -5,6 +5,7 @@ import {
   EndDateCtx,
   MealPlanCtx,
   StartDateCtx,
+  TutorialElementsCtx,
   UserSelectedMealsCtx,
   WeeksOffCtx
 } from '../../static/context';
@@ -20,7 +21,12 @@ import DaySelector from '../form_elements/DaySelector';
 import { Weekday } from '../../types/userSelectedMealsObject';
 import mapUserMeals from '../../lib/mapUserMeals';
 import dereferenceMeal from '../../lib/dereferenceMeal';
-import tutorial from '../../static/tutorial';
+import tooltip from '../../static/tooltip';
+
+interface DayEditorProps {
+  /** The order this component should appear. */
+  order: number;
+}
 
 /**
  * Renders a meal table for meals added to given days an an option to remove meals from that day.
@@ -28,11 +34,14 @@ import tutorial from '../../static/tutorial';
  *
  * @return {JSX.Element} The rendered DayEditor component.
  */
-const DayEditor = () => {
+const DayEditor = ({
+  order
+}: DayEditorProps) => {
   // Load all necessary contexts
   const userSelectedMeals = useContext(UserSelectedMealsCtx);
   const customMeals = useContext(CustomMealsCtx);
   const weeksOff = useContext(WeeksOffCtx);
+  const tutorialRefs = useContext(TutorialElementsCtx);
 
   // Dereference the userSelectedMeals context
   const userSelectedMealsValue = useMemo(
@@ -122,7 +131,9 @@ const DayEditor = () => {
       buttonOnClick={removeMeal}
       createNotification={(name) => `Removed ${name} from ${weekday}`}
       searchable={false}
-      tutorial={tutorial.dayEditor}
+      tooltip={tooltip.dayEditor}
+      setRef={(ref) => tutorialRefs.setValue(ref, "Day Editor")}
+      order={order}
     >
       <Divider />
       <DotLeader
