@@ -12,7 +12,11 @@ import { useContext, useEffect, useState } from 'react';
 import { v4 as uuid } from 'uuid';
 import tooltip from '../../static/tooltip';
 import CustomMealAddModal from '../modals/CustomMealAddModal';
-import { Weekday } from '../../types/userSelectedMealsObject';
+import {
+  UserSelectedMealsObjectType,
+  Weekday
+} from '../../types/userSelectedMealsObject';
+import mapUserMeals from '../../lib/mapUserMeals';
 
 interface AvailableMealsProps {
   /** The order this component should appear. */
@@ -25,9 +29,7 @@ interface AvailableMealsProps {
  *
  * @return {JSX.Element} The Available Meals section component.
  */
-const AvailableMeals = ({
-  order
-}: AvailableMealsProps) => {
+const AvailableMeals = ({ order }: AvailableMealsProps) => {
   // Load all necessary contexts
   const mealQueue = useContext(MealQueueCtx);
   const customMeals = useContext(CustomMealsCtx);
@@ -72,6 +74,32 @@ const AvailableMeals = ({
   }, [currentCustomData]);
 
   /**
+   * Deletes a custom meal from the customMeals context.
+   * Also removes the custom meal from the meal queue and any days it has been added to.
+   */
+  const onDeleteCustomMeal = () => {
+    const shouldDelete = confirm(
+      "This custom meal will be deleted from your available meals, your meal queue, and any days you've added it to. You can't undo this action. Delete this meal?"
+    );
+    if (!shouldDelete) return;
+    customMeals.setValue(
+      customMeals.value.filter((val) => val.id !== currentCustomData?.id)
+    );
+    mealQueue.setValue(
+      mealQueue.value.filter((val) => val.id !== currentCustomData?.id)
+    );
+    userSelectedMeals.setValue(
+      mapUserMeals((day) => [
+        day,
+        userSelectedMeals.value[day].filter(
+          (m) => m.id !== currentCustomData?.id
+        )
+      ]) as UserSelectedMealsObjectType
+    );
+    setIsEditingCustomMeal(false);
+  };
+
+  /**
    * Adds a meal to the queue.
    *
    * @param {Meal} meal - The meal to be added to the queue.
@@ -108,7 +136,9 @@ const AvailableMeals = ({
         buttonOnClick={addToQueue}
         buttonOnClickDay={addToDay}
         createNotification={(name) => `Added ${name} to meal queue`}
-        createDayNotification={(day, name) => `Added ${name} directly to ${day}`}
+        createDayNotification={(day, name) =>
+          `Added ${name} directly to ${day}`
+        }
         onCustomClick={(data: Meal) => {
           // If the custom data isn't changed, useEffect won't be triggered, but we don't have any new state
           // so all we need to do is show the modal
@@ -118,29 +148,22 @@ const AvailableMeals = ({
         newCustomMealID={newCustomMealID}
         searchable
         tooltip={tooltip.availableMeals}
-        setRef={(ref) => tutorialRefs.setValue(ref, "Available Meals")}
+        setRef={(ref) => tutorialRefs.setValue(ref, 'Available Meals')}
         order={order}
       >
         <CustomMeal setNewCustomMealID={setNewCustomMealID} />
       </MealContainer>
       {
-      // This cannot work with only the 'visible' property because otherwise it will not re-render
-      // when we change its data  
-      isEditingCustomMeal ? (
+        // This cannot work with only the 'visible' property because otherwise it will not re-render
+        // when we change its data
+        isEditingCustomMeal ? (
           <CustomMealAddModal
             startingData={currentCustomData}
             onConfirm={onUpdateCustomMeal}
             onCancel={() => {
               setIsEditingCustomMeal(false);
             }}
-            onDelete={() => {
-              customMeals.setValue(
-                customMeals.value.filter(
-                  (val) => val.id !== currentCustomData?.id
-                )
-              );
-              setIsEditingCustomMeal(false);
-            }}
+            onDelete={onDeleteCustomMeal}
             visible={isEditingCustomMeal}
           />
         ) : (
