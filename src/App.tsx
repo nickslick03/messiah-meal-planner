@@ -30,6 +30,7 @@ import { getWeekdaysBetween } from './lib/dateCalcuation';
 import Tutorial from './components/modals/Tutorial';
 import tutorialSteps from './static/tutorialSteps';
 import AvailableMeals from './components/sections/AvailableMeals';
+import Menu from './components/other/Menu';
 
 function App() {
   const [weeksOff, setWeeksOff] = usePersistentState<number | null>(
@@ -191,6 +192,7 @@ function App() {
                       <CustomMealsCtx.Provider
                         value={{ value: customMeals, setValue: setCustomMeals }}
                       >
+                      <Menu />  
                         <ScreenContainer>
                           <header className='bg-messiah-blue rounded-xl border-4 border-white shadow-md w-full mb-4'>
                             <h1 className='font-semibold text-4xl text-white text-center p-8'>
