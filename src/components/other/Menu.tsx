@@ -42,7 +42,8 @@ const Menu = () => {
                 className={`${isVisible ? "opacity-100" : "opacity-0"} 
                 ${isInFront ? "z-50" : "-z-10"} 
                 transition-opacity duration-500
-                fixed top-0 left-0 w-screen h-screen bg-opacity-50 bg-slate-900 z-50`}
+                fixed top-0 left-0 w-screen h-screen bg-opacity-50 bg-slate-900`}
+                onClick={() => setIsVisible(false)}
                 onTransitionEnd={() => setIsInFront(isVisible ? isInFront : false)}
             ></div>
             <div 
@@ -50,7 +51,7 @@ const Menu = () => {
                 ${isInFront ? "z-50" : "-z-10"} 
                 transition-transform duration-500
                 fixed top-0 right-full w-full max-w-80 h-full bg-white
-                py-4 flex flex-col gap-4 justify-between items-center z-50`}
+                py-4 flex flex-col gap-4 justify-between items-center`}
             >
                 <button
                     className='absolute top-2 right-2'
