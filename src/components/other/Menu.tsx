@@ -12,17 +12,29 @@ const Menu = () => {
 
     const [isResetModalVisible, setIsResetModalVisible] = useState(false);
 
+    const [scrollDistance, setScrollDistance] = useState(0);
+    const [isIconVisible, setIsIconVisible] = useState(true);
+
     useEffect(() => {
-        if (isVisible)
-            setIsInFront(true);
-    }, [isVisible]);
+        const newScrollDistance = document.documentElement.scrollTop;
+        const setDistance = () => {
+            setIsIconVisible(scrollDistance > newScrollDistance);
+            setScrollDistance(newScrollDistance);
+        };
+        document.addEventListener('scroll', setDistance);
+        return () => document.removeEventListener('scroll', setDistance);
+    });
 
     return (
         <>
             <div 
-                className="fixed z-50 top-8 left-4 bg-white p-1 rounded-full shadow shadow-[rgba(0,0,0,.3)]
-                hover:shadow-[rgba(0,0,0,.4)] hover:shadow-md transition-shadow cursor-pointer"
-                onClick={() => setIsVisible(true)}
+                className={`${isIconVisible ? '' : '-top-8'} 
+                fixed z-50 top-8 left-4 bg-white p-1 rounded-full shadow shadow-[rgba(0,0,0,.4)]
+                hover:shadow-[rgba(0,0,0,.5)] hover:shadow-md transition-all duration-200 cursor-pointer`}
+                onClick={() => {
+                    setIsVisible(true);
+                    setIsInFront(true);
+                }}
             >
                 <IoMenu size="20px" />
             </div>
@@ -56,7 +68,7 @@ const Menu = () => {
                     </li>
                 </ul>
                 <footer className="text-gray-500 text-sm text-center">
-                    Website By{' '}
+                    By{' '}
                     <a href="#" className='text-indigo-900 underline'>Caleb Rice</a>{' '}
                     And{' '}
                     <a href="#" className='text-indigo-900 underline'>Nicholas Epps</a>
