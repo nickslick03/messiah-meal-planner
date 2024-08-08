@@ -3,11 +3,14 @@ import { IoMenu } from "react-icons/io5";
 import SectionHeader from "../containers/SectionHeader";
 import { IoMdClose } from "react-icons/io";
 import { GrPowerReset } from "react-icons/gr";
+import ResetModal from "../modals/ResetModal";
 
 const Menu = () => {
 
     const [isVisible, setIsVisible] = useState(false);
     const [isInFront, setIsInFront] = useState(false);
+
+    const [isResetModalVisible, setIsResetModalVisible] = useState(false);
 
     useEffect(() => {
         if (isVisible)
@@ -31,10 +34,10 @@ const Menu = () => {
                 onTransitionEnd={() => setIsInFront(isVisible ? isInFront : false)}
             ></div>
             <div 
-                className={`${isVisible ? "translate-x-full" : "translate-x-0"} 
+                className={`${isVisible ? "translate-x-full shadow-lg shadow-[rgba(0,0,0,.5)]" : "translate-x-0"} 
                 ${isInFront ? "z-50" : "-z-10"} 
                 transition-transform duration-500
-                fixed top-0 right-full w-full max-w-80 h-full bg-white shadow-lg shadow-[rgba(0,0,0,.5)]
+                fixed top-0 right-full w-full max-w-80 h-full bg-white
                 py-4 flex flex-col gap-4 justify-between items-center z-50`}
             >
                 <button
@@ -45,7 +48,10 @@ const Menu = () => {
                 </button>
                 <SectionHeader text="Menu" />
                 <ul className="flex-1 select-none text-lg">
-                    <li className="hover:underline cursor-pointer flex items-center gap-1">
+                    <li 
+                        className="hover:underline cursor-pointer flex items-center gap-1"
+                        onClick={() => setIsResetModalVisible(true)}
+                    >
                         <GrPowerReset /> Reset
                     </li>
                 </ul>
@@ -55,7 +61,12 @@ const Menu = () => {
                     And{' '}
                     <a href="#" className='text-indigo-900 underline'>Nicholas Epps</a>
                 </footer>    
-            </div> 
+            </div>
+            <ResetModal
+                onConfirm={() => {}}
+                onCancel={() => setIsResetModalVisible(false)}
+                isVisible={isResetModalVisible}
+            />
         </>
     );
 }
