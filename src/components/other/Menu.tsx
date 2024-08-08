@@ -69,9 +69,9 @@ const Menu = () => {
                 </ul>
                 <footer className="text-gray-500 text-sm text-center">
                     By{' '}
-                    <a href="#" className='text-indigo-900 underline'>Caleb Rice</a>{' '}
-                    And{' '}
-                    <a href="#" className='text-indigo-900 underline'>Nicholas Epps</a>
+                    <a target="_blank" href="#" className='text-indigo-900 underline'>Caleb Rice</a>{' '}
+                    and{' '}
+                    <a target="_blank" href="https://www.linkedin.com/in/nicholas-epps-597b94295/" className='text-indigo-900 underline'>Nicholas Epps</a>
                 </footer>    
             </div>
             <ResetModal
