@@ -25,11 +25,13 @@ const Menu = () => {
         return () => document.removeEventListener('scroll', setDistance);
     });
 
+    console.log(isIconVisible)
+
     return (
         <>
             <div 
-                className={`${isIconVisible ? '' : '-top-8'} 
-                fixed z-50 top-8 left-4 bg-white p-1 rounded-full shadow shadow-[rgba(0,0,0,.4)]
+                className={`${isIconVisible ? 'top-8' : '-top-8'} 
+                fixed z-50 left-4 bg-white p-1 rounded-full shadow shadow-[rgba(0,0,0,.4)]
                 hover:shadow-[rgba(0,0,0,.5)] hover:shadow-md transition-all duration-200 cursor-pointer`}
                 onClick={() => {
                     setIsVisible(true);
