@@ -4,7 +4,8 @@ import {
   ChangeEvent,
   HTMLInputTypeAttribute,
   useMemo,
-  useState
+  useState,
+  useRef
 } from 'react';
 import { IMPORTANCE_CLASSES } from '../../static/constants';
 import {
@@ -12,6 +13,9 @@ import {
   newImportanceIndex
 } from '../../types/ImportanceIndex';
 import { dateToString } from '../../lib/dateCalcuation';
+import { MdClear } from 'react-icons/md';
+import { IconContext } from 'react-icons';
+
 interface InputProps<T> {
   label?: string;
   importance?: ImportanceIndex;
@@ -22,6 +26,7 @@ interface InputProps<T> {
   invalidMessage?: string;
   placeholder?: string;
   cssClasses?: string;
+  clearable?: boolean;
 }
 
 /**
@@ -36,6 +41,7 @@ interface InputProps<T> {
  * @param {string} invalidMessage - The message to display when the input is invalid.
  * @param {string} placeholder - The placeholder text for the input.
  * @param {string} cssClasses - The styles to apply to the input.
+ * @param {boolean} clearable - Whether the input should be clearable.
  * @returns {JSX.Element} The rendered input component.
  */
 const Input = <T,>({
@@ -47,7 +53,8 @@ const Input = <T,>({
   setValue,
   invalidMessage,
   placeholder = '',
-  cssClasses
+  cssClasses,
+  clearable
 }: InputProps<T>): JSX.Element => {
   const importanceStyle = IMPORTANCE_CLASSES[importance] ?? 'font-normal';
   const styles = `border border-black rounded focus:outline focus:outline-2 focus:outline-messiah-blue 
@@ -93,12 +100,32 @@ const Input = <T,>({
     setShowInvalid(newValue === null);
   };
 
+  /**
+   * Clears the input value.
+   */
+  const clearInput = () => {
+    const nothing = (
+      typeof value === 'boolean'
+        ? false
+        : typeof value === 'string'
+        ? ''
+        : typeof value === 'number'
+        ? 0
+        : null
+    ) as T | null;
+    setValue(nothing);
+    if (ref.current) ref.current.value = '';
+  };
+
+  /** Create ref to input element. */
+  const ref = useRef<HTMLInputElement>(null);
+
   return (
     <div className='text-left w-full'>
       <label
         className={`${importanceStyle} ${
           styles.includes('w-full') ? 'w-full' : 'w-max'
-        } flex flex-row flex-wrap gap-2 items-center`}
+        } flex flex-row flex-wrap gap-2 items-center relative`}
       >
         {label || ''}
         {type === 'checkbox' ? (
@@ -110,15 +137,33 @@ const Input = <T,>({
             title={titleAttribute}
           />
         ) : (
-          <input
-            className={styles}
-            type={type}
-            defaultValue={initialValue}
-            inputMode={type === 'number' ? 'decimal' : undefined}
-            onInput={handleChange}
-            title={titleAttribute}
-            placeholder={placeholder}
-          />
+          <>
+            <input
+              ref={ref}
+              className={styles}
+              type={type}
+              defaultValue={initialValue}
+              inputMode={type === 'number' ? 'decimal' : undefined}
+              onInput={handleChange}
+              title={titleAttribute}
+              placeholder={placeholder}
+            />
+            {clearable && (
+              <button
+                className='w-5 h-5 rounded absolute right-2'
+                onClick={clearInput}
+              >
+                <IconContext.Provider
+                  value={{
+                    className:
+                      'w-full h-full fill-gray-300 hover:fill-gray-500 active:fill-gray-700'
+                  }}
+                >
+                  <MdClear />
+                </IconContext.Provider>
+              </button>
+            )}
+          </>
         )}
       </label>
       <p
