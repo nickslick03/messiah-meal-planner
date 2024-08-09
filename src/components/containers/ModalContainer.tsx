@@ -12,6 +12,7 @@ interface ModalContainerProps {
   onCancel?: () => void;
   confirmDisabled?: boolean;
   centered?: boolean;
+  minimalSpace?: boolean;
 }
 
 /**
@@ -25,6 +26,7 @@ interface ModalContainerProps {
  * @param {() => void} onCancel - Event handler for when the cancel button is clicked
  * @param {boolean} confirmDisabled - boolean for whether the confirm button is disabled
  * @param {boolean} centered - boolean for whether the modal content should be centered
+ * @param {boolean} minimalSpace - boolean for whether the modal should only have the width and height of its children
  * @returns {JSX.Element} JSX for rendering a modal
  */
 const ModalContainer = ({
@@ -35,7 +37,8 @@ const ModalContainer = ({
   onConfirm,
   onCancel,
   confirmDisabled = true,
-  centered = true
+  centered = true,
+  minimalSpace = false
 }: ModalContainerProps): JSX.Element => {
   // Keep track of whether or not the modal is visible
   const [isVisible, setIsVisible] = useState(true);
@@ -56,8 +59,12 @@ const ModalContainer = ({
       <div className='h-screen w-screen bg-opacity-50 bg-slate-900 fixed top-0 left-0 flex items-center justify-center z-50'>
         {/* The actual modal component */}
         <div
-          className='text-center bg-white w-full p-5 m-4 flex flex-col rounded-lg
-          h-[80%] sm:w-auto sm:h-auto sm:min-w-[500px] sm:min-h-[500px] sm:max-w-[800px] sm:max-h-screen'
+          className={`text-center bg-white p-5 m-4 flex flex-col rounded-lg
+          ${
+          minimalSpace
+          ? ''
+          : 'w-full h-[80%] sm:w-auto sm:h-auto sm:min-w-[500px] sm:min-h-[500px] sm:max-w-[800px] sm:max-h-screen'
+          }`}
         >
           {
             /* Title goes here */
@@ -69,7 +76,13 @@ const ModalContainer = ({
           }
           {/* Content goes here */}
           <div
-            className={`overflow-y-scroll flex-grow flex flex-col ${
+            className={`flex-grow flex flex-col 
+              ${
+                minimalSpace
+                ? ''
+                : 'overflow-y-scroll'
+              }
+              ${
               centered
                 ? 'justify-center'
                 : 'justify-start align-center text-left'

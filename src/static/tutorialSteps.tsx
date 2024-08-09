@@ -60,7 +60,7 @@ const tutorialSteps: TutorialStep[] = [
           </span>
         ) : (
           <span>
-            long pressing a <IoAdd size={ICON_SIZE} className='inline' /> button
+            hovering over a <IoAdd size={ICON_SIZE} className='inline' /> button
           </span>
         )}
         , or click a <IoAdd size={ICON_SIZE} className='inline' /> button to add
@@ -69,7 +69,7 @@ const tutorialSteps: TutorialStep[] = [
     ),
     action: (
       <strong>
-        Choose some meals that sound good and add them to the meal queue.
+        Choose some meals that look good and add them to the meal queue.
       </strong>
     )
   },
