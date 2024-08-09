@@ -139,6 +139,7 @@ const MealTable = ({
                 validator={(s) => s}
                 placeholder='Search for meals...'
                 cssClasses='w-full border-[2px] border-messiah-blue rounded-lg p-2 px-3 h-full'
+                clearable={true}
               />
             </div>
 
