@@ -69,7 +69,6 @@ export const PresetMealPlans = [
                 createMealReference('Lottie', 'Dinner')
             ],
             Saturday: [
-                createMealReference('Lottie', 'Breakfast'),
                 createMealReference('Lottie', 'Lunch'), 
                 createMealReference('Lottie', 'Dinner')
             ],

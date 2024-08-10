@@ -5,11 +5,13 @@ import Button from "../form_elements/Button";
 import formatCurrency from "../../lib/formatCurrency";
 
 interface PresetMealPlanViewProps {
-    presetMealPlan: PresetMealPlan
+    presetMealPlan: PresetMealPlan;
+    onSet: () => void;
 }
 
 export const PresetMealPlanView = ({
-    presetMealPlan
+    presetMealPlan,
+    onSet
 }: PresetMealPlanViewProps) => {
 
     const hasDiscount = useContext(MealPlanCtx);
@@ -32,8 +34,8 @@ export const PresetMealPlanView = ({
                 </div>
                 <div className="self-end [&>button]:mb-0">
                     <Button 
-                        title='add'
-                        onClick={() => 0}
+                        title='Set'
+                        onClick={onSet}
                     />    
                 </div> 
             </div>
