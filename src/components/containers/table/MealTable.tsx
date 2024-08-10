@@ -143,7 +143,7 @@ const MealTable = ({
             </div>
 
             {/* Custom meal filter */}
-            <div className='text-sm h-full bg-gray-300 rounded-lg flex flex-row relative z-5'>
+            <div className='text-sm h-full bg-gray-300 rounded-lg flex relative z-5'>
               <button
                 id={`dayselector-${daySelectorId}-0`}
                 onClick={() => setCustomOnly(false)}
@@ -166,7 +166,7 @@ const MealTable = ({
                 } transition duration-50 z-20`}
               >
                 <FaUser className='p-2' size={30} />
-                <span className='hidden sm:inline'>Custom Only&nbsp;</span>
+                <span className='hidden sm:inline text-nowrap'>Custom Only&nbsp;</span>
               </button>
             </div>
             <Highlighter
