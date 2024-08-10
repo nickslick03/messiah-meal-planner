@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 
 interface NotificationProps {
-    message: { text: string};
+    message: { text: string };
 }
 
 const Notification = ({

@@ -1,8 +1,9 @@
-import { useContext, useState } from "react";
+import React, { useContext, useState } from "react";
 import { PresetMealPlans } from "../../static/PresetMealPlans";
 import ModalContainer from "../containers/ModalContainer";
 import { PresetMealPlanView } from "../other/PresetMealPlanView";
 import { UserSelectedMealsCtx } from "../../static/context";
+import Notification from "../other/Notification";
 
 interface PresetMealPlanModalProps {
     /** Whether or not the modal is visible. */
@@ -20,6 +21,7 @@ const PresetMealPlanModal = ({
 
     const [showConfirm, setShowConfirm] = useState(false);
     const [selectedPlan, setSelectedPlan] = useState(-1);
+    const [message, setMessage] = useState({ text: '' });
 
     const onSet = (index: number) => {
         setSelectedPlan(index);
@@ -32,44 +34,50 @@ const PresetMealPlanModal = ({
         );
         setShowConfirm(false);
         onCancel();
+        setMessage({ text: `Set meal plan to ${PresetMealPlans[selectedPlan].name}`});
     }
 
     return (
-        isVisible ? (
-            <>
-                <ModalContainer
-                    onlyCancel={true}
-                    title="Preset Meal Plans"
-                    onCancel={onCancel}
-                >
-                    {PresetMealPlans.map((plan, i) => 
-                        <>
-                            <PresetMealPlanView presetMealPlan={plan} key={i} onSet={() => onSet(i)} />
-                            {i + 1 != PresetMealPlans.length
-                            ? <div className="w-full h-[1px] bg-gray-300 my-5"></div>
-                            : ''}
-                        </>
-                    )}
-                </ModalContainer>
-                {showConfirm ? (
+        <>  
+            <div className="z-[100] relative w-full flex justify-center">
+                <Notification message={message} />
+            </div>
+            {isVisible ? (
+                <>
                     <ModalContainer
-                        minimalSpace={true}
-                        confirmDisabled={false}
-                        title="Confirm Preset Meal"
-                        confirmText="Set"
-                        onConfirm={onConfirmSet}
-                        onCancel={() => setShowConfirm(false)}
+                        onlyCancel={true}
+                        title="Preset Meal Plans"
+                        onCancel={onCancel}
                     >
-                        This will replace the current meal plan with the 
-                        "{PresetMealPlans[selectedPlan].name}" meal plan. Are you sure?
+                        {PresetMealPlans.map((plan, i) => 
+                            <React.Fragment key={i}>
+                                <PresetMealPlanView presetMealPlan={plan} onSet={() => onSet(i)} />
+                                {i + 1 != PresetMealPlans.length
+                                    ? <div className="w-full h-[1px] bg-gray-300 my-5"></div>
+                                    : ''}
+                            </React.Fragment>
+                        )}
                     </ModalContainer>
-                ) : (
-                    <></>
-                )}
-            </>
-        ) : (
-            <></>
-        )
+                    {showConfirm ? (
+                        <ModalContainer
+                            minimalSpace={true}
+                            confirmDisabled={false}
+                            title="Confirm Preset Meal Plan"
+                            confirmText="Set"
+                            onConfirm={onConfirmSet}
+                            onCancel={() => setShowConfirm(false)}
+                        >
+                            This will replace the current meal plan with the 
+                            "{PresetMealPlans[selectedPlan].name}" meal plan. Are you sure?
+                        </ModalContainer>
+                    ) : (
+                        <></>
+                    )}
+                </>
+            ) : (
+                <></>
+            )}
+        </>
     );
 }
 

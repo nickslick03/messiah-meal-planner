@@ -39,7 +39,7 @@ export default {
         }
       },
       animation: {
-        topNotify: 'topNotify 2.5s ease'
+        topNotify: 'topNotify 3s ease'
       }
     }
   },
