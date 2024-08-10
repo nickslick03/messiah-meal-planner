@@ -1,15 +1,17 @@
 import { useEffect, useState } from 'react';
 import { IoMenu } from 'react-icons/io5';
 import SectionHeader from '../containers/SectionHeader';
-import { IoMdClose } from 'react-icons/io';
+import { IoIosDocument, IoMdClose } from 'react-icons/io';
 import { GrPowerReset } from 'react-icons/gr';
 import ResetModal from '../modals/ResetModal';
+import PresetMealPlanModal from '../modals/PresetMealPlanModal';
 
 const Menu = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [isInFront, setIsInFront] = useState(false);
 
   const [isResetModalVisible, setIsResetModalVisible] = useState(false);
+  const [isPresetModalVisible, setIsPresetModalVisible] = useState(false);
 
   const [scrollDistance, setScrollDistance] = useState(0);
   const [isIconVisible, setIsIconVisible] = useState(true);
@@ -70,9 +72,15 @@ const Menu = () => {
           <IoMdClose size='20px' />
         </button>
         <SectionHeader text='Menu' />
-        <ul className='flex-1 select-none text-lg'>
+        <ul className='flex-1 select-none text-lg flex flex-col gap-2'>
           <li
-            className='hover:underline cursor-pointer flex items-center gap-1'
+              className='hover:underline cursor-pointer flex items-center gap-2'
+              onClick={() => setIsPresetModalVisible(true)}
+          >
+            <IoIosDocument /> Preset Meal Plans
+          </li>
+          <li
+            className='hover:underline cursor-pointer flex items-center gap-2'
             onClick={() => setIsResetModalVisible(true)}
           >
             <GrPowerReset /> Reset
@@ -101,6 +109,10 @@ const Menu = () => {
         onConfirm={() => {}}
         onCancel={() => setIsResetModalVisible(false)}
         isVisible={isResetModalVisible}
+      />
+      <PresetMealPlanModal 
+        onCancel={() => setIsPresetModalVisible(false)}
+        isVisible={isPresetModalVisible}
       />
     </>
   );

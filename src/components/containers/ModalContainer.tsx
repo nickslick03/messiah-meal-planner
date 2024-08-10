@@ -13,6 +13,7 @@ interface ModalContainerProps {
   confirmDisabled?: boolean;
   centered?: boolean;
   minimalSpace?: boolean;
+  onlyCancel?: boolean;
 }
 
 /**
@@ -27,6 +28,7 @@ interface ModalContainerProps {
  * @param {boolean} confirmDisabled - boolean for whether the confirm button is disabled
  * @param {boolean} centered - boolean for whether the modal content should be centered
  * @param {boolean} minimalSpace - boolean for whether the modal should only have the width and height of its children
+ * @param {boolean} onlyCancel - if true, only the cancel button is shown
  * @returns {JSX.Element} JSX for rendering a modal
  */
 const ModalContainer = ({
@@ -38,7 +40,8 @@ const ModalContainer = ({
   onCancel,
   confirmDisabled = true,
   centered = true,
-  minimalSpace = false
+  minimalSpace = false,
+  onlyCancel = false
 }: ModalContainerProps): JSX.Element => {
   // Keep track of whether or not the modal is visible
   const [isVisible, setIsVisible] = useState(true);
@@ -92,11 +95,13 @@ const ModalContainer = ({
           </div>
           {/* Confirm and cancel buttons */}
           <div className='flex-shrink flex flex-row justify-center'>
-            <Button
-              title={confirmText}
-              onClick={handleConfirm}
-              disabled={confirmDisabled}
-            />
+            {!onlyCancel 
+              ? <Button
+                  title={confirmText}
+                  onClick={handleConfirm}
+                  disabled={confirmDisabled}
+                />
+                : ''}
             <Button title={cancelText} onClick={handleCancel} frame />
           </div>
         </div>
