@@ -1,9 +1,11 @@
 import Meal from '../types/Meal';
 import CryptoJS from 'crypto-js';
 
-// Generates a unique ID for a meal based on its location and name, should persist across app runs
-// and be the same for all users.
-const generateId = (location: string, name: string) => {
+/**
+ * Generates a unique ID for a meal based on its location and name, should persist across app runs
+ *  and be the same for all users.
+ */
+export const generateId = (location: string, name: string) => {
   return CryptoJS.MD5(location + name).toString();
 };
 
