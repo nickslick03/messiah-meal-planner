@@ -78,8 +78,14 @@ export function calculateDateWhenRunOut(
   endDate: Date,
   startingBalance: number,
   weeksOff = 0
-): Date {
-  const allDates = getAllDatesBetween(startDate, endDate).slice(weeksOff * 7);
+): Date | null {
+  let allDates;
+  try {
+    allDates = getAllDatesBetween(startDate, endDate).slice(weeksOff * 7);
+  } catch (e) {
+    return null;
+  }
+
   const allWeekdays: Weekday[] = allDates.map(
     (date) => WEEKDAYS[new Date(date).getDay()]
   );
