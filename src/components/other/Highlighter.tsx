@@ -1,36 +1,62 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 
 interface HighlighterProps {
+  /**
+   * Index of the selected day
+   */
   selectedIndex: number;
+
+  /**
+   * ID of the day selector
+   */
   daySelectorId: string;
-  offsetTop?: number; // Optional offset for top
-  offsetLeft?: number; // Optional offset for left
+
+  /**
+   * Optional offset for top
+   */
+  offsetTop?: number;
+
+  /**
+   * Optional offset for left
+   */
+  offsetLeft?: number;
 }
 
 /**
  * Component for highlighting the selected day in a day selector
- * @param {number} selectedIndex - Index of the selected day
- * @param {string} daySelectorId - ID of the day selector
- * @param {number} [offsetTop=0] - Optional offset for top
- * @param {number} [offsetLeft=0] - Optional offset for left
+ *
+ * @param {HighlighterProps} props - The props for the Highlighter component.
  * @returns {JSX.Element} The Highlighter component
  */
-const Highlighter: React.FC<HighlighterProps> = ({
+const Highlighter = ({
   selectedIndex,
   daySelectorId,
-  offsetTop = 0, // Default to 0 if not provided
-  offsetLeft = 0 // Default to 0 if not provided
-}) => {
+  offsetTop = 0,
+  offsetLeft = 0
+}: HighlighterProps) => {
+  /**
+   * Style for the highlighter, specifically for position
+   */
   const [highlightStyle, setHighlightStyle] = useState<{
     top: number;
     height: number;
     width: number;
     left: number;
   }>({ top: 0, height: 0, width: 0, left: 0 });
+
+  /**
+   * Reference to the highlight element
+   */
   const highlightRef = useRef<HTMLDivElement>(null);
 
+  /**
+   * Flag to disable initial render
+   */
   const [renderNumber, setRenderNumber] = useState(0);
 
+  /**
+   * Update the position of the highlighter
+   */
   const updateHighlightPosition = useCallback(() => {
     const button = document.getElementById(
       `dayselector-${daySelectorId}-${selectedIndex}`
@@ -52,19 +78,26 @@ const Highlighter: React.FC<HighlighterProps> = ({
     }
   }, [daySelectorId, selectedIndex, offsetTop, offsetLeft]);
 
-  // Initial render to set position without transition
+  /**
+   * Initial render to set position without transition
+   */
   useEffect(() => {
     updateHighlightPosition();
     setRenderNumber(renderNumber < 2 ? renderNumber + 1 : renderNumber); // Disable initial render flag
   }, [renderNumber, updateHighlightPosition]);
 
-  // Enable transition after initial render
+  /**
+   * Enable transition after initial render
+   */
   useEffect(() => {
     if (renderNumber >= 2) {
       updateHighlightPosition();
     }
   }, [renderNumber, updateHighlightPosition]);
 
+  /**
+   * Update position on resize
+   */
   useEffect(() => {
     window.addEventListener('resize', updateHighlightPosition);
     return () => {

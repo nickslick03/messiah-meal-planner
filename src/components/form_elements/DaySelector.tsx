@@ -5,20 +5,34 @@ import { v4 as uuid } from 'uuid';
 const days = WEEKDAYS.map((day) => day.slice(0, 3));
 
 interface DaySelectorProps {
+  /**
+   * List of booleans indicating whether each day of the week is selected or not.
+   */
   daysSelected: boolean[];
+  /**
+   * Function to call when a day is clicked, with the index of the day as an argument.
+   */
   onChange: (i: number) => void;
+  /**
+   * Optional boolean indicating whether each day should be square or not.
+   * Defaults to false.
+   */
   square?: boolean;
+  /**
+   * Optional list of numbers indicating the number of meals on each day.
+   */
   numOfMeals?: number[];
+  /**
+   * Optional boolean indicating whether to slide the highlighter.
+   * Defaults to false.
+   */
   slideHighlight?: boolean;
 }
 
 /**
  * Component for a day selector, with each day in a circle that can be selected (and deselected)
- * @param {boolean[]} props.daysSelected - List of booleans indicating whether each day is selected or not
- * @param {function} props.onChange - Function to call when a day is clicked, with the index of the day as an argument
- * @param {boolean} [props.square=false] - Optional boolean indicating whether the selector should be square or not
- * @param {number[]} [props.numOfMeals] - Optional list of numbers indicating the number of meals on each day
- * @param {boolean} [props.slideHighlight] - Optional boolean indicating whether to slide the highlighter
+ *
+ * @param {DaySelectorProps} props - The props for the DaySelector component.
  * @returns {JSX.Element} The DaySelector component
  */
 const DaySelector = ({

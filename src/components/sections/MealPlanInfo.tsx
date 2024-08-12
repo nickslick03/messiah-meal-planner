@@ -12,19 +12,29 @@ import {
 import { dateInputToDate, getDaysBetween } from '../../lib/dateCalcuation';
 import tooltip from '../../static/tooltip';
 
+interface MealPlanInfoProps {
+  /**
+   * A callback function that is called when the user enters details.
+   * @param {boolean} details - The flag indicating whether the user has entered details.
+   */
+  onEnterDetails: (details: boolean) => void;
+
+  /**
+   * The order of the meal plan info.
+   */
+  order: number;
+}
+
 /**
  * Renders a component for displaying and managing meal plan information.
  *
+ * @param {MealPlanInfoProps} props - The props for the component.
  * @return {JSX.Element} The rendered MealPlanInfo component.
  */
 const MealPlanInfo = ({
   onEnterDetails,
   order
-}: {
-  onEnterDetails: (details: boolean) => void;
-  order: number;
-}): JSX.Element => {
-  // Load all necessary contexts
+}: MealPlanInfoProps): JSX.Element => {
   const startDate = useContext(StartDateCtx);
   const endDate = useContext(EndDateCtx);
   const mealPlan = useContext(MealPlanCtx);
@@ -32,15 +42,19 @@ const MealPlanInfo = ({
   const balance = useContext(BalanceCtx);
   const tutorialRefs = useContext(TutorialElementsCtx);
 
-  const [ weeksOffInvalidMsg, setWeeksOffInvalidMsg ] = useState('');
+  /**
+   * The error message to display if the user's input is invalid.
+   */
+  const [weeksOffInvalidMsg, setWeeksOffInvalidMsg] = useState('');
 
+  /**
+   * Calls the onEnterDetails function with the validity of the user's input.
+   */
   useEffect(() => {
     if (
-      [startDate, 
-        endDate, 
-        balance, 
-        mealPlan, 
-        weeksOff].every(ctx => ctx.value !== null)
+      [startDate, endDate, balance, mealPlan, weeksOff].every(
+        (ctx) => ctx.value !== null
+      )
     ) {
       onEnterDetails(true);
     } else {
@@ -49,10 +63,10 @@ const MealPlanInfo = ({
   }, [startDate, endDate, mealPlan, balance, weeksOff, onEnterDetails]);
 
   return (
-    <SectionContainer 
+    <SectionContainer
       title='Meal Plan Info'
-      tooltip={tooltip.mealPlanInfo} 
-      setRef={(ref) => tutorialRefs.setValue(ref, "Meal Plan Info")}
+      tooltip={tooltip.mealPlanInfo}
+      setRef={(ref) => tutorialRefs.setValue(ref, 'Meal Plan Info')}
       order={order}
     >
       <div className='mt-4 flex flex-col items-start gap-4 w-min'>
@@ -91,26 +105,29 @@ const MealPlanInfo = ({
           setValue={mealPlan.setValue}
           validator={(str) => str === 'true'}
         />
-        <Input 
+        <Input
           label={'Number of weeks off: '}
           type={'number'}
           value={weeksOff.value}
           setValue={weeksOff.setValue}
           validator={(str) => {
-            const isValidNumber = !isNaN(parseFloat(str)) && parseFloat(str) >= 0;
-            setWeeksOffInvalidMsg(isValidNumber 
-              ? 'Number of weeks off cannot be greater than the distance between the start and end date.' 
-              : 'Number of weeks off must be a non-negative number.');
-            return isValidNumber 
-              && 
-              (startDate.value === null 
-                || endDate.value === null
-                || Math.min(getDaysBetween(startDate.value, endDate.value)) >= parseFloat(str) * 7)
+            const isValidNumber =
+              !isNaN(parseFloat(str)) && parseFloat(str) >= 0;
+            setWeeksOffInvalidMsg(
+              isValidNumber
+                ? 'Number of weeks off cannot be greater than the distance between the start and end date.'
+                : 'Number of weeks off must be a non-negative number.'
+            );
+            return isValidNumber &&
+              (startDate.value === null ||
+                endDate.value === null ||
+                Math.min(getDaysBetween(startDate.value, endDate.value)) >=
+                  parseFloat(str) * 7)
               ? parseFloat(str)
-              : null
+              : null;
           }}
           invalidMessage={weeksOffInvalidMsg}
-          />
+        />
         <Input
           label={'Starting Balance: $'}
           type={'number'}

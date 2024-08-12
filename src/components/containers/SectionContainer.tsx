@@ -4,23 +4,38 @@ import SectionHeader from './SectionHeader';
 import { FiHelpCircle } from 'react-icons/fi';
 import { TutorialControlCtx } from '../../static/context';
 
-// Prop types
 interface SectionContainerProps {
+  /**
+   * The children components to render inside the section container
+   */
   children?: React.ReactNode;
+
+  /**
+   * The title of the section container
+   */
   title?: string;
+
+  /**
+   * The tooltip object for the section
+   */
   tooltip?: TooltipObject;
+
+  /**
+   * Optional callback function to get the section ref
+   * @param {HTMLElement | null} ref - The section ref
+   */
   setRef?: (ref: HTMLElement | null) => void;
+
+  /**
+   * The order this component should appear
+   */
   order?: number;
 }
 
 /**
  * Renders a section container with a title and children
  *
- * @param {React.ReactNode} children - The children components to render inside the section container
- * @param {string} title - The title of the section container
- * @param {TooltipObject} tooltip - The tooltip object for the section
- * @param setRef - optional callback function to get the section ref
- * @param {number} order - the order this component should appear.
+ * @param {SectionContainerProps} props - The props for the SectionContainer component.
  * @returns {JSX.Element} The rendered section container
  */
 const SectionContainer = ({
@@ -29,18 +44,17 @@ const SectionContainer = ({
   setRef = () => {},
   order = 0
 }: SectionContainerProps): JSX.Element => {
-
   const { setTutorialStep, setShowTutorial } = useContext(TutorialControlCtx);
 
   return (
-    <section 
+    <section
       className='relative border-4 border-messiah-blue bg-white rounded-xl p-4 
       flex flex-col justify-center items-center w-full shadow-md'
       style={{
-        "order": order
-      }} 
+        order: order
+      }}
       ref={(ref) => setRef(ref)}
-      >
+    >
       {title === undefined ? '' : <SectionHeader text={title} />}
       <button
         className='absolute top-5 right-5'

@@ -32,18 +32,21 @@ interface DayEditorProps {
  * Renders a meal table for meals added to given days an an option to remove meals from that day.
  * Also includes a results summary.
  *
+ * @param {DayEditorProps} props - The props for the component.
  * @return {JSX.Element} The rendered DayEditor component.
  */
-const DayEditor = ({
-  order
-}: DayEditorProps) => {
-  // Load all necessary contexts
+const DayEditor = ({ order }: DayEditorProps) => {
   const userSelectedMeals = useContext(UserSelectedMealsCtx);
   const customMeals = useContext(CustomMealsCtx);
   const weeksOff = useContext(WeeksOffCtx);
   const tutorialRefs = useContext(TutorialElementsCtx);
+  const startDate = useContext(StartDateCtx);
+  const endDate = useContext(EndDateCtx);
+  const discount = useContext(MealPlanCtx);
 
-  // Dereference the userSelectedMeals context
+  /**
+   * Transforms the userSelectedMeals object into an array of [day, [meal, meal, meal, ...]]
+   */
   const userSelectedMealsValue = useMemo(
     () =>
       mapUserMeals(
@@ -58,28 +61,35 @@ const DayEditor = ({
     [userSelectedMeals, customMeals]
   );
 
-  // State variable to track which day the user is editing
+  /**
+   * State variable to track which day the user is editing
+   */
   const [weekdayIndex, setWeekdayIndex] = useState(0);
 
-  // Get the day of the week the user is editing
+  /**
+   * Get the day of the week the user is editing
+   */
   const weekday = useMemo(() => WEEKDAYS[weekdayIndex], [weekdayIndex]);
 
-  // Get the list of selected meals for the given day
+  /**
+   * Get the list of selected meals for the given day
+   */
   const dayMealList = useMemo(
     () => (userSelectedMealsValue[WEEKDAYS[weekdayIndex]] as Meal[]) ?? [],
     [userSelectedMealsValue, weekdayIndex]
   );
 
-  const startDate = useContext(StartDateCtx);
-  const endDate = useContext(EndDateCtx);
-  const discount = useContext(MealPlanCtx);
-
+  /**
+   * The total cost of the selected meals for the given day.
+   */
   const mealDayTotal = useMemo(
     () => getMealDayTotal(dayMealList, 1, discount.value ?? false),
     [dayMealList, discount.value]
   );
 
-  /** The total number of days for each weekday (starting on Sunday) */
+  /**
+   * The total number of days for each weekday (starting on Sunday)
+   */
   const numOfWeekdays = useMemo(
     () =>
       startDate.value !== null && endDate.value !== null
@@ -92,7 +102,9 @@ const DayEditor = ({
     [startDate, endDate, weeksOff]
   );
 
-  /** The total number of meals for each weekday (starting on Sunday). */
+  /**
+   * The total number of meals for each weekday (starting on Sunday).
+   */
   const numOfMeals = useMemo(
     () => WEEKDAYS.map((day) => userSelectedMealsValue[day].length),
     [userSelectedMealsValue]
@@ -132,7 +144,7 @@ const DayEditor = ({
       createNotification={(name) => `Removed ${name} from ${weekday}`}
       searchable={false}
       tooltip={tooltip.dayEditor}
-      setRef={(ref) => tutorialRefs.setValue(ref, "Day Editor")}
+      setRef={(ref) => tutorialRefs.setValue(ref, 'Day Editor')}
       order={order}
     >
       <Divider />

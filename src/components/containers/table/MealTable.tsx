@@ -14,31 +14,70 @@ import Meal from '../../../types/Meal';
 import { Weekday } from '../../../types/userSelectedMealsObject';
 
 interface MealTableProps {
+  /**
+   * The array of Meal objects to be displayed in the table
+   */
   data: Array<Meal>;
+
+  /**
+   * The icon for the optional button
+   */
   buttonIcon?: JSX.Element;
+
+  /**
+   * The title of the optional button column
+   */
   buttonTitle?: string;
+
+  /**
+   * The click event handler for the optional button
+   * @param {Meal} meal - The meal object to be filtered
+   */
   buttonOnClick: (meal: Meal) => void;
+
+  /**
+   * The click event handler for the optional day button
+   * @param {Weekday} day - The day of the week
+   * @param {Meal} meal - The meal object to be filtered
+   */
   buttonOnClickDay?: (day: Weekday, meal: Meal) => void;
+
+  /**
+   * A function that takes in the meal name and returns the notification message
+   * @param {string} name - The name of the meal
+   * @returns {string} The notification message
+   */
   createNotification: (name: string) => string;
+
+  /**
+   * A function that takes in the meal name and returns the notification message for adding direct to day
+   * @param {Weekday} day - The day of the week
+   * @param {string} name - The name of the meal
+   * @returns {string} The notification message
+   */
   createDayNotification?: (day: Weekday, name: string) => string;
+
+  /**
+   * The click event handler for editing a custom meal
+   * @param {Meal} data - The meal object to be edited
+   */
   onCustomClick?: (data: Meal) => void;
+
+  /**
+   * The ID of the newly added custom meal to scroll to
+   */
   newCustomMealID?: string;
+
+  /**
+   * Whether the table should be searchable
+   */
   searchable?: boolean;
 }
 
 /**
  * Renders a table component for displaying meal data with an optional button
  *
- * @param {Array<Meal>} data - The array of meal objects to be displayed in the table
- * @param {string} buttonTitle - The title of the optional button column
- * @param {JSX.Element} buttonIcon - The icon for the optional button
- * @param {(Meal) => void} buttonOnClick - The click event handler for the optional button
- * @param {(day: Weekday) => void} buttonOnClickDay - The click event handler for the optional day button
- * @param {() => string} createNotification - A function that takes in the meal name and returns the notification message
- * @param {() => string} createDayNotification - A function that takes in the meal name and returns the notification message for adding direct to day
- * @param {() => void} onCustomClick - The click event handler for editing a custom meal
- * @param {string | undefined} newCustomMealID - The ID of the newly added custom meal to scroll to
- * @param {boolean} searchable - Whether the table should be searchable
+ * @param {MealTableProps} props - The props for the MealTable component
  * @return {JSX.Element} The rendered table component
  */
 const MealTable = ({
@@ -55,19 +94,29 @@ const MealTable = ({
 }: MealTableProps): JSX.Element => {
   const headers = ['Place', 'Name', 'Price', buttonTitle ?? null];
 
-  /** State variable to store sort direction */
+  /**
+   * State variable to store sort direction
+   */
   const [sortDirection, setSortDirection] = useState(true);
 
-  /** State variable to store sort column */
+  /**
+   * State variable to store sort column
+   */
   const [sortColumn, setSortColumn] = useState<SortBy>('Place');
 
-  /** State variable to store search key. */
+  /**
+   * State variable to store search key
+   */
   const [searchKey, setSearchKey] = useState<string | null>('');
 
-  /** State variable to store whether only custom meals should be displayed */
+  /**
+   * State variable to store whether only custom meals should be displayed
+   */
   const [customOnly, setCustomOnly] = useState(false);
 
-  /** State variable to store notification message. */
+  /**
+   * State variable to store notification message.
+   */
   const [message, setMessage] = useState({ text: '' });
 
   /**
@@ -79,6 +128,11 @@ const MealTable = ({
     setMessage({ text: createNotification(row.name) });
   };
 
+  /**
+   * Creates a notification on a direct to day button click
+   * @param day - The day of the week
+   * @param row - The meal object to be filtered
+   */
   const handleDayButtonClick = (day: Weekday, row: Meal) => {
     buttonOnClickDay?.(day, row);
     setMessage({
@@ -113,6 +167,9 @@ const MealTable = ({
     setSortDirection(sortColumn === header ? !sortDirection : true);
   };
 
+  /**
+   * The HTML ID of the day selector
+   */
   const daySelectorId = `dayselector-${uuid()}`;
 
   return (
@@ -167,7 +224,9 @@ const MealTable = ({
                 } transition duration-50 z-20`}
               >
                 <FaUser className='p-2' size={30} />
-                <span className='hidden sm:inline text-nowrap'>Custom Only&nbsp;</span>
+                <span className='hidden sm:inline text-nowrap'>
+                  Custom Only&nbsp;
+                </span>
               </button>
             </div>
             <Highlighter

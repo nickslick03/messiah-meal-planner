@@ -30,19 +30,24 @@ interface AvailableMealsProps {
  * @return {JSX.Element} The Available Meals section component.
  */
 const AvailableMeals = ({ order }: AvailableMealsProps) => {
-  // Load all necessary contexts
   const mealQueue = useContext(MealQueueCtx);
   const customMeals = useContext(CustomMealsCtx);
   const userSelectedMeals = useContext(UserSelectedMealsCtx);
   const tutorialRefs = useContext(TutorialElementsCtx);
 
-  // State variable to determine whether or not the custom meal modal should be open
+  /**
+   * State variable to determine whether or not the custom meal modal should be open.
+   */
   const [isEditingCustomMeal, setIsEditingCustomMeal] = useState(false);
 
-  // State variable to track the current custom meal editing data
+  /**
+   * State variable to track the current custom meal editing data.
+   */
   const [currentCustomData, setCurrentCustomData] = useState<Meal>();
 
-  // State variable to track the ID of the next custom meal
+  /**
+   * State variable to track the ID of the next custom meal.
+   */
   const [newCustomMealID, setNewCustomMealID] = useState<string>();
 
   /**
@@ -68,6 +73,9 @@ const AvailableMeals = ({ order }: AvailableMealsProps) => {
     setIsEditingCustomMeal(false);
   };
 
+  /**
+   * Opens the modal for editing a custom meal.
+   */
   useEffect(() => {
     if (!currentCustomData) return;
     setIsEditingCustomMeal(true);

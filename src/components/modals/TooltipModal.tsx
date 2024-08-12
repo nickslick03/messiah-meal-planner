@@ -5,8 +5,19 @@ import ModalContainer from '../containers/ModalContainer';
 import { Dispatch, SetStateAction } from 'react';
 
 interface TooltipModalProps {
+  /**
+   * The tooltip to display.
+   */
   tooltip?: TooltipObject;
+
+  /**
+   * Whether or not the modal is visible.
+   */
   tooltipVisible: boolean;
+
+  /**
+   * The function to set whether or not the modal is visible.
+   */
   setTooltipVisible: Dispatch<SetStateAction<boolean>>;
 }
 
@@ -14,9 +25,6 @@ interface TooltipModalProps {
  * Component for displaying a tooltip modal.
  *
  * @param {TooltipModalProps} props - The props for the component.
- * @param {TooltipObject} props.tooltip - The tooltip to display.
- * @param {boolean} props.tooltipVisible - Whether or not the modal is visible.
- * @param {Dispatch<SetStateAction<boolean>>} props.setTooltipVisible - The function to set whether or not the modal is visible.
  * @returns {JSX.Element} The tooltip modal component.
  */
 const TooltipModal = ({
@@ -48,14 +56,18 @@ const TooltipModal = ({
     setCurrentTooltip(Object.values(tooltipData)[currentIndex + 1]);
   };
 
-  /** Memoized value for the index of the current tooltip */
+  /**
+   * Memoized value for the index of the current tooltip
+   */
   const currentIndex = useMemo(
     () =>
       Object.keys(tooltipData).indexOf(camelify(currentTooltip?.title ?? '')),
     [currentTooltip]
   );
 
-  /** Memoized value for whether or not the current tooltip is the last tooltip */
+  /**
+   * Memoized value for whether or not the current tooltip is the last tooltip
+   */
   const isLastTooltip = useMemo(
     () => currentIndex === Object.keys(tooltipData).length - 1,
     [currentIndex]
@@ -72,23 +84,23 @@ const TooltipModal = ({
         confirmDisabled={isLastTooltip}
         centered={false}
       >
-      <div className='flex justify-center mb-4'>
-        {/* Render the text of the tooltip */}
-        {currentTooltip?.images?.small && (
-          <img
-            src={currentTooltip?.images?.small}
-            alt={currentTooltip?.title}
-            className={'block sm:hidden'}
-          />
-        )}
-        {currentTooltip?.images?.large && (
-          <img
-            src={currentTooltip?.images?.large}
-            alt={currentTooltip?.title}
-            className={'hidden sm:block max-w-lg'}
-          />
-        )}        
-      </div>
+        <div className='flex justify-center mb-4'>
+          {/* Render the text of the tooltip */}
+          {currentTooltip?.images?.small && (
+            <img
+              src={currentTooltip?.images?.small}
+              alt={currentTooltip?.title}
+              className={'block sm:hidden'}
+            />
+          )}
+          {currentTooltip?.images?.large && (
+            <img
+              src={currentTooltip?.images?.large}
+              alt={currentTooltip?.title}
+              className={'hidden sm:block max-w-lg'}
+            />
+          )}
+        </div>
         {currentTooltip?.text}
       </ModalContainer>
     )

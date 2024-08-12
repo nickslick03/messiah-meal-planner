@@ -9,21 +9,40 @@ import Button from '../form_elements/Button';
 import { FaTrash } from 'react-icons/fa';
 
 interface CustomMealAddModalProps {
+  /**
+   * Whether or not the modal is visible.
+   */
   visible: boolean;
+
+  /**
+   * Event handler for when the confirm button is clicked.
+   *
+   * @param {string} location - The location of the custom meal.
+   * @param {string} name - The name of the custom meal.
+   * @param {number} price - The price of the custom meal.
+   */
   onConfirm: (location: string, name: string, price: number) => void;
+
+  /**
+   * Event handler for when the cancel button is clicked.
+   */
   onCancel: () => void;
+
+  /**
+   * Event handler for when the delete button is clicked (optional).
+   */
   onDelete?: () => void;
+
+  /**
+   * The starting data for the modal (optional).
+   */
   startingData?: Meal;
 }
 
 /**
  * Renders a modal component for adding a custom meal.
  *
- * @param {boolean} visible - Whether or not the modal is visible.
- * @param {(location: string, name: string, price: number) => void} onConfirm - Event handler for when the confirm button is clicked.
- * @param {() => void} onCancel - Event handler for when the cancel button is clicked.
- * @param {() => void} onDelete - Event handler for when the delete button is clicked.
- * @param {Meal | undefined} startingData - The starting data for the modal.
+ * @param {CustomMealAddModalProps} props - The props for the CustomMealAddModal component.
  * @returns {JSX.Element} The rendered CustomMealAddModal component.
  */
 const CustomMealAddModal = ({
@@ -33,30 +52,43 @@ const CustomMealAddModal = ({
   onDelete,
   startingData
 }: CustomMealAddModalProps) => {
-  // Default values
   const DEFAULT_LOCATION = 'Select Place...';
   const DEFAULT_PRICE = null;
   const DEFAULT_NAME = null;
 
-  // State variables for use in adding a custom meal
+  /**
+   * State for the location of the custom meal.
+   */
   const [location, setPlace] = useState(
     startingData?.location ?? DEFAULT_LOCATION
   );
+
+  /**
+   * State for the price of the custom meal.
+   */
   const [price, setPrice] = useState<number | null>(
     startingData?.price ?? DEFAULT_PRICE
   );
+
+  /**
+   * State for the name of the custom meal.
+   */
   const [name, setName] = useState<string | null>(
     startingData?.name ?? DEFAULT_NAME
   );
 
-  /** Resets the modal state. */
+  /**
+   * Resets the modal state.
+   */
   const resetState = () => {
     setPlace(DEFAULT_LOCATION);
     setPrice(DEFAULT_PRICE);
     setName(DEFAULT_NAME);
   };
 
-  /** Checks whether the form is incomplete. */
+  /**
+   * Checks whether the form is incomplete.
+   */
   const isIncomplete = useMemo(
     () => price === null || name === null || location === DEFAULT_LOCATION,
     [price, name, location]

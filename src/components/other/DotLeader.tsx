@@ -7,17 +7,37 @@ import {
 const DOTS = '.'.repeat(200);
 
 interface DotLeaderProps {
-  info: {
+  /**
+   * An array of objects containing information to be displayed in the DotLeader component.
+   */
+  info: Array<{
+    /**
+     * The title to be displayed.
+     */
     title: string;
+
+    /**
+     * The importance level of the title. Defaults to `newImportanceIndex(3)`.
+     */
     titleImportance?: ImportanceIndex;
+
+    /**
+     * The value to be displayed next to the title. Can be a string or a number.
+     */
     value: string | number;
+
+    /**
+     * The CSS classes to be applied to the value.
+     */
     resultsStyle?: string;
-  }[];
+  }>;
 }
 
 /**
  * Renders a title, followed by the correct amount of dots to make the full width, followed by the title's associated value.
- * @param {DotLeaderProps["info"]} info The info to be rendered in the dot leader
+ *
+ * @param {DotLeaderProps} props - The props for the DotLeader component.
+ * @returns {JSX.Element} The rendered dot leader
  */
 const DotLeader = ({ info }: DotLeaderProps) => {
   return (

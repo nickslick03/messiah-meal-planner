@@ -15,18 +15,38 @@ import usePersistentState from '../../hooks/usePersistentState';
 import tooltip from '../../static/tooltip';
 
 interface TutorialProps {
-  /** boolean whether to show the tutorial. */
+  /**
+   * Boolean whether to show the tutorial.
+   */
   show: boolean;
-  /** setter for showTutorial. */
+
+  /**
+   * Setter for showTutorial.
+   */
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
-  /** The step the tutorial is on. */
+
+  /**
+   * The step the tutorial is on.
+   */
   step: number;
-  /** The setter for the step. */
+
+  /**
+   * The setter for the step.
+   */
   setStep: React.Dispatch<React.SetStateAction<number>>;
-  /** Whether the details for the meal plan info form are complete and valid. */
+
+  /**
+   * Whether the details for the meal plan info form are complete and valid.
+   */
   areDetailsEntered: boolean;
 }
 
+/**
+ * Component for displaying the tutorial.
+ *
+ * @param {TutorialProps} props - The props for the component.
+ * @returns {JSX.Element} The tutorial component.
+ */
 const Tutorial = ({
   show,
   setShow,
@@ -35,8 +55,15 @@ const Tutorial = ({
   areDetailsEntered
 }: TutorialProps) => {
   const tutorialRefs = useContext(TutorialElementsCtx);
+
+  /**
+   * State for whether the user is a new user.
+   */
   const [isNewUser, setIsNewUser] = usePersistentState('isNewUser', true);
 
+  /**
+   * State for storing the text under 'more details' in the tooltip
+   */
   const moreDetails = useMemo(
     () =>
       Object.values(tooltip).find(
@@ -44,8 +71,15 @@ const Tutorial = ({
       )?.text,
     [step]
   );
+
+  /**
+   * State for whether the 'more details' text should be shown
+   */
   const [showDetails, setShowDetails] = useState(false);
 
+  /**
+   * If new user, show the tutorial and log that the user is no longer new
+   */
   useEffect(() => {
     if (isNewUser) {
       setShow(true);
@@ -53,8 +87,14 @@ const Tutorial = ({
     }
   }, [isNewUser, setIsNewUser, setShow]);
 
+  /**
+   * Ref for the tooltip
+   */
   const tutorialTooltipRef = useRef<HTMLDivElement | null>(null);
 
+  /**
+   * Whether the current step is complete
+   */
   const isStepComplete = useMemo(() => {
     const validation = [
       {
@@ -65,6 +105,9 @@ const Tutorial = ({
     return !validation || validation.check();
   }, [step, areDetailsEntered]);
 
+  /**
+   * Resets the z-index of the previous tutorial step
+   */
   const resetPrevDiv = useCallback(
     (i: number) => {
       const div = tutorialRefs.value[i];
@@ -75,6 +118,9 @@ const Tutorial = ({
     [tutorialRefs]
   );
 
+  /**
+   * Sets the z-index of the current tutorial step and scrolls it into view
+   */
   useEffect(() => {
     const tooltip = tutorialTooltipRef!.current!;
     const position = tutorialSteps[step].position;
@@ -107,6 +153,9 @@ const Tutorial = ({
     }
   }, [step, show, tutorialRefs.value]);
 
+  /**
+   * Resets the z-index of the previous tutorial step
+   */
   useEffect(() => {
     if (!show) resetPrevDiv(step);
   }, [resetPrevDiv, show, step]);

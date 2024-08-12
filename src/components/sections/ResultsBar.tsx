@@ -3,9 +3,24 @@ import { BalanceCtx } from '../../static/context';
 import formatCurrency from '../../lib/formatCurrency';
 
 interface ResultsBarProps {
+  /**
+   * The grand total cost of the meal plan.
+   */
   grandTotal: number;
+
+  /**
+   * Whether the grand total is under the starting balance.
+   */
   isUnderBalance: boolean;
+
+  /**
+   * The difference between the grand total and the starting balance.
+   */
   difference: number;
+
+  /**
+   * The order in which the ResultsBar should appear in the results section.
+   */
   order: number;
 }
 
@@ -21,15 +36,24 @@ const ResultsBar = ({
   difference,
   order
 }: ResultsBarProps) => {
-  /** Load balance context */
+  /**
+   * Load balance context
+   */
   const balance = useContext(BalanceCtx);
 
-  /** Ref to the container of this element, for handling the bottom corner rounding. */
+  /**
+   * Ref to the container of this element, for handling the bottom corner rounding.
+   */
   const ref = useRef<HTMLDivElement>(null);
 
-  // Indicates whether the user is at the bottom of the page
+  /**
+   * Indicates whether the user is at the bottom of the page
+   */
   const [isAtBottom, setIsAtBottom] = useState(false);
 
+  /**
+   * Detect if the user is at the bottom of the page
+   */
   useEffect(() => {
     new IntersectionObserver(
       ([e]) => setIsAtBottom(e.intersectionRatio === 1),
