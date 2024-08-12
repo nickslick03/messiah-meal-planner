@@ -9,8 +9,12 @@ export const generateId = (location: string, name: string) => {
   return CryptoJS.MD5(location + name).toString();
 };
 
+export function isMealAllowedOnDay(meal: Meal, day: number) {
+  return (!meal.unavailable || meal.unavailable.every(d => d !== day));
+}
+
 /** location values are arrays of weekdays represented as indices denoting when that location is closed. */
-export const locationClosures = {
+export const locationClosures: Record<string, number[]> = {
   'Falcon': [0, 6]
 }
 
@@ -19,7 +23,8 @@ const meals: Meal[] = [
   {
     location: 'Lottie',
     name: 'Breakfast',
-    price: 6.3
+    price: 6.3,
+    unavailable: [0, 6]
   },
   {
     location: 'Lottie',
