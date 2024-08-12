@@ -4,23 +4,28 @@ import { WEEKDAYS } from '../../../static/constants';
 import { Weekday } from '../../../types/userSelectedMealsObject';
 import useLongPress from '../../../hooks/useLongPress';
 import useClickOutside from '../../../hooks/useClickOutside';
+import Meal from '../../../types/Meal';
+import { isMealAllowedOnDay } from '../../../static/mealsDatabase';
 
 interface ButtonCellProps {
   icon: JSX.Element;
   onClick: () => void;
   onClickDay?: (day: Weekday) => void;
+  meal: Meal;
 }
 
 /**
  * Renders a table cell with a button that triggers the provided onClick function when clicked
  * and the provided onClickDay function when a day button is clicked
  *
+ * @param {Meal} meal - The meal this button correlates with
  * @param {JSX.Element} icon - The component for the icon to display on the button
  * @param {() => void} onClick - The function to be called when the button is clicked
  * @param {() => void} onClickDay - The function to be called when a day button is clicked
  * @returns {JSX.Element} The rendered table cell with a button
  */
 const ButtonCell = ({
+  meal,
   icon,
   onClick = () => {},
   onClickDay = () => {}
@@ -130,11 +135,14 @@ const ButtonCell = ({
                 : () => {}
             }
           >
-            {WEEKDAYS.map((day) => (
+            {WEEKDAYS.map((day, i) => (
               <button
                 key={day}
-                className='w-full h-full hover:bg-messiah-light-blue-hover transition duration-50 select-none'
+                className='w-full h-full hover:bg-messiah-light-blue-hover 
+                disabled:text-gray-500 disabled:hover:bg-messiah-light-blue 
+                transition duration-50 select-none'
                 onClick={() => onClickDay(day)}
+                disabled={!isMealAllowedOnDay(meal, i) || undefined}
               >
                 {day.slice(0, 2)}
               </button>

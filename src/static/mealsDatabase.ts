@@ -9,17 +9,26 @@ export const generateId = (location: string, name: string) => {
   return CryptoJS.MD5(location + name).toString();
 };
 
-/** location values are arrays of weekdays represented as indices denoting when that location is closed. */
-export const locationClosures = {
-  'Falcon': [0, 6]
+export function isMealAllowedOnDay(meal: Meal, day: number) {
+  return (
+    (!meal.unavailable || meal.unavailable.every((d) => d !== day)) &&
+    (!locationClosures[meal.location] ||
+      locationClosures[meal.location].every((d) => d !== day))
+  );
 }
+
+/** location values are arrays of weekdays represented as indices denoting when that location is closed. */
+export const locationClosures: Record<string, number[]> = {
+  Falcon: [0, 6]
+};
 
 // List of available meals at Messiah
 const meals: Meal[] = [
   {
     location: 'Lottie',
     name: 'Breakfast',
-    price: 6.3
+    price: 6.3,
+    unavailable: [0, 6]
   },
   {
     location: 'Lottie',
@@ -423,6 +432,6 @@ const meals: Meal[] = [
   }
 ].map((m) => ({ ...m, id: generateId(m.location, m.name) }));
 
-export const mealLocations = [...(new Set(meals.map((m) => m.location)))];
+export const mealLocations = [...new Set(meals.map((m) => m.location))];
 
 export default meals;
