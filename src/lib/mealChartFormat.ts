@@ -7,6 +7,7 @@ import { applyDiscount } from './calculationEngine';
 
 /**
  * This function takes in a UserSelectedMealsObject and returns data for a stacked chart of the total cost of each meal.
+ *
  * @param userSelectedMeals The userSelectedMeals object
  * @param meals The list of all meals
  * @param customMeals The list of all custom meals
@@ -17,7 +18,7 @@ export function userMealsToStackedChart(
   userSelectedMeals: UserSelectedMealsObjectType,
   meals: Meal[],
   customMeals: Meal[],
-  isDiscount: boolean,
+  isDiscount: boolean
 ) {
   const locationMap = mealLocations.reduce(
     (map, location) => map.set(location, Array(7).fill(0)),
@@ -32,7 +33,7 @@ export function userMealsToStackedChart(
       );
       mealList.forEach((meal) => {
         const n = locationMap.get(meal.location) ?? [];
-        
+
         n[i] += isDiscount ? applyDiscount(meal) : meal.price;
         locationMap.set(meal.location, n);
       });

@@ -13,14 +13,35 @@ import lgResults from '../assets/lg-results.png';
 import { TUTORIAL_ICON_SIZE as ICON_SIZE } from './constants';
 
 export interface TooltipObject {
+  /**
+   * The title of the tooltip.
+   */
   title: string;
+
+  /**
+   * The text content of the tooltip.
+   */
   text: JSX.Element;
+
+  /**
+   * The images displayed in the tooltip.
+   */
   images: {
+    /**
+     * The small image.
+     */
     small: string;
+
+    /**
+     * The large image.
+     */
     large: string;
   };
 }
 
+/**
+ * Object containing the tooltip information.
+ */
 const tooltip = {
   mealPlanInfo: {
     title: 'Meal Plan Info',

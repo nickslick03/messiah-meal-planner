@@ -9,6 +9,13 @@ export const generateId = (location: string, name: string) => {
   return CryptoJS.MD5(location + name).toString();
 };
 
+/**
+ * Checks if a meal is allowed/available on a given day.
+ *
+ * @param meal - The meal to check
+ * @param day - The day to check
+ * @returns Whether the meal is allowed on the given day
+ */
 export function isMealAllowedOnDay(meal: Meal, day: number) {
   return (
     (!meal.unavailable || meal.unavailable.every((d) => d !== day)) &&
@@ -22,7 +29,9 @@ export const locationClosures: Record<string, number[]> = {
   Falcon: [0, 6]
 };
 
-// List of available meals at Messiah
+/**
+ * The list of all available meals at Messiah (that we have catalogued)
+ */
 const meals: Meal[] = [
   {
     location: 'Lottie',
@@ -432,6 +441,9 @@ const meals: Meal[] = [
   }
 ].map((m) => ({ ...m, id: generateId(m.location, m.name) }));
 
+/**
+ * An array of all meal locations in the database.
+ */
 export const mealLocations = [...new Set(meals.map((m) => m.location))];
 
 export default meals;
