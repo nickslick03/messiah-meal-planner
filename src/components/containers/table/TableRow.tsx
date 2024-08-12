@@ -78,6 +78,7 @@ const TableRow = ({
             icon={buttonIcon}
             onClick={buttonOnClick}
             onClickDay={buttonOnClickDay}
+            meal={data}
           />
         ) : (
           <></>

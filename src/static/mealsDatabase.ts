@@ -10,7 +10,8 @@ export const generateId = (location: string, name: string) => {
 };
 
 export function isMealAllowedOnDay(meal: Meal, day: number) {
-  return (!meal.unavailable || meal.unavailable.every(d => d !== day));
+  return (!meal.unavailable || meal.unavailable.every(d => d !== day)) 
+  && (!locationClosures[meal.location] || locationClosures[meal.location].every(d => d !== day));
 }
 
 /** location values are arrays of weekdays represented as indices denoting when that location is closed. */
