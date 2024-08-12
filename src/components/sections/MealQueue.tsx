@@ -138,7 +138,9 @@ const MealQueue = ({
 
   /** List of meals where a day is selected that that meal isn't served */
   const offendedMeals = useMemo(() => {
-    return mealQueueValue.filter(meal => selectedDays.some(day => !isMealAllowedOnDay(meal, day)));
+    return mealQueueValue.filter(meal => 
+      selectedDays.some(day => 
+        (meal.unavailable && meal.unavailable.some(d => d === day))));
   }, [mealQueueValue, selectedDays]);
 
   console.log(offendedMeals);
