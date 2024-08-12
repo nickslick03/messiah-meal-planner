@@ -1,7 +1,11 @@
 import { WEEKDAYS } from '../../static/constants';
 import Button from '../form_elements/Button';
 import { useReducer, useContext, useMemo, useState } from 'react';
-import { MealQueueCtx, TutorialElementsCtx, UserSelectedMealsCtx } from '../../static/context';
+import {
+  MealQueueCtx,
+  TutorialElementsCtx,
+  UserSelectedMealsCtx
+} from '../../static/context';
 import MealContainer from '../containers/MealContainer';
 import Meal from '../../types/Meal';
 import {
@@ -10,7 +14,7 @@ import {
 } from '../../types/userSelectedMealsObject';
 import { v4 as uuid } from 'uuid';
 import Notification from '../other/Notification';
-import meals, { isMealAllowedOnDay, locationClosures } from '../../static/mealsDatabase';
+import meals, { locationClosures } from '../../static/mealsDatabase';
 import { CustomMealsCtx } from '../../static/context';
 import DaySelector from '../form_elements/DaySelector';
 import mapUserMeals from '../../lib/mapUserMeals';
@@ -25,9 +29,7 @@ interface MealQueueProps {
 /**
  * Renders the Meal Queue section, where meals in the queue can be added to different days of the week.
  */
-const MealQueue = ({
-  order
-}: MealQueueProps) => {
+const MealQueue = ({ order }: MealQueueProps) => {
   // Load all necessary contexts
   const mealQueue = useContext(MealQueueCtx);
   const userSelectedMeals = useContext(UserSelectedMealsCtx);
@@ -138,9 +140,11 @@ const MealQueue = ({
 
   /** List of meals where a day is selected that that meal isn't served */
   const offendedMeals = useMemo(() => {
-    return mealQueueValue.filter(meal => 
-      selectedDays.some(day => 
-        (meal.unavailable && meal.unavailable.some(d => d === day))));
+    return mealQueueValue.filter((meal) =>
+      selectedDays.some(
+        (day) => meal.unavailable && meal.unavailable.some((d) => d === day)
+      )
+    );
   }, [mealQueueValue, selectedDays]);
 
   /** Indicates whether the add meal button is disabled. */
@@ -150,7 +154,12 @@ const MealQueue = ({
       selectedDays.length == 0 ||
       offendedLocations.length > 0 ||
       offendedMeals.length > 0,
-    [mealQueue.value.length, offendedLocations.length, selectedDays.length, offendedMeals.length]
+    [
+      mealQueue.value.length,
+      offendedLocations.length,
+      selectedDays.length,
+      offendedMeals.length
+    ]
   );
   /** Indicates whether the clear meal button is disabled. */
   const isClearMealsButtonDisabled = useMemo(
@@ -167,7 +176,7 @@ const MealQueue = ({
       createNotification={(name) => `Removed ${name} from meal queue`}
       searchable={false}
       tooltip={tooltip.mealQueue}
-      setRef={(ref) => tutorialRefs.setValue(ref, "Meal Queue")}
+      setRef={(ref) => tutorialRefs.setValue(ref, 'Meal Queue')}
       order={order}
     >
       <div className='mb-4' />
@@ -194,13 +203,15 @@ const MealQueue = ({
             .join(', ')}`}
         </p>
       ))}
-      {offendedMeals.map((meal, i) =>
+      {offendedMeals.map((meal, i) => (
         <p className='text-messiah-red text-sm mt-2' key={i}>
           {meal.name} from {meal.location} Isn't served on{' '}
-          {selectedDays.filter(day => meal.unavailable?.includes(day))
-            .map(day => WEEKDAYS[day])
+          {selectedDays
+            .filter((day) => meal.unavailable?.includes(day))
+            .map((day) => WEEKDAYS[day])
             .join(', ')}
-        </p>)}
+        </p>
+      ))}
       <div className='flex gap-2 mt-4'>
         <Button
           title='Add Meals to Selected Days'

@@ -139,7 +139,8 @@ const ButtonCell = ({
               <button
                 key={day}
                 className='w-full h-full hover:bg-messiah-light-blue-hover 
-                disabled:bg-messiah-light-blue-active transition duration-50 select-none'
+                disabled:text-gray-500 disabled:hover:bg-messiah-light-blue 
+                transition duration-50 select-none'
                 onClick={() => onClickDay(day)}
                 disabled={!isMealAllowedOnDay(meal, i) || undefined}
               >

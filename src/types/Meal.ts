@@ -5,7 +5,7 @@ interface Meal {
   location: string;
   name: string;
   price: number;
-  unavailable?: number[]
+  unavailable?: number[];
 }
 
 export default Meal;
