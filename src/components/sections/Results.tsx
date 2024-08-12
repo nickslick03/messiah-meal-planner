@@ -7,7 +7,7 @@ import {
   UserSelectedMealsCtx,
   CustomMealsCtx,
   WeeksOffCtx,
-  TutorialElementsCtx,
+  TutorialElementsCtx
 } from '../../static/context';
 import formatCurrency from '../../lib/formatCurrency';
 import { getMealTotal } from '../../lib/calculationEngine';
@@ -24,7 +24,7 @@ interface ResultsProps {
   isUnderBalance: boolean;
   difference: number;
   grandTotal: number;
-  dayWhenRunOut: Date;
+  dayWhenRunOut: Date | null;
   order: number;
 }
 
@@ -66,7 +66,7 @@ const Results = ({
   const customMeals = useContext(CustomMealsCtx);
   const userSelectedMeals = useContext(UserSelectedMealsCtx);
   const tutorialRefs = useContext(TutorialElementsCtx);
-  
+
   /** The meal total for one week. */
   const weekTotal = useMemo(
     () =>
@@ -213,13 +213,15 @@ const Results = ({
   );
 
   return (
-    <SectionContainer 
-      title='Results' 
-      tooltip={tooltip.results} 
-      setRef={(ref) => tutorialRefs.setValue(ref, "Results")}
+    <SectionContainer
+      title='Results'
+      tooltip={tooltip.results}
+      setRef={(ref) => tutorialRefs.setValue(ref, 'Results')}
       order={order}
     >
-      <div className='text-gray-400 mt-4 mb-1'>(Charts are based on the total for 1 week)</div>
+      <div className='text-gray-400 mt-4 mb-1'>
+        (Charts are based on the total for 1 week)
+      </div>
       <div className='flex flex-row flex-wrap w-full justify-evenly mb-4'>
         <div className='relative mb-4 w-full lg:w-[45%] min-h-[250px] sm:min-h-[300px]'>
           <Bar data={barChartData} options={barChartOptions} />
@@ -247,13 +249,15 @@ const Results = ({
             resultsStyle: 'text-messiah-red'
           }
         ].concat(
-          !isUnderBalance
+          !isUnderBalance && dayWhenRunOut !== null
             ? [
                 {
                   title: `Date When Money Runs Out 
-                  ${weeksOff.value
-                    ? '(Assuming the weeks off are before this)'
-                    : ''}`,
+                  ${
+                    weeksOff.value
+                      ? '(Assuming the weeks off are before this)'
+                      : ''
+                  }`,
                   value: `${
                     dayWhenRunOut.getMonth() + 1
                   }/${dayWhenRunOut.getDate()}/${dayWhenRunOut.getFullYear()}`,
@@ -265,9 +269,7 @@ const Results = ({
       />
       <div
         className={`${
-          isUnderBalance 
-            ? 'text-messiah-green' 
-            : 'text-messiah-red'
+          isUnderBalance ? 'text-messiah-green' : 'text-messiah-red'
         } text-xl font-bold mt-4 text-center`}
       >
         {isUnderBalance
