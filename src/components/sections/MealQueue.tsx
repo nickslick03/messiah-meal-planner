@@ -143,8 +143,6 @@ const MealQueue = ({
         (meal.unavailable && meal.unavailable.some(d => d === day))));
   }, [mealQueueValue, selectedDays]);
 
-  console.log(offendedMeals);
-
   /** Indicates whether the add meal button is disabled. */
   const isAddMealsButtonDisabled = useMemo(
     () =>
