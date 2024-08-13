@@ -6,21 +6,23 @@ import { CustomMealsCtx } from '../../static/context';
 import { v4 as uuid } from 'uuid';
 
 interface CustomMealProps {
+  /** Setter for newly added custom meals */
   setNewCustomMealID: React.Dispatch<React.SetStateAction<string | undefined>>;
 }
 
 /**
  * Renders a Custom Meal button and Modal.
- * @param {React.SetStateAction<Meal | undefined>} setNewCustomMeal Setter for newly added custom meals
+ *
+ * @param {CustomMealProps} props - Props for the CustomMeal component.
+ * @returns {JSX.Element} The CustomMeal component.
  */
-const CustomMeal = ({
-  setNewCustomMealID
-}: CustomMealProps) => {
-  // State variable to determine whether or not the custom meal modal should be open
-  const [isAddingCustomMeal, setIsAddingCustomMeal] = useState(false);
-
-  // Load custom meals context
+const CustomMeal = ({ setNewCustomMealID }: CustomMealProps) => {
   const customMeals = useContext(CustomMealsCtx);
+
+  /**
+   * State variable to determine whether or not the custom meal modal should be open
+   */
+  const [isAddingCustomMeal, setIsAddingCustomMeal] = useState(false);
 
   return (
     <>
@@ -31,11 +33,14 @@ const CustomMeal = ({
       />
       <CustomMealAddModal
         onConfirm={(location, name, price) => {
-          const newCustomMeal = { location, name, price, isCustom: true, id: uuid() };
-          customMeals.setValue([
-            ...customMeals.value,
-            newCustomMeal
-          ]);
+          const newCustomMeal = {
+            location,
+            name,
+            price,
+            isCustom: true,
+            id: uuid()
+          };
+          customMeals.setValue([...customMeals.value, newCustomMeal]);
           setIsAddingCustomMeal(false);
           setNewCustomMealID(newCustomMeal.id);
         }}

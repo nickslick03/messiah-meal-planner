@@ -17,31 +17,63 @@ import { MdClear } from 'react-icons/md';
 import { IconContext } from 'react-icons';
 
 interface InputProps<T> {
+  /**
+   * The label for the input.
+   */
   label?: string;
+
+  /**
+   * The importance level of the input.
+   */
   importance?: ImportanceIndex;
+
+  /**
+   * The type of the input.
+   */
   type: HTMLInputTypeAttribute;
+
+  /**
+   * The validator function for the input value. Returns the new value if valid, null otherwise.
+   * @param value - The value to validate.
+   * @returns The validated value or null.
+   */
   validator: (value: string) => T | null;
+
+  /**
+   * The value of the input.
+   */
   value: T | null;
+
+  /**
+   * The function to update the input value.
+   */
   setValue: Dispatch<SetStateAction<T | null>>;
+
+  /**
+   * The message to display when the input is invalid.
+   */
   invalidMessage?: string;
+
+  /**
+   * The placeholder text for the input.
+   */
   placeholder?: string;
+
+  /**
+   * The styles to apply to the input.
+   */
   cssClasses?: string;
+
+  /**
+   * Whether the input should be clearable.
+   */
   clearable?: boolean;
 }
 
 /**
  * Renders an input component with a label and handles input changes. Can be any type of input.
  *
- * @param {string} label - The label for the input.
- * @param {ImportanceIndex} importance - The importance level of the input.
- * @param {React.HTMLInputTypeAttribute} type - The type of the input.
- * @param {(value: string) => T | null} validator - The validator function for the input value. Returns the new value if valid, null otherwise.
- * @param {string | boolean | number} value - The value of the input.
- * @param {React.Dispatch<React.SetStateAction<T>>} setValue - The function to update the input value.
- * @param {string} invalidMessage - The message to display when the input is invalid.
- * @param {string} placeholder - The placeholder text for the input.
- * @param {string} cssClasses - The styles to apply to the input.
- * @param {boolean} clearable - Whether the input should be clearable.
+ * @param {InputProps} props - The props for the Input component.
  * @returns {JSX.Element} The rendered input component.
  */
 const Input = <T,>({

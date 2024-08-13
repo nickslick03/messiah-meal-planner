@@ -21,14 +21,35 @@ import { TooltipItem } from 'chart.js/auto';
 import tooltip from '../../static/tooltip';
 
 interface ResultsProps {
+  /**
+   * Indicates whether the user is under their balance.
+   */
   isUnderBalance: boolean;
+
+  /**
+   * The difference between the balance and the grand total.
+   */
   difference: number;
+
+  /**
+   * The grand total of the meal plan.
+   */
   grandTotal: number;
+
+  /**
+   * The date when the user will run out of funds, or null if they won't.
+   */
   dayWhenRunOut: Date | null;
+
+  /**
+   * The order of this component relative to others.
+   */
   order: number;
 }
 
-/** The background color for charts. */
+/**
+ * The background color for charts.
+ */
 const backgroundColor = [
   'rgba(54, 162, 235, 0.2)',
   'rgba(75, 192, 192, 0.2)',
@@ -38,7 +59,9 @@ const backgroundColor = [
   'rgba(201, 203, 207, 0.2)'
 ];
 
-/** The border color for charts. */
+/**
+ * The border color for charts.
+ */
 const borderColor = [
   'rgb(54, 162, 235)',
   'rgb(75, 192, 192)',
@@ -58,7 +81,6 @@ const Results = ({
   dayWhenRunOut,
   order
 }: ResultsProps) => {
-  // Load all necessary contexts
   const balance = useContext(BalanceCtx);
   const weeksOff = useContext(WeeksOffCtx);
   const userMeals = useContext(UserSelectedMealsCtx);
@@ -67,7 +89,9 @@ const Results = ({
   const userSelectedMeals = useContext(UserSelectedMealsCtx);
   const tutorialRefs = useContext(TutorialElementsCtx);
 
-  /** The meal total for one week. */
+  /**
+   * The meal total for one week.
+   */
   const weekTotal = useMemo(
     () =>
       getMealTotal(
@@ -79,7 +103,9 @@ const Results = ({
     [customMeals.value, isDiscount.value, userMeals.value]
   );
 
-  /** The data for the bar chart, splits up weekly meal prices by location. */
+  /**
+   * The data for the bar chart, splits up weekly meal prices by location.
+   */
   const barChartData = useMemo(() => {
     const locationMap = userMealsToStackedChart(
       userSelectedMeals.value,
@@ -99,7 +125,9 @@ const Results = ({
     };
   }, [customMeals.value, userSelectedMeals.value, isDiscount.value]);
 
-  /** The data for the pie chart, splits up weekly meal prices by location. */
+  /**
+   * The data for the pie chart, splits up weekly meal prices by location.
+   */
   const pieChartData = useMemo(() => {
     const locationMap = userMealsToStackedChart(
       userSelectedMeals.value,

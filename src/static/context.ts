@@ -15,7 +15,8 @@ interface ContextType<T> {
 export const WeeksOffCtx = createContext<ContextType<number | null>>({
   value: null,
   setValue: () => {}
-})
+});
+
 export const MealPlanCtx = createContext<ContextType<boolean | null>>({
   value: false,
   setValue: () => {}
@@ -70,5 +71,5 @@ interface TutorialControl {
 
 export const TutorialControlCtx = createContext<TutorialControl>({
   setShowTutorial: () => {},
-  setTutorialStep: () => {},
+  setTutorialStep: () => {}
 });

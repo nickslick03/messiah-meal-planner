@@ -1,21 +1,47 @@
 interface ButtonProps {
+  /**
+   * The text to display on the button.
+   */
   title?: string;
+
+  /**
+   * The icon to display on the button.
+   */
   icon?: JSX.Element;
+
+  /**
+   * The event handler to be called when the button is clicked.
+   *
+   * @param {React.MouseEvent<HTMLButtonElement>} e - The mouse event.
+   */
   onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
+
+  /**
+   * If true, the button will have a white background with a border and a
+   * messiah-specific style.
+   */
   frame?: boolean;
+
+  /**
+   * Additional CSS classes to apply to the button.
+   */
   style?: string;
+
+  /**
+   * If true, the button will be disabled and cannot be clicked.
+   */
   disabled?: boolean;
+
+  /**
+   * If true, the icon will be displayed to the right of the text.
+   */
   iconRight?: boolean;
 }
 
 /**
  * Renders a button component with the provided title and click event handler.
  *
- * @param {string} title - The text to display on the button.
- * @param {JSX.Element} icon - The icon to display on the button.
- * @param {() => void} onClick - The event handler to be called when the button is clicked.
- * @param {boolean} disabled - optional boolean for whether the button is disabled.
- * @param {boolean} iconRight - If true, puts the icon on the right.
+ * @param {ButtonProps} props - The props for the Button component.
  * @return {JSX.Element} The rendered button component.
  */
 const Button = ({

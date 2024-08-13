@@ -13,51 +13,78 @@ const useLongPress = (
   onClick?: () => void,
   delay = 300
 ) => {
+  /**
+   * The timer that will be used to detect the long press event
+   */
   const timer = useRef<NodeJS.Timeout | null>(null);
+
+  /**
+   * A flag that will be used to detect the long press event
+   */
   const isLongPress = useRef(false);
 
-  const handleMouseDown = () => {
-    isLongPress.current = false; // Reset the flag
+  /**
+   * The function that will be called when the long press event is detected
+   * Must be triggered by other events, see below calls
+   */
+  const handleLongPress = () => {
+    isLongPress.current = false;
     timer.current = setTimeout(() => {
       isLongPress.current = true;
       onLongPress();
-      if ('vibrate' in navigator) {
-        navigator.vibrate(100); // Vibrate for 100 milliseconds
-      }
+      vibrate();
     }, delay);
   };
 
-  const handleMouseUp = () => {
-    // No action on mouse up for short clicks
+  /**
+   * The function that will be called when the mouse is pressed down
+   */
+  const handleMouseDown = handleLongPress;
+
+  /**
+   * The function that will be called when the touch is started
+   */
+  const handleTouchStart = handleLongPress;
+
+  /**
+   * If supported, vibrate the device
+   */
+  const vibrate = () => {
+    if ('vibrate' in navigator) {
+      navigator.vibrate(100);
+    }
   };
 
-  const handleTouchStart = () => {
-    isLongPress.current = false; // Reset the flag
-    timer.current = setTimeout(() => {
-      isLongPress.current = true;
-      onLongPress();
-      if ('vibrate' in navigator) {
-        navigator.vibrate(100);
-      }
-    }, delay);
-  };
+  /**
+   * The function that will be called when the mouse is released
+   * Doesn't do anything currently, we don't need it for this app
+   */
+  const handleMouseUp = () => {};
 
+  /**
+   * The function that will be called when the touch is ended
+   */
   const handleTouchEnd = () => {
     if (timer.current) {
       clearTimeout(timer.current);
       if (!isLongPress.current && onClick) {
-        onClick(); // Call onClick only if it wasn't a long press
+        onClick();
       }
     }
   };
 
+  /**
+   * The function that will be called when the component is clicked (but not long pressed)
+   */
   const handleClick = (event: React.MouseEvent | React.TouchEvent) => {
-    // Prevent onClick from firing if it's a long press
     if (isLongPress.current) {
       event.preventDefault();
     }
   };
 
+  /**
+   * Clean up the timer
+   */
   useEffect(() => {
     return () => {
       if (timer.current) {

@@ -9,23 +9,45 @@ import { applyDiscount } from '../../../lib/calculationEngine';
 import { Weekday } from '../../../types/userSelectedMealsObject';
 
 interface TableRowProps {
+  /**
+   * The data for the table row
+   */
   data: Meal;
+
+  /**
+   * The icon for the button
+   */
   buttonIcon?: JSX.Element;
+
+  /**
+   * The click event handler for the button
+   */
   buttonOnClick?: () => void;
+
+  /**
+   * The click event handler for the day button
+   *
+   * @param {Weekday} day - The day of the week
+   */
   buttonOnClickDay?: (day: Weekday) => void;
+
+  /**
+   * The click event handler for editing a custom meal
+   *
+   * @param {Meal} data - The data for the table row
+   */
   onCustomClick?: (data: Meal) => void;
+
+  /**
+   * The ID of the newly added custom meal to be scrolled to
+   */
   newCustomMealID?: string;
 }
 
 /**
  * Renders a table row with data and an optional button
  *
- * @param {Meal} data - The data for the table row
- * @param {JSX.Element} buttonIcon - The icon for the button
- * @param {() => void} buttonOnClick - The click event handler for the button
- * @param {(day: Weekday) => void} buttonOnClickDay - The click event handler for the day button
- * @param {() => void} onCustomClick - The click event handler for editing a custom meal
- * @param {string} newCustomMealID - The ID of the newly added custom meal to be scrolled to
+ * @param {TableRowProps} props - The properties for the table row
  * @return {JSX.Element} The rendered table row.
  */
 const TableRow = ({
@@ -38,13 +60,22 @@ const TableRow = ({
 }: TableRowProps): JSX.Element => {
   const isMealPlan = useContext(MealPlanCtx);
 
+  /**
+   * The price of the meal based on whether or not the DD meal plan discount is enabled
+   */
   const price = useMemo(
     () => (isMealPlan.value ? applyDiscount(data) : data.price),
     [data, isMealPlan.value]
   );
 
+  /**
+   * Reference to the table row element
+   */
   const tr = useRef<HTMLTableRowElement>(null);
 
+  /**
+   * Scrolls to the newly added custom meal
+   */
   useEffect(() => {
     if (newCustomMealID && data.id === newCustomMealID && tr.current)
       tr.current.scrollIntoView({
@@ -56,7 +87,6 @@ const TableRow = ({
 
   return (
     <>
-      {/* Table row */}
       <tr ref={tr}>
         <TableCell data={data.location} importance={newImportanceIndex(1)} />
         <TableCell

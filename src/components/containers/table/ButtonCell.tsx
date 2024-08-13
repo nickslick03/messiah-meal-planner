@@ -8,9 +8,26 @@ import Meal from '../../../types/Meal';
 import { isMealAllowedOnDay } from '../../../static/mealsDatabase';
 
 interface ButtonCellProps {
+  /**
+   * The icon to display on the button.
+   */
   icon: JSX.Element;
+
+  /**
+   * Function to be called when the button is clicked.
+   */
   onClick: () => void;
+
+  /**
+   * Function to be called when a day button is clicked.
+   *
+   * @param {Weekday} day - The day button that was clicked.
+   */
   onClickDay?: (day: Weekday) => void;
+
+  /**
+   * The meal this button correlates with.
+   */
   meal: Meal;
 }
 
@@ -18,10 +35,7 @@ interface ButtonCellProps {
  * Renders a table cell with a button that triggers the provided onClick function when clicked
  * and the provided onClickDay function when a day button is clicked
  *
- * @param {Meal} meal - The meal this button correlates with
- * @param {JSX.Element} icon - The component for the icon to display on the button
- * @param {() => void} onClick - The function to be called when the button is clicked
- * @param {() => void} onClickDay - The function to be called when a day button is clicked
+ * @param {ButtonCellProps} props - The props for the ButtonCell component
  * @returns {JSX.Element} The rendered table cell with a button
  */
 const ButtonCell = ({

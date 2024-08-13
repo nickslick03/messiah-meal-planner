@@ -12,23 +12,40 @@ enum SortState {
 }
 
 interface TableCellProps {
+  /**
+   * The data to be displayed in the table cell
+   */
   data: string | number;
+
+  /**
+   * The importance level of the table cell
+   */
   importance?: ImportanceIndex;
+
+  /**
+   * Whether the table cell is a header
+   */
   isHeader?: boolean;
+
+  /**
+   * Whether the table cell represents a custom meal
+   */
   isCustom?: boolean;
+
+  /**
+   * The click event handler for clicking on a custom meal
+   */
   onCustomClick?: () => void;
+
+  /**
+   * The sort state of the table cell
+   */
   sortState?: SortState;
 }
 
 /**
  * Renders a table cell with the given data, importance level, and header status
- *
- * @param {string | number} data - The data to be displayed in the table cell
- * @param {ImportanceIndex} importance - The importance level of the table cell
- * @param {boolean} isHeader - Whether the table cell is a header
- * @param {boolean} isCustom - Whether the table cell represents a custom meal
- * @param {() => void} onCustomClick - The click event handler for clicking on a custom meal
- * @param {SortState} sortState - The sort state of the table cell
+ * @param {TableCellProps} props - The properties for the table cell
  * @returns {JSX.Element} The rendered table cell
  */
 const TableCell = ({

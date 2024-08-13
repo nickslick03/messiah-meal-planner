@@ -6,25 +6,47 @@ import {
 } from '../../types/ImportanceIndex';
 
 interface SelectProps {
+  /**
+   * The label text for the select dropdown.
+   */
   label: string;
+
+  /**
+   * The importance level of the label text.
+   */
   importance?: ImportanceIndex;
+
+  /**
+   * The list of options for the select dropdown.
+   */
   list: readonly string[];
+
+  /**
+   * The value of the selected option.
+   */
   value: string;
+
+  /**
+   * The function to set the selected option.
+   */
   setSelected: React.Dispatch<React.SetStateAction<string>>;
+
+  /**
+   * If true, the options tags will have the styling of a header tag and the border of the
+   * select tag will be removed.
+   */
   isTitle?: boolean;
+
+  /**
+   * The CSS classes to apply to the select dropdown.
+   */
   cssClasses?: string;
 }
 
 /**
  * Renders a select form element
- * @param {string} label The text next to the select dropdown
- * @param {ImportanceIndex} importance The boldness of the label text
- * @param {boolean} isTitle If true, gives the options tags the styling of a header tag and removes the border of the select tag
- * @param {string[]} list The list of options
- * @param {string} value The value of the selected column
- * @param {React.Dispatch<React.SetStateAction<string>>} setSelected A react state setter to track the selected option
- * @param {boolean} isTitle If true, gives the options tags the styling of a header tag and removes the border of the select tag
- * @param {string} cssClasses The css classes to apply
+ *
+ * @param {SelectProps} props - The props for the Select component.
  * @returns {JSX.Element} The rendered select
  */
 const Select = ({

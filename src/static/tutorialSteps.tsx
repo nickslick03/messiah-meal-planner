@@ -2,13 +2,35 @@ import { IoAdd } from 'react-icons/io5';
 import { TUTORIAL_ICON_SIZE as ICON_SIZE } from './constants';
 
 interface TutorialStep {
+  /**
+   * The position of the tutorial step on the screen.
+   */
   position?: 'center' | 'start' | 'end';
+
+  /**
+   * The order of the tutorial step within the tutorial.
+   */
   order?: number;
+
+  /**
+   * The title of the tutorial step.
+   */
   title: string;
+
+  /**
+   * The description of the tutorial step.
+   */
   description: JSX.Element;
+
+  /**
+   * The action element to display for the tutorial step.
+   */
   action?: JSX.Element;
 }
 
+/**
+ * Array of TutorialStep objects.
+ */
 const tutorialSteps: TutorialStep[] = [
   {
     position: 'center',

@@ -1,4 +1,5 @@
 interface ScreenContainerProps {
+  /** The children components to render inside the screen container. */
   children?: React.ReactNode;
 }
 
@@ -6,7 +7,6 @@ interface ScreenContainerProps {
  * Renders a screen container with the provided children. This just sets the margins and font for the content.
  *
  * @param {ScreenContainerProps} props - The props for the ScreenContainer component.
- * @param {React.ReactNode} props.children - The children components to render inside the screen container.
  * @return {JSX.Element} The rendered screen container.
  */
 const ScreenContainer = ({

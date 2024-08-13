@@ -6,16 +6,45 @@ import { GrPowerReset } from 'react-icons/gr';
 import ResetModal from '../modals/ResetModal';
 import PresetMealPlanModal from '../modals/PresetMealPlanModal';
 
+/**
+ * The main menu component of the app.
+ *
+ * @returns {JSX.Element} The rendered Menu component.
+ */
 const Menu = () => {
+  /**
+   * State for menu visibility.
+   */
   const [isVisible, setIsVisible] = useState(false);
+
+  /**
+   * State for whether the menu is in front of other elements.
+   */
   const [isInFront, setIsInFront] = useState(false);
 
+  /**
+   * State for reset modal visibility.
+   */
   const [isResetModalVisible, setIsResetModalVisible] = useState(false);
+
+  /**
+   * State for preset modal visibility.
+   */
   const [isPresetModalVisible, setIsPresetModalVisible] = useState(false);
 
+  /**
+   * State for the scroll distance.
+   */
   const [scrollDistance, setScrollDistance] = useState(0);
+
+  /**
+   * State for whether the menu icon is visible.
+   */
   const [isIconVisible, setIsIconVisible] = useState(true);
 
+  /**
+   * Updates the scroll distance and icon visibility on scroll.
+   */
   useEffect(() => {
     const handleScroll = () => {
       const newScrollDistance = Math.max(window.scrollY, 0);
@@ -35,6 +64,7 @@ const Menu = () => {
 
   return (
     <>
+      {/* Main menu button */}
       <div
         className={`${isIconVisible ? 'top-8' : '-top-8'} 
                 fixed z-50 left-4 bg-white p-1 rounded-full shadow shadow-[rgba(0,0,0,.4)]
@@ -46,6 +76,7 @@ const Menu = () => {
       >
         <IoMenu size='20px' />
       </div>
+      {/* Menu overlay */}
       <div
         className={`${isVisible ? 'opacity-100' : 'opacity-0'} 
                 ${isInFront ? 'z-50' : '-z-10'} 
@@ -54,6 +85,7 @@ const Menu = () => {
         onClick={() => setIsVisible(false)}
         onTransitionEnd={() => setIsInFront(isVisible ? isInFront : false)}
       ></div>
+      {/* Menu content */}
       <div
         className={`${
           isVisible
@@ -65,17 +97,20 @@ const Menu = () => {
                 fixed top-0 right-full w-full max-w-80 h-full bg-white
                 py-4 flex flex-col gap-4 justify-between items-center`}
       >
+        {/* Close button */}
         <button
           className='absolute top-2 right-2'
           onClick={() => setIsVisible(false)}
         >
           <IoMdClose size='20px' />
         </button>
+        {/* Menu header */}
         <SectionHeader text='Menu' />
+        {/* Menu links */}
         <ul className='flex-1 select-none text-lg flex flex-col gap-2'>
           <li
-              className='hover:underline cursor-pointer flex items-center gap-2'
-              onClick={() => setIsPresetModalVisible(true)}
+            className='hover:underline cursor-pointer flex items-center gap-2'
+            onClick={() => setIsPresetModalVisible(true)}
           >
             <IoIosDocument /> Preset Meal Plans
           </li>
@@ -110,7 +145,7 @@ const Menu = () => {
         onCancel={() => setIsResetModalVisible(false)}
         isVisible={isResetModalVisible}
       />
-      <PresetMealPlanModal 
+      <PresetMealPlanModal
         onCancel={() => setIsPresetModalVisible(false)}
         isVisible={isPresetModalVisible}
       />

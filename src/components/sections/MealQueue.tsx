@@ -22,7 +22,9 @@ import dereferenceMeal from '../../lib/dereferenceMeal';
 import tooltip from '../../static/tooltip';
 
 interface MealQueueProps {
-  /** The order this component should appear. */
+  /**
+   * The order this component should appear.
+   */
   order: number;
 }
 
@@ -30,16 +32,19 @@ interface MealQueueProps {
  * Renders the Meal Queue section, where meals in the queue can be added to different days of the week.
  */
 const MealQueue = ({ order }: MealQueueProps) => {
-  // Load all necessary contexts
   const mealQueue = useContext(MealQueueCtx);
   const userSelectedMeals = useContext(UserSelectedMealsCtx);
   const customMeals = useContext(CustomMealsCtx);
   const tutorialRefs = useContext(TutorialElementsCtx);
 
-  // notification text
+  /**
+   * The message to be displayed in the notification.
+   */
   const [message, setMessage] = useState({ text: '' });
 
-  /** Dereferences the meal queue. */
+  /**
+   * Dereferences the meal queue.
+   */
   const mealQueueValue = useMemo(
     () =>
       mealQueue.value
@@ -104,7 +109,9 @@ const MealQueue = ({ order }: MealQueueProps) => {
     setMessage({ text: 'Cleared meal queue' });
   };
 
-  // State variable to track which days the user has selected
+  /**
+   * State variable to track which days the user has selected
+   */
   const [selectedDays, selectedDaysDispatch] = useReducer(
     (
       state: number[],
@@ -124,7 +131,9 @@ const MealQueue = ({ order }: MealQueueProps) => {
     []
   );
 
-  /** List of locations where a day is selected with a meal that comes from a closed location. */
+  /**
+   * List of locations where a day is selected with a meal that comes from a closed location.
+   */
   const offendedLocations = useMemo(() => {
     const userLocations = new Set(mealQueueValue.map((m) => m.location));
     return (
@@ -138,7 +147,9 @@ const MealQueue = ({ order }: MealQueueProps) => {
     );
   }, [mealQueueValue, selectedDays]);
 
-  /** List of meals where a day is selected that that meal isn't served */
+  /**
+   * List of meals where a day is selected that that meal isn't served
+   */
   const offendedMeals = useMemo(() => {
     return mealQueueValue.filter((meal) =>
       selectedDays.some(
@@ -147,7 +158,9 @@ const MealQueue = ({ order }: MealQueueProps) => {
     );
   }, [mealQueueValue, selectedDays]);
 
-  /** Indicates whether the add meal button is disabled. */
+  /**
+   * Indicates whether the add meal button is disabled.
+   */
   const isAddMealsButtonDisabled = useMemo(
     () =>
       mealQueue.value.length == 0 ||
@@ -161,7 +174,10 @@ const MealQueue = ({ order }: MealQueueProps) => {
       offendedMeals.length
     ]
   );
-  /** Indicates whether the clear meal button is disabled. */
+
+  /**
+   * Indicates whether the clear meal button is disabled.
+   */
   const isClearMealsButtonDisabled = useMemo(
     () => mealQueue.value.length == 0,
     [mealQueue]

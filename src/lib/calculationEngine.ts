@@ -37,6 +37,7 @@ export function getMealDayTotal(meals: Meal[], days: number, discount = false) {
 
 /**
  * Calculates the total amount for the meals the user selected within the given timeframe.
+ *
  * @param userMeals The object representing the user selected meals
  * @param weekdays An array of weekdays the user will be purchasing meals in
  * @param discount A boolean flag indicating whether to apply a discount to the meal prices.
@@ -62,6 +63,7 @@ export function getMealTotal(
 
 /**
  * Calculates the date that the user will run out of funds, or the last date if they won't.
+ *
  * @param userMeals The object representing the user selected meals
  * @param discount A boolean flag indicating whether to apply a discount to the meal prices.
  * @param searchMealList An array of meals to search from.

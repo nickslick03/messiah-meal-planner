@@ -10,9 +10,12 @@ import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 const usePersistentState = <T>(
   key: string,
   initialValue: T,
-  deserialize?: (value: string) => T,
+  deserialize?: (value: string) => T
 ): [T, Dispatch<SetStateAction<T>>] => {
-  // Set the initial value of the state
+  /**
+   * The current state value and a function to update the state value
+   * Loads the inital value from localStorage if it exists
+   */
   const [value, setValue] = useState<T>(() => {
     const storedValue = localStorage.getItem(key);
     if (storedValue !== 'null' && storedValue !== null) {
@@ -24,7 +27,9 @@ const usePersistentState = <T>(
     return initialValue;
   });
 
-  // Update localStorage on update
+  /**
+   * Updates the state value in localStorage when the state value changes
+   */
   useEffect(() => {
     localStorage.setItem(key, JSON.stringify(value));
   }, [key, value]);
