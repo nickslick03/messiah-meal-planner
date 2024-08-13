@@ -1,7 +1,11 @@
 import { WEEKDAYS } from '../../static/constants';
 import Button from '../form_elements/Button';
 import { useReducer, useContext, useMemo, useState } from 'react';
-import { MealQueueCtx, UserSelectedMealsCtx } from '../../static/context';
+import {
+  MealQueueCtx,
+  TutorialElementsCtx,
+  UserSelectedMealsCtx
+} from '../../static/context';
 import MealContainer from '../containers/MealContainer';
 import Meal from '../../types/Meal';
 import {
@@ -15,21 +19,32 @@ import { CustomMealsCtx } from '../../static/context';
 import DaySelector from '../form_elements/DaySelector';
 import mapUserMeals from '../../lib/mapUserMeals';
 import dereferenceMeal from '../../lib/dereferenceMeal';
-import tutorial from '../../static/tutorial';
+import tooltip from '../../static/tooltip';
+
+interface MealQueueProps {
+  /**
+   * The order this component should appear.
+   */
+  order: number;
+}
 
 /**
  * Renders the Meal Queue section, where meals in the queue can be added to different days of the week.
  */
-const MealQueue = () => {
-  // Load all necessary contexts
+const MealQueue = ({ order }: MealQueueProps) => {
   const mealQueue = useContext(MealQueueCtx);
   const userSelectedMeals = useContext(UserSelectedMealsCtx);
   const customMeals = useContext(CustomMealsCtx);
+  const tutorialRefs = useContext(TutorialElementsCtx);
 
-  // notification text
+  /**
+   * The message to be displayed in the notification.
+   */
   const [message, setMessage] = useState({ text: '' });
 
-  /** Dereferences the meal queue. */
+  /**
+   * Dereferences the meal queue.
+   */
   const mealQueueValue = useMemo(
     () =>
       mealQueue.value
@@ -94,7 +109,9 @@ const MealQueue = () => {
     setMessage({ text: 'Cleared meal queue' });
   };
 
-  // State variable to track which days the user has selected
+  /**
+   * State variable to track which days the user has selected
+   */
   const [selectedDays, selectedDaysDispatch] = useReducer(
     (
       state: number[],
@@ -114,7 +131,9 @@ const MealQueue = () => {
     []
   );
 
-  /** List of locations where a day is selected with a meal that comes from a closed location. */
+  /**
+   * List of locations where a day is selected with a meal that comes from a closed location.
+   */
   const offendedLocations = useMemo(() => {
     const userLocations = new Set(mealQueueValue.map((m) => m.location));
     return (
@@ -128,15 +147,37 @@ const MealQueue = () => {
     );
   }, [mealQueueValue, selectedDays]);
 
-  /** Indicates whether the add meal button is disabled. */
+  /**
+   * List of meals where a day is selected that that meal isn't served
+   */
+  const offendedMeals = useMemo(() => {
+    return mealQueueValue.filter((meal) =>
+      selectedDays.some(
+        (day) => meal.unavailable && meal.unavailable.some((d) => d === day)
+      )
+    );
+  }, [mealQueueValue, selectedDays]);
+
+  /**
+   * Indicates whether the add meal button is disabled.
+   */
   const isAddMealsButtonDisabled = useMemo(
     () =>
       mealQueue.value.length == 0 ||
       selectedDays.length == 0 ||
-      offendedLocations.length > 0,
-    [mealQueue.value.length, offendedLocations.length, selectedDays.length]
+      offendedLocations.length > 0 ||
+      offendedMeals.length > 0,
+    [
+      mealQueue.value.length,
+      offendedLocations.length,
+      selectedDays.length,
+      offendedMeals.length
+    ]
   );
-  /** Indicates whether the clear meal button is disabled. */
+
+  /**
+   * Indicates whether the clear meal button is disabled.
+   */
   const isClearMealsButtonDisabled = useMemo(
     () => mealQueue.value.length == 0,
     [mealQueue]
@@ -150,7 +191,9 @@ const MealQueue = () => {
       buttonOnClick={removeMealFromQueue}
       createNotification={(name) => `Removed ${name} from meal queue`}
       searchable={false}
-      tutorial={tutorial.mealQueue}
+      tooltip={tooltip.mealQueue}
+      setRef={(ref) => tutorialRefs.setValue(ref, 'Meal Queue')}
+      order={order}
     >
       <div className='mb-4' />
       <p className='mb-2'>Add these meals to:</p>
@@ -166,6 +209,7 @@ const MealQueue = () => {
             })
           }
           square={true}
+          slideHighlight={false}
         />
       </div>
       {offendedLocations.map((location, i) => (
@@ -173,6 +217,15 @@ const MealQueue = () => {
           {`${location} is closed on days ${locationClosures[location]
             .map((n) => WEEKDAYS[n])
             .join(', ')}`}
+        </p>
+      ))}
+      {offendedMeals.map((meal, i) => (
+        <p className='text-messiah-red text-sm mt-2' key={i}>
+          {meal.name} from {meal.location} Isn't served on{' '}
+          {selectedDays
+            .filter((day) => meal.unavailable?.includes(day))
+            .map((day) => WEEKDAYS[day])
+            .join(', ')}
         </p>
       ))}
       <div className='flex gap-2 mt-4'>

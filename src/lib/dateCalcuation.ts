@@ -1,5 +1,6 @@
 /**
  * Converts a string in the format YYYY-MM-DD (value attribute from a date input tag) to a Date object.
+ *
  * @param dateInput the date represented as a string from a date input (YYYY-MM-DD).
  * @returns The date object with the CORRECT DAY.
  */
@@ -10,9 +11,11 @@ export function dateInputToDate(dateInput: string) {
 
 /**
  * Converts a string in the format YYYY-MM-DD (value attribute from a date input tag) to a Date object.
+ *
  * @param dateInput - the date represented as a string from a date input (YYYY-MM-DD).
  * @returns The date object with the correct day.
- */ export function dateToString(date: Date) {
+ */
+export function dateToString(date: Date) {
   const year = date.getFullYear() + '';
   const month = date.getMonth() + 1 + '';
   const day = date.getDate() + '';
@@ -22,6 +25,7 @@ export function dateInputToDate(dateInput: string) {
 /**
  * Returns the amount of days in between the start and end parameters,
  * inclusive (if the dates are on the name day, the function returns 1).
+ *
  * @param start The start date. Must be before the end date
  * @param end The end date
  * @returns The number of days in between the two dates, as an integer, inclusive.
@@ -37,16 +41,17 @@ export function getDaysBetween(start: Date, end: Date) {
 /**
  * Returns the number of each weekday that occur between the two dates, inclusive
  * (if the dates are on the same day, the element at that weekday will equal 1).
+ *
  * @param start The start date. Must be before the end date
  * @param end The end date
- * @param weekOff If true, subtracts each element in the array by 1.
+ * @param weeksOff The number of weeks the student is taking off of the meal plan timeframe.
  * @returns An array were each element represents a day in the week ([0] == Sunday, [6] == Saturday)
  * and each element is the number of weekdays in between the two dates, inclusive.
  * If the start date is after the end date, returns an array were each element is zero.
  */
-export function getWeekdaysBetween(start: Date, end: Date, weekOff = false) {
+export function getWeekdaysBetween(start: Date, end: Date, weeksOff = 0) {
   const daysBetween = getDaysBetween(start, end);
-  const fullWeeks = Math.floor(daysBetween / 7) - (weekOff ? 1 : 0);
+  const fullWeeks = Math.floor(daysBetween / 7) - weeksOff;
 
   if (daysBetween === -1 || fullWeeks < 0) return Array(7).fill(0);
 
@@ -61,6 +66,7 @@ export function getWeekdaysBetween(start: Date, end: Date, weekOff = false) {
 
 /**
  * Returns an array of all dates between the start and end dates, inclusive.
+ *
  * @param start The start date. Must be before the end date
  * @param end The end date
  * @returns An array of dates between the start and end dates. If the start date is after the end date, returns an empty array.

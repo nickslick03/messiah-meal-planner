@@ -37,6 +37,7 @@ export function getMealDayTotal(meals: Meal[], days: number, discount = false) {
 
 /**
  * Calculates the total amount for the meals the user selected within the given timeframe.
+ *
  * @param userMeals The object representing the user selected meals
  * @param weekdays An array of weekdays the user will be purchasing meals in
  * @param discount A boolean flag indicating whether to apply a discount to the meal prices.
@@ -62,10 +63,14 @@ export function getMealTotal(
 
 /**
  * Calculates the date that the user will run out of funds, or the last date if they won't.
+ *
  * @param userMeals The object representing the user selected meals
  * @param discount A boolean flag indicating whether to apply a discount to the meal prices.
  * @param searchMealList An array of meals to search from.
  * @param startDate The start date of the timeframe
+ * @param endDate The end date of the timeframe
+ * @param startingBalance The starting balance of dining dollars the student has.
+ * @param weeksOff The number of weeks off from spending dining dollars.
  */
 export function calculateDateWhenRunOut(
   userMeals: UserSelectedMealsObjectType,
@@ -74,11 +79,15 @@ export function calculateDateWhenRunOut(
   startDate: Date,
   endDate: Date,
   startingBalance: number,
-  weekOff = false
-): Date {
-  const allDates = weekOff
-    ? getAllDatesBetween(startDate, endDate).slice(7)
-    : getAllDatesBetween(startDate, endDate);
+  weeksOff = 0
+): Date | null {
+  let allDates;
+  try {
+    allDates = getAllDatesBetween(startDate, endDate).slice(weeksOff * 7);
+  } catch (e) {
+    return null;
+  }
+
   const allWeekdays: Weekday[] = allDates.map(
     (date) => WEEKDAYS[new Date(date).getDay()]
   );

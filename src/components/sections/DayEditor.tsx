@@ -3,10 +3,11 @@ import { WEEKDAYS } from '../../static/constants';
 import DotLeader from '../other/DotLeader';
 import {
   EndDateCtx,
-  IsBreakCtx,
   MealPlanCtx,
   StartDateCtx,
-  UserSelectedMealsCtx
+  TutorialElementsCtx,
+  UserSelectedMealsCtx,
+  WeeksOffCtx
 } from '../../static/context';
 import Divider from '../other/Divider';
 import MealContainer from '../containers/MealContainer';
@@ -20,20 +21,32 @@ import DaySelector from '../form_elements/DaySelector';
 import { Weekday } from '../../types/userSelectedMealsObject';
 import mapUserMeals from '../../lib/mapUserMeals';
 import dereferenceMeal from '../../lib/dereferenceMeal';
-import tutorial from '../../static/tutorial';
+import tooltip from '../../static/tooltip';
+
+interface DayEditorProps {
+  /** The order this component should appear. */
+  order: number;
+}
 
 /**
  * Renders a meal table for meals added to given days an an option to remove meals from that day.
  * Also includes a results summary.
  *
+ * @param {DayEditorProps} props - The props for the component.
  * @return {JSX.Element} The rendered DayEditor component.
  */
-const DayEditor = () => {
-  // Load all necessary contexts
+const DayEditor = ({ order }: DayEditorProps) => {
   const userSelectedMeals = useContext(UserSelectedMealsCtx);
   const customMeals = useContext(CustomMealsCtx);
+  const weeksOff = useContext(WeeksOffCtx);
+  const tutorialRefs = useContext(TutorialElementsCtx);
+  const startDate = useContext(StartDateCtx);
+  const endDate = useContext(EndDateCtx);
+  const discount = useContext(MealPlanCtx);
 
-  // Dereference the userSelectedMeals context
+  /**
+   * Transforms the userSelectedMeals object into an array of [day, [meal, meal, meal, ...]]
+   */
   const userSelectedMealsValue = useMemo(
     () =>
       mapUserMeals(
@@ -48,42 +61,50 @@ const DayEditor = () => {
     [userSelectedMeals, customMeals]
   );
 
-  // State variable to track which day the user is editing
+  /**
+   * State variable to track which day the user is editing
+   */
   const [weekdayIndex, setWeekdayIndex] = useState(0);
 
-  // Get the day of the week the user is editing
+  /**
+   * Get the day of the week the user is editing
+   */
   const weekday = useMemo(() => WEEKDAYS[weekdayIndex], [weekdayIndex]);
 
-  // Get the list of selected meals for the given day
+  /**
+   * Get the list of selected meals for the given day
+   */
   const dayMealList = useMemo(
     () => (userSelectedMealsValue[WEEKDAYS[weekdayIndex]] as Meal[]) ?? [],
     [userSelectedMealsValue, weekdayIndex]
   );
 
-  const startDate = useContext(StartDateCtx);
-  const endDate = useContext(EndDateCtx);
-  const weekOff = useContext(IsBreakCtx);
-  const discount = useContext(MealPlanCtx);
-
+  /**
+   * The total cost of the selected meals for the given day.
+   */
   const mealDayTotal = useMemo(
     () => getMealDayTotal(dayMealList, 1, discount.value ?? false),
     [dayMealList, discount.value]
   );
 
-  /** The total number of days for each weekday (starting on Sunday) */
+  /**
+   * The total number of days for each weekday (starting on Sunday)
+   */
   const numOfWeekdays = useMemo(
     () =>
       startDate.value !== null && endDate.value !== null
         ? getWeekdaysBetween(
             startDate.value,
             endDate.value,
-            weekOff.value ?? false
+            weeksOff.value ?? 0
           )
         : Array(7).fill(0),
-    [startDate, endDate, weekOff]
+    [startDate, endDate, weeksOff]
   );
 
-  /** The total number of meals for each weekday (starting on Sunday). */
+  /**
+   * The total number of meals for each weekday (starting on Sunday).
+   */
   const numOfMeals = useMemo(
     () => WEEKDAYS.map((day) => userSelectedMealsValue[day].length),
     [userSelectedMealsValue]
@@ -113,6 +134,7 @@ const DayEditor = () => {
               .map((_, day) => day === weekdayIndex)}
             onChange={setWeekdayIndex}
             numOfMeals={numOfMeals}
+            slideHighlight
           />
         </div>
       }
@@ -121,7 +143,9 @@ const DayEditor = () => {
       buttonOnClick={removeMeal}
       createNotification={(name) => `Removed ${name} from ${weekday}`}
       searchable={false}
-      tutorial={tutorial.dayEditor}
+      tooltip={tooltip.dayEditor}
+      setRef={(ref) => tutorialRefs.setValue(ref, 'Day Editor')}
+      order={order}
     >
       <Divider />
       <DotLeader

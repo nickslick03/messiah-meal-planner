@@ -2,29 +2,62 @@ import { useState } from 'react';
 import SectionHeader from './SectionHeader';
 import Button from '../form_elements/Button';
 
-// Prop types
 interface ModalContainerProps {
+  /**
+   * Child component(s) to display in the modal
+   */
   children?: React.ReactNode;
+
+  /**
+   * Title of the modal
+   */
   title?: string | null;
+
+  /**
+   * Text to display on the confirm button
+   */
   confirmText?: string;
+
+  /**
+   * Text to display on the cancel button
+   */
   cancelText?: string;
+
+  /**
+   * Event handler for when the confirm button is clicked
+   */
   onConfirm?: () => void;
+
+  /**
+   * Event handler for when the cancel button is clicked
+   */
   onCancel?: () => void;
+
+  /**
+   * boolean for whether the confirm button is disabled
+   */
   confirmDisabled?: boolean;
+
+  /**
+   * boolean for whether the modal content should be centered
+   */
   centered?: boolean;
+
+  /**
+   * boolean for whether the modal should only have the width and height of its children
+   */
+  minimalSpace?: boolean;
+
+  /**
+   * if true, only the cancel button is shown
+   */
+  onlyCancel?: boolean;
 }
 
 /**
  * Renders a modal with a confirm and cancel button
  *
- * @param {JSX.Element} children - Child component(s) to display in the modal
- * @param {string | null} title - Title of the modal
- * @param {string} confirmText - Text to display on the confirm button
- * @param {string} cancelText - Text to display on the cancel button
- * @param {() => void} onConfirm - Event handler for when the confirm button is clicked
- * @param {() => void} onCancel - Event handler for when the cancel button is clicked
- * @param {boolean} confirmDisabled - boolean for whether the confirm button is disabled
- * @param {boolean} centered - boolean for whether the modal content should be centered
+ * @param {ModalContainerProps} props - props for the ModalContainer
  * @returns {JSX.Element} JSX for rendering a modal
  */
 const ModalContainer = ({
@@ -35,7 +68,9 @@ const ModalContainer = ({
   onConfirm,
   onCancel,
   confirmDisabled = true,
-  centered = true
+  centered = true,
+  minimalSpace = false,
+  onlyCancel = false
 }: ModalContainerProps): JSX.Element => {
   // Keep track of whether or not the modal is visible
   const [isVisible, setIsVisible] = useState(true);
@@ -53,10 +88,16 @@ const ModalContainer = ({
   return (
     <div className={isVisible ? '' : 'hidden'}>
       {/* Fullscreen translucent black div to disable everything and focus attention on the modal */}
-      <div className='h-screen w-screen bg-opacity-50 bg-slate-900 fixed top-0 left-0 flex items-center justify-center z-10'>
+      <div className='h-screen w-screen bg-opacity-50 bg-slate-900 fixed top-0 left-0 flex items-center justify-center z-50'>
         {/* The actual modal component */}
-        <div className='text-center bg-white w-full p-5 m-4 flex flex-col rounded-lg
-          h-[80%] sm:w-auto sm:h-auto sm:min-w-[500px] sm:min-h-[500px] sm:max-w-[800px] sm:max-h-screen'>
+        <div
+          className={`text-center bg-white p-5 m-4 flex flex-col rounded-lg
+          ${
+            minimalSpace
+              ? ''
+              : 'w-full h-[80%] sm:w-auto sm:h-auto sm:min-w-[500px] sm:min-h-[500px] sm:max-w-[800px] sm:max-h-screen'
+          }`}
+        >
           {
             /* Title goes here */
             title !== null && title !== undefined ? (
@@ -67,21 +108,27 @@ const ModalContainer = ({
           }
           {/* Content goes here */}
           <div
-            className={`overflow-y-scroll flex-grow flex flex-col ${
-              centered
-                ? 'justify-center'
-                : 'justify-start align-center text-left'
-            } mt-4`}
+            className={`flex-grow flex flex-col 
+              ${minimalSpace ? '' : 'overflow-y-scroll'}
+              ${
+                centered
+                  ? 'justify-center'
+                  : 'justify-start align-center text-left'
+              } mt-4`}
           >
             {children}
           </div>
           {/* Confirm and cancel buttons */}
           <div className='flex-shrink flex flex-row justify-center'>
-            <Button
-              title={confirmText}
-              onClick={handleConfirm}
-              disabled={confirmDisabled}
-            />
+            {!onlyCancel ? (
+              <Button
+                title={confirmText}
+                onClick={handleConfirm}
+                disabled={confirmDisabled}
+              />
+            ) : (
+              ''
+            )}
             <Button title={cancelText} onClick={handleCancel} frame />
           </div>
         </div>

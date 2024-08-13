@@ -60,7 +60,6 @@ describe('filterMeals', () => {
     ];
     const filter = 'sandwich';
     const result = filterMeals(meals, filter);
-    console.log(result);
     expect(result).toEqual([
         { name: 'chicken sandwich', location: 'Italian', price: 10 },
         { name: 'turkey sandwich', location: 'Italian', price: 10 },

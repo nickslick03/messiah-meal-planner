@@ -10,7 +10,7 @@ import { Weekday } from '../types/userSelectedMealsObject';
  * @param {function(day: Weekday, index: number): [string, MealReference[] | Meal[]]} fn - The function
  * to apply to each element of WEEKDAYS. The function takes in a day and its index, and returns
  * a tuple containing a string key and either an array of MealReferences or Meals.
- * @return {UserSelectedMealsObjectType} - The resulting UserSelectedMealsObjectType object.
+ * @returns {UserSelectedMealsObjectType} - The resulting UserSelectedMealsObjectType object.
  */
 const mapUserMeals = (
   fn: (day: Weekday, index: number) => [string, MealReference[] | Meal[]]

@@ -1,5 +1,6 @@
 /**
  * Converts a title to camelCase.
+ *
  * @param title - The title to convert to camelCase
  * @returns The title in camelCase
  */

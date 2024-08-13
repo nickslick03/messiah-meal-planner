@@ -6,7 +6,8 @@ import {
   MealPlanCtx,
   UserSelectedMealsCtx,
   CustomMealsCtx,
-  IsBreakCtx
+  WeeksOffCtx,
+  TutorialElementsCtx
 } from '../../static/context';
 import formatCurrency from '../../lib/formatCurrency';
 import { getMealTotal } from '../../lib/calculationEngine';
@@ -17,15 +18,38 @@ import { WEEKDAYS } from '../../static/constants';
 import { userMealsToStackedChart } from '../../lib/mealChartFormat';
 import Divider from '../other/Divider';
 import { TooltipItem } from 'chart.js/auto';
+import tooltip from '../../static/tooltip';
 
 interface ResultsProps {
+  /**
+   * Indicates whether the user is under their balance.
+   */
   isUnderBalance: boolean;
+
+  /**
+   * The difference between the balance and the grand total.
+   */
   difference: number;
+
+  /**
+   * The grand total of the meal plan.
+   */
   grandTotal: number;
-  dayWhenRunOut: Date;
+
+  /**
+   * The date when the user will run out of funds, or null if they won't.
+   */
+  dayWhenRunOut: Date | null;
+
+  /**
+   * The order of this component relative to others.
+   */
+  order: number;
 }
 
-/** The background color for charts. */
+/**
+ * The background color for charts.
+ */
 const backgroundColor = [
   'rgba(54, 162, 235, 0.2)',
   'rgba(75, 192, 192, 0.2)',
@@ -35,7 +59,9 @@ const backgroundColor = [
   'rgba(201, 203, 207, 0.2)'
 ];
 
-/** The border color for charts. */
+/**
+ * The border color for charts.
+ */
 const borderColor = [
   'rgb(54, 162, 235)',
   'rgb(75, 192, 192)',
@@ -52,17 +78,20 @@ const Results = ({
   isUnderBalance,
   difference,
   grandTotal,
-  dayWhenRunOut
+  dayWhenRunOut,
+  order
 }: ResultsProps) => {
-  // Load all necessary contexts
   const balance = useContext(BalanceCtx);
+  const weeksOff = useContext(WeeksOffCtx);
   const userMeals = useContext(UserSelectedMealsCtx);
   const isDiscount = useContext(MealPlanCtx);
   const customMeals = useContext(CustomMealsCtx);
   const userSelectedMeals = useContext(UserSelectedMealsCtx);
-  const isBreak = useContext(IsBreakCtx);
+  const tutorialRefs = useContext(TutorialElementsCtx);
 
-  /** The meal total for one week. */
+  /**
+   * The meal total for one week.
+   */
   const weekTotal = useMemo(
     () =>
       getMealTotal(
@@ -74,7 +103,9 @@ const Results = ({
     [customMeals.value, isDiscount.value, userMeals.value]
   );
 
-  /** The data for the bar chart, splits up weekly meal prices by location. */
+  /**
+   * The data for the bar chart, splits up weekly meal prices by location.
+   */
   const barChartData = useMemo(() => {
     const locationMap = userMealsToStackedChart(
       userSelectedMeals.value,
@@ -94,7 +125,9 @@ const Results = ({
     };
   }, [customMeals.value, userSelectedMeals.value, isDiscount.value]);
 
-  /** The data for the pie chart, splits up weekly meal prices by location. */
+  /**
+   * The data for the pie chart, splits up weekly meal prices by location.
+   */
   const pieChartData = useMemo(() => {
     const locationMap = userMealsToStackedChart(
       userSelectedMeals.value,
@@ -208,12 +241,20 @@ const Results = ({
   );
 
   return (
-    <SectionContainer title='Results'>
-      <div className='flex flex-row flex-wrap w-full justify-evenly my-4'>
-        <div className='relative my-4 w-full lg:w-[45%] min-h-[250px] sm:min-h-[300px]'>
+    <SectionContainer
+      title='Results'
+      tooltip={tooltip.results}
+      setRef={(ref) => tutorialRefs.setValue(ref, 'Results')}
+      order={order}
+    >
+      <div className='text-gray-400 mt-4 mb-1'>
+        (Charts are based on the total for 1 week)
+      </div>
+      <div className='flex flex-row flex-wrap w-full justify-evenly mb-4'>
+        <div className='relative mb-4 w-full lg:w-[45%] min-h-[250px] sm:min-h-[300px]'>
           <Bar data={barChartData} options={barChartOptions} />
         </div>
-        <div className='relative my-4 w-full lg:w-[45%] min-h-[250px] sm:min-h-[300px]'>
+        <div className='relative mb-4 w-full lg:w-[45%] min-h-[250px] sm:min-h-[300px]'>
           <Pie data={pieChartData} options={pieChartOptions} />
         </div>
       </div>
@@ -236,14 +277,15 @@ const Results = ({
             resultsStyle: 'text-messiah-red'
           }
         ].concat(
-          !isUnderBalance
+          !isUnderBalance && dayWhenRunOut !== null
             ? [
                 {
-                  title:
-                    'Date When Money Runs Out' +
-                    (isBreak.value
-                      ? ' (Assuming Your Break Is Over Before This)'
-                      : ''),
+                  title: `Date When Money Runs Out 
+                  ${
+                    weeksOff.value
+                      ? '(Assuming the weeks off are before this)'
+                      : ''
+                  }`,
                   value: `${
                     dayWhenRunOut.getMonth() + 1
                   }/${dayWhenRunOut.getDate()}/${dayWhenRunOut.getFullYear()}`,

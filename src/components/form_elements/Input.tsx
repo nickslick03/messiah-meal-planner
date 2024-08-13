@@ -4,7 +4,8 @@ import {
   ChangeEvent,
   HTMLInputTypeAttribute,
   useMemo,
-  useState
+  useState,
+  useRef
 } from 'react';
 import { IMPORTANCE_CLASSES } from '../../static/constants';
 import {
@@ -12,30 +13,67 @@ import {
   newImportanceIndex
 } from '../../types/ImportanceIndex';
 import { dateToString } from '../../lib/dateCalcuation';
+import { MdClear } from 'react-icons/md';
+import { IconContext } from 'react-icons';
+
 interface InputProps<T> {
+  /**
+   * The label for the input.
+   */
   label?: string;
+
+  /**
+   * The importance level of the input.
+   */
   importance?: ImportanceIndex;
+
+  /**
+   * The type of the input.
+   */
   type: HTMLInputTypeAttribute;
+
+  /**
+   * The validator function for the input value. Returns the new value if valid, null otherwise.
+   * @param value - The value to validate.
+   * @returns The validated value or null.
+   */
   validator: (value: string) => T | null;
+
+  /**
+   * The value of the input.
+   */
   value: T | null;
+
+  /**
+   * The function to update the input value.
+   */
   setValue: Dispatch<SetStateAction<T | null>>;
+
+  /**
+   * The message to display when the input is invalid.
+   */
   invalidMessage?: string;
+
+  /**
+   * The placeholder text for the input.
+   */
   placeholder?: string;
+
+  /**
+   * The styles to apply to the input.
+   */
   cssClasses?: string;
+
+  /**
+   * Whether the input should be clearable.
+   */
+  clearable?: boolean;
 }
 
 /**
  * Renders an input component with a label and handles input changes. Can be any type of input.
  *
- * @param {string} label - The label for the input.
- * @param {ImportanceIndex} importance - The importance level of the input.
- * @param {React.HTMLInputTypeAttribute} type - The type of the input.
- * @param {(value: string) => T | null} validator - The validator function for the input value. Returns the new value if valid, null otherwise.
- * @param {string | boolean | number} value - The value of the input.
- * @param {React.Dispatch<React.SetStateAction<T>>} setValue - The function to update the input value.
- * @param {string} invalidMessage - The message to display when the input is invalid.
- * @param {string} placeholder - The placeholder text for the input.
- * @param {string} cssClasses - The styles to apply to the input.
+ * @param {InputProps} props - The props for the Input component.
  * @returns {JSX.Element} The rendered input component.
  */
 const Input = <T,>({
@@ -47,7 +85,8 @@ const Input = <T,>({
   setValue,
   invalidMessage,
   placeholder = '',
-  cssClasses
+  cssClasses,
+  clearable
 }: InputProps<T>): JSX.Element => {
   const importanceStyle = IMPORTANCE_CLASSES[importance] ?? 'font-normal';
   const styles = `border border-black rounded focus:outline focus:outline-2 focus:outline-messiah-blue 
@@ -72,12 +111,7 @@ const Input = <T,>({
 
   /** The title attribute of the input tag. */
   const titleAttribute = useMemo(
-    () =>
-      label
-        ? label[label.length - 1].match(/[\s:]/)
-          ? label.substring(0, label.length - 1)
-          : label
-        : 'input',
+    () => (label ? label.replace(/[^(\s|\w)]/g, '').trim() : 'input'),
     [label]
   );
 
@@ -98,10 +132,32 @@ const Input = <T,>({
     setShowInvalid(newValue === null);
   };
 
+  /**
+   * Clears the input value.
+   */
+  const clearInput = () => {
+    const nothing = (
+      typeof value === 'boolean'
+        ? false
+        : typeof value === 'string'
+        ? ''
+        : typeof value === 'number'
+        ? 0
+        : null
+    ) as T | null;
+    setValue(nothing);
+    if (ref.current) ref.current.value = '';
+  };
+
+  /** Create ref to input element. */
+  const ref = useRef<HTMLInputElement>(null);
+
   return (
-    <div className='text-left flex items-center w-full'>
+    <div className='text-left w-full'>
       <label
-        className={`${importanceStyle} w-full flex flex-row flex-wrap gap-2 items-center`}
+        className={`${importanceStyle} ${
+          styles.includes('w-full') ? 'w-full' : 'w-max'
+        } flex flex-row flex-wrap gap-2 items-center relative`}
       >
         {label || ''}
         {type === 'checkbox' ? (
@@ -113,15 +169,33 @@ const Input = <T,>({
             title={titleAttribute}
           />
         ) : (
-          <input
-            className={styles}
-            type={type}
-            defaultValue={initialValue}
-            inputMode={type === 'number' ? 'decimal' : undefined}
-            onInput={handleChange}
-            title={titleAttribute}
-            placeholder={placeholder}
-          />
+          <>
+            <input
+              ref={ref}
+              className={styles}
+              type={type}
+              defaultValue={initialValue}
+              inputMode={type === 'number' ? 'decimal' : undefined}
+              onInput={handleChange}
+              title={titleAttribute}
+              placeholder={placeholder}
+            />
+            {clearable && (
+              <button
+                className='w-5 h-5 rounded absolute right-2'
+                onClick={clearInput}
+              >
+                <IconContext.Provider
+                  value={{
+                    className:
+                      'w-full h-full fill-gray-300 hover:fill-gray-500 active:fill-gray-700'
+                  }}
+                >
+                  <MdClear />
+                </IconContext.Provider>
+              </button>
+            )}
+          </>
         )}
       </label>
       <p
