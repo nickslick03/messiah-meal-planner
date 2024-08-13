@@ -127,7 +127,7 @@ const Tutorial = ({
     let div: HTMLElement | null = null;
     if (tutorialRefs.value[step] !== null) {
       div = tutorialRefs.value[step];
-      div.style.zIndex = '50';
+      div!.style.zIndex = '50';
     }
     if (position !== 'center') {
       tooltip.style.position = 'static';

@@ -16,7 +16,7 @@ const useLongPress = (
   /**
    * The timer that will be used to detect the long press event
    */
-  const timer = useRef<NodeJS.Timeout | null>(null);
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   /**
    * A flag that will be used to detect the long press event
