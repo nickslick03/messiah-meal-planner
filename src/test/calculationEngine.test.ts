@@ -9,6 +9,7 @@ import meals from '../static/mealsDatabase';
 import MealReference from '../types/MealReference';
 import { UserSelectedMealsObjectType } from '../types/userSelectedMealsObject';
 import Meal from '../types/Meal';
+import { ALACARTE_DISCOUNT } from '../static/discounts';
 
 describe('applyDiscount', () => {
   it('should work for Lottie', () => {
@@ -36,12 +37,12 @@ describe('getMealDayTotal', () => {
 
   it('should work', () => {
     expect(getMealDayTotal(mealList, 1)).toBeCloseTo(
-      (6.55 + 4.5 + 8 + 2.25) * 0.9,
+      (6.55 + 4.5 + 8 + 2.25) * (1 - ALACARTE_DISCOUNT),
       2
     );
 
     expect(getMealDayTotal(mealList, 2)).toBeCloseTo(
-      (6.55 + 4.5 + 8 + 2.25) * 2 * 0.9,
+      (6.55 + 4.5 + 8 + 2.25) * 2 * (1 - ALACARTE_DISCOUNT),
       1
     );
   });
@@ -87,16 +88,16 @@ describe('getMealTotal', () => {
   it('should work for 1 day', () => {
     expect(
       getMealTotal(userMeals, [0, 1, 0, 0, 0, 0, 0], false, meals) // mealList1
-    ).toBeCloseTo((6.55 + 8) * 0.9, 2);
+    ).toBeCloseTo((6.55 + 8) * (1 - ALACARTE_DISCOUNT), 2);
     expect(
       getMealTotal(userMeals, [1, 0, 0, 0, 0, 0, 0], false, meals) // mealList2
-    ).toBeCloseTo(6.75 * 0.9, 2);
+    ).toBeCloseTo(6.75 * (1 - ALACARTE_DISCOUNT), 2);
   });
 
   it('should work for multiple days', () => {
     expect(
       getMealTotal(userMeals, [1, 1, 0, 0, 0, 0, 0], false, meals)
-    ).toBeCloseTo((6.55 + 8 + 6.75) * 0.9, 2);
+    ).toBeCloseTo((6.55 + 8 + 6.75) * (1 - ALACARTE_DISCOUNT), 2);
   });
 
   it('should work for discount', () => {

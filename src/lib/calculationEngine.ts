@@ -3,7 +3,7 @@ import {
   UserSelectedMealsObjectType,
   Weekday
 } from '../types/userSelectedMealsObject';
-import { DISCOUNTS } from '../static/discounts';
+import { ALACARTE_DISCOUNT, DISCOUNTS } from '../static/discounts';
 import { WEEKDAYS } from '../static/constants';
 import { getAllDatesBetween } from './dateCalcuation';
 
@@ -32,7 +32,10 @@ export function applyDiscount(meal: Meal) {
  */
 export function getMealDayTotal(meals: Meal[], days: number, discount = false) {
   let total = 0;
-  meals.forEach((m) => (total += discount ? applyDiscount(m) : m.price * 0.9));
+  meals.forEach(
+    (m) =>
+      (total += discount ? applyDiscount(m) : m.price * (1 - ALACARTE_DISCOUNT))
+  );
   return total * days;
 }
 
