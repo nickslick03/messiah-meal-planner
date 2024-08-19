@@ -1,7 +1,5 @@
 import { Fragment, useMemo, useState } from 'react';
 import { FaListUl, FaUser } from 'react-icons/fa';
-import { v4 as uuid } from 'uuid';
-import Highlighter from '../../other/Highlighter';
 import Input from '../../form_elements/Input';
 import Notification from '../../other/Notification';
 import TableCell from './TableCell';
@@ -12,6 +10,7 @@ import { newImportanceIndex } from '../../../types/ImportanceIndex';
 import SortBy from '../../../types/SortBy';
 import Meal from '../../../types/Meal';
 import { Weekday } from '../../../types/userSelectedMealsObject';
+import Switch from '../../form_elements/Switch';
 
 interface MealTableProps {
   /**
@@ -167,14 +166,9 @@ const MealTable = ({
     setSortDirection(sortColumn === header ? !sortDirection : true);
   };
 
-  /**
-   * The HTML ID of the day selector
-   */
-  const daySelectorId = `dayselector-${uuid()}`;
-
   return (
     <>
-      <div id={daySelectorId} className='relative w-full'>
+      <div className='relative w-full'>
         <div
           className={`${
             data.length === 0 ? 'hidden' : ''
@@ -201,38 +195,11 @@ const MealTable = ({
             </div>
 
             {/* Custom meal filter */}
-            <div className='text-sm h-full bg-gray-300 rounded-lg flex relative z-5'>
-              <button
-                id={`dayselector-${daySelectorId}-0`}
-                onClick={() => setCustomOnly(false)}
-                className={`relative flex flex-row items-center justify-center h-full rounded-lg p-[5px] ${
-                  customOnly
-                    ? 'sm:hover:bg-messiah-light-blue-hover'
-                    : 'bg-transparent hover:bg-transparent active:bg-transparent'
-                } transition duration-50 z-20`}
-              >
-                <FaListUl className='p-2' size={30} />
-                <span className='hidden sm:inline'>All&nbsp;</span>
-              </button>
-              <button
-                id={`dayselector-${daySelectorId}-1`}
-                onClick={() => setCustomOnly(true)}
-                className={`relative flex flex-row items-center justify-center h-full rounded-lg p-[5px] ${
-                  customOnly
-                    ? 'bg-transparent hover:bg-transparent active:bg-transparent'
-                    : 'sm:hover:bg-messiah-light-blue-hover'
-                } transition duration-50 z-20`}
-              >
-                <FaUser className='p-2' size={30} />
-                <span className='hidden sm:inline text-nowrap'>
-                  Custom Only&nbsp;
-                </span>
-              </button>
-            </div>
-            <Highlighter
-              selectedIndex={customOnly ? 1 : 0}
-              daySelectorId={daySelectorId}
-              offsetTop={-16}
+            <Switch
+              state={customOnly}
+              setState={setCustomOnly}
+              offIcon={<FaListUl />}
+              onIcon={<FaUser />}
             />
           </div>
         </div>
