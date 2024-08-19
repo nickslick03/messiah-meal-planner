@@ -4,6 +4,7 @@ import { UserSelectedMealsObjectType } from '../types/userSelectedMealsObject';
 import dereferenceMeal from './dereferenceMeal';
 import Meal from '../types/Meal';
 import { applyDiscount } from './calculationEngine';
+import { ALACARTE_DISCOUNT } from '../static/discounts';
 
 /**
  * This function takes in a UserSelectedMealsObject and returns data for a stacked chart of the total cost of each meal.
@@ -34,7 +35,9 @@ export function userMealsToStackedChart(
       mealList.forEach((meal) => {
         const n = locationMap.get(meal.location) ?? [];
 
-        n[i] += isDiscount ? applyDiscount(meal) : meal.price;
+        n[i] += isDiscount
+          ? applyDiscount(meal)
+          : meal.price * (1 - ALACARTE_DISCOUNT);
         locationMap.set(meal.location, n);
       });
     }

@@ -61,10 +61,10 @@ const tutorialSteps: TutorialStep[] = [
         . If this is your first semester, here is some info to help:
         <ul className='list-disc ml-5'>
           <li>
-            If you live in the residence halls, check the "Dining Dollars
-            Discount."
+            If you live in the residence halls, set the meal plan type to
+            "Dining Dollars".
           </li>
-          <li>Set the starting balance to 1200.</li>
+          <li>Set the starting balance to 1145.</li>
         </ul>
       </div>
     ),

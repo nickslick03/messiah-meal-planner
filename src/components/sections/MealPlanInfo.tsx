@@ -11,6 +11,7 @@ import {
 } from '../../static/context';
 import { dateInputToDate, getDaysBetween } from '../../lib/dateCalcuation';
 import tooltip from '../../static/tooltip';
+import Switch from '../form_elements/Switch';
 
 interface MealPlanInfoProps {
   /**
@@ -97,14 +98,15 @@ const MealPlanInfo = ({
           }
           invalidMessage={'End date must be after start date.'}
         />
-
-        <Input
-          label={'Dining Dollars Discount:'}
-          type={'checkbox'}
-          value={mealPlan.value}
-          setValue={mealPlan.setValue}
-          validator={(str) => str === 'true'}
-        />
+        <div className='flex flex-row items-center'>
+          <div className='w-[130px]'>Meal Plan Type: </div>
+          <Switch
+            state={mealPlan.value ?? false}
+            setState={mealPlan.setValue}
+            offText='A La Carte'
+            onText='Dining Dollars'
+          />
+        </div>
         <Input
           label={'Number of weeks off: '}
           type={'number'}
