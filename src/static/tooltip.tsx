@@ -67,8 +67,8 @@ const tooltip = {
             move out at the end of the semester.
           </li>
           <li>
-            <strong>Dining Dollars Discount:</strong> Check this if you use the
-            Dining Dollars plan, with the discount.
+            <strong>Meal Plan Type:</strong> Set this to the type of meal plan
+            you have, it will be used in calculating the discount.
           </li>
           <li>
             <strong>Number of Weeks off:</strong> Enter the number of weeks you

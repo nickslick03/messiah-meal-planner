@@ -34,7 +34,7 @@ export function userMealsToStackedChart(
       mealList.forEach((meal) => {
         const n = locationMap.get(meal.location) ?? [];
 
-        n[i] += isDiscount ? applyDiscount(meal) : meal.price;
+        n[i] += isDiscount ? applyDiscount(meal) : meal.price * 0.9;
         locationMap.set(meal.location, n);
       });
     }

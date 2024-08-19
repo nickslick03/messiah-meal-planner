@@ -17,7 +17,7 @@ interface SwitchProps {
   /**
    * The icon to display on the "off" side of the switch.
    */
-  offIcon: JSX.Element;
+  offIcon?: JSX.Element;
 
   /**
    * The text to display on the "off" side of the switch.
@@ -27,12 +27,17 @@ interface SwitchProps {
   /**
    * The icon to display on the "on" side of the switch.
    */
-  onIcon: JSX.Element;
+  onIcon?: JSX.Element;
 
   /**
    * The text to display on the "on" side of the switch.
    */
   onText: string;
+
+  /**
+   * Whether or not the switch should shrink for small screeens.
+   */
+  shrinkable?: boolean;
 }
 
 /**
@@ -44,10 +49,11 @@ interface SwitchProps {
 const Switch = ({
   state,
   setState,
-  offIcon,
+  offIcon = <></>,
   offText,
-  onIcon,
-  onText
+  onIcon = <></>,
+  onText,
+  shrinkable = false
 }: SwitchProps) => {
   const id = `dayselector-${uuid()}`;
 
@@ -66,7 +72,11 @@ const Switch = ({
           <IconContext.Provider value={{ className: 'p-2', size: '30px' }}>
             {offIcon}
           </IconContext.Provider>
-          <span className='hidden sm:inline'>{offText}&nbsp;</span>
+          <span
+            className={`${shrinkable ? 'hidden sm:' : ''}inline text-nowrap`}
+          >
+            {offText}&nbsp;
+          </span>
         </button>
         <button
           id={`dayselector-${id}-1`}
@@ -80,7 +90,11 @@ const Switch = ({
           <IconContext.Provider value={{ className: 'p-2', size: '30px' }}>
             {onIcon}
           </IconContext.Provider>
-          <span className='hidden sm:inline text-nowrap'>{onText}&nbsp;</span>
+          <span
+            className={`${shrinkable ? 'hidden sm:' : ''}inline text-nowrap`}
+          >
+            {onText}&nbsp;
+          </span>
         </button>
       </div>
       <Highlighter

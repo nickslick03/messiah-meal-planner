@@ -64,7 +64,7 @@ const TableRow = ({
    * The price of the meal based on whether or not the DD meal plan discount is enabled
    */
   const price = useMemo(
-    () => (isMealPlan.value ? applyDiscount(data) : data.price),
+    () => (isMealPlan.value ? applyDiscount(data) : data.price * 0.9),
     [data, isMealPlan.value]
   );
 

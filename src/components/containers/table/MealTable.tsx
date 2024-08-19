@@ -202,6 +202,7 @@ const MealTable = ({
               onIcon={<FaUser />}
               offText='All'
               onText='Custom Only'
+              shrinkable={true}
             />
           </div>
         </div>

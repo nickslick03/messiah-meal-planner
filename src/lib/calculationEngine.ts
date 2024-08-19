@@ -26,12 +26,13 @@ export function applyDiscount(meal: Meal) {
  *
  * @param meals - An array of meal objects.
  * @param days - The number of weekdays for which to calculate the total price.
- * @param discount - A boolean flag indicating whether to apply a discount to the meal prices.
+ * @param discount - A boolean flag indicating whether to apply the DD discount to the meal prices.
+ *  If false, uses the 10% A La Carte Discount.
  * @returns The total price for the given meals over the specified number of weekdays.
  */
 export function getMealDayTotal(meals: Meal[], days: number, discount = false) {
   let total = 0;
-  meals.forEach((m) => (total += discount ? applyDiscount(m) : m.price));
+  meals.forEach((m) => (total += discount ? applyDiscount(m) : m.price * 0.9));
   return total * days;
 }
 
