@@ -19,8 +19,11 @@ const BetaNotice = () => {
           caused by the software, including but not limited to spending too many
           dining dollars. That being said, if you do find a bug or have a
           feature you'd like to see included, we'd love to hear from you so we
-          can fix it! Please fill out our <a>bug and suggestion form</a> to let
-          us know.
+          can fix it! Please fill out our{' '}
+          <a href='https://forms.gle/srYiiuHeoyGnXvq87' className='underline'>
+            bug and suggestion form
+          </a>{' '}
+          to let us know.
         </p>
       </div>
     </div>
