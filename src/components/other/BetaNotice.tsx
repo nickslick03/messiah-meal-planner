@@ -6,7 +6,7 @@ import { CiWarning } from 'react-icons/ci';
  */
 const BetaNotice = () => {
   return (
-    <div className='w-full p-2'>
+    <div className='w-full p-2 text-left'>
       <div className='w-full flex justify-center bg-red-200 rounded-lg flex-col box-border p-2'>
         <h2 className='text-messiah-red font-bold text-lg'>
           <CiWarning className='inline' /> NOTICE
