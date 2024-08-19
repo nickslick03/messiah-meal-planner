@@ -1,10 +1,11 @@
+import React from 'react';
 import { CiWarning } from 'react-icons/ci';
 
 /**
  * Component for displaying a beta notice and a link to the bug and suggestion form
- * @returns {JSX.Element} The beta notice
+ * @returns The beta notice
  */
-const BetaNotice = () => {
+const BetaNotice = (): React.JSX.Element => {
   return (
     <div className='w-full p-2 text-left'>
       <div className='w-full flex justify-center bg-red-200 rounded-lg flex-col box-border p-2'>

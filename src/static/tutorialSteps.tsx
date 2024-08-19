@@ -37,13 +37,15 @@ const tutorialSteps: TutorialStep[] = [
     position: 'center',
     title: 'Tutorial Intro',
     description: (
-      <p>
-        Welcome to the Messiah Meal Planner! This website allows you to plan
-        your meals for the semester and budget your dining dollars. Follow this
-        tutorial to learn more about Messiah's student meal plan and how to
-        budget for it.
+      <>
+        <p>
+          Welcome to the Messiah Meal Planner! This website allows you to plan
+          your meals for the semester and budget your dining dollars. Follow this
+          tutorial to learn more about Messiah's student meal plan and how to
+          budget for it.   
+        </p>
         <BetaNotice />
-      </p>
+      </>
     )
   },
   {
