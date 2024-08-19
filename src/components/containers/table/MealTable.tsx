@@ -200,6 +200,8 @@ const MealTable = ({
               setState={setCustomOnly}
               offIcon={<FaListUl />}
               onIcon={<FaUser />}
+              offText='All'
+              onText='Custom Only'
             />
           </div>
         </div>

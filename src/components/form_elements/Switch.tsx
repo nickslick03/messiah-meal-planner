@@ -20,9 +20,19 @@ interface SwitchProps {
   offIcon: JSX.Element;
 
   /**
+   * The text to display on the "off" side of the switch.
+   */
+  offText: string;
+
+  /**
    * The icon to display on the "on" side of the switch.
    */
   onIcon: JSX.Element;
+
+  /**
+   * The text to display on the "on" side of the switch.
+   */
+  onText: string;
 }
 
 /**
@@ -31,7 +41,14 @@ interface SwitchProps {
  * @param {SwitchProps} props - The props for the Switch component.
  * @returns {JSX.Element} The Switch component.
  */
-const Switch = ({ state, setState, offIcon, onIcon }: SwitchProps) => {
+const Switch = ({
+  state,
+  setState,
+  offIcon,
+  offText,
+  onIcon,
+  onText
+}: SwitchProps) => {
   const id = `dayselector-${uuid()}`;
 
   return (
@@ -49,7 +66,7 @@ const Switch = ({ state, setState, offIcon, onIcon }: SwitchProps) => {
           <IconContext.Provider value={{ className: 'p-2', size: '30px' }}>
             {offIcon}
           </IconContext.Provider>
-          <span className='hidden sm:inline'>All&nbsp;</span>
+          <span className='hidden sm:inline'>{offText}&nbsp;</span>
         </button>
         <button
           id={`dayselector-${id}-1`}
@@ -63,9 +80,7 @@ const Switch = ({ state, setState, offIcon, onIcon }: SwitchProps) => {
           <IconContext.Provider value={{ className: 'p-2', size: '30px' }}>
             {onIcon}
           </IconContext.Provider>
-          <span className='hidden sm:inline text-nowrap'>
-            Custom Only&nbsp;
-          </span>
+          <span className='hidden sm:inline text-nowrap'>{onText}&nbsp;</span>
         </button>
       </div>
       <Highlighter
