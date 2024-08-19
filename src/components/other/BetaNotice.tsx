@@ -20,7 +20,7 @@ const BetaNotice = () => {
           dining dollars. That being said, if you do find a bug or have a
           feature you'd like to see included, we'd love to hear from you so we
           can fix it! Please fill out our{' '}
-          <a href='https://forms.gle/cMMqxgHpJBH2gSAp9' className='underline'>
+          <a href='https://forms.gle/cMMqxgHpJBH2gSAp9' target='_blank' className='underline'>
             bug and suggestion form
           </a>{' '}
           to let us know.
