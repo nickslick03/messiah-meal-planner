@@ -5,6 +5,7 @@ import { IoIosDocument, IoMdClose } from 'react-icons/io';
 import { GrPowerReset } from 'react-icons/gr';
 import ResetModal from '../modals/ResetModal';
 import PresetMealPlanModal from '../modals/PresetMealPlanModal';
+import BetaNotice from './BetaNotice';
 
 /**
  * The main menu component of the app.
@@ -122,6 +123,7 @@ const Menu = () => {
           </li>
         </ul>
         <footer className='text-gray-500 text-sm text-center'>
+          <BetaNotice />
           By{' '}
           <a
             target='_blank'
