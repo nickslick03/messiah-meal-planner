@@ -36,18 +36,18 @@ const meals: Meal[] = [
   {
     location: 'Lottie',
     name: 'Breakfast',
-    price: 6.3,
+    price: 6.55,
     unavailable: [0, 6]
   },
   {
     location: 'Lottie',
     name: 'Lunch',
-    price: 9.15
+    price: 9.55
   },
   {
     location: 'Lottie',
     name: 'Dinner',
-    price: 11.65
+    price: 12.1
   },
   {
     location: 'Union',
