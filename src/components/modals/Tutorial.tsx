@@ -127,7 +127,7 @@ const Tutorial = ({
     let div: HTMLElement | null = null;
     if (tutorialRefs.value[step] !== null) {
       div = tutorialRefs.value[step];
-      div.style.zIndex = '50';
+      div!.style.zIndex = '50';
     }
     if (position !== 'center') {
       tooltip.style.position = 'static';
@@ -169,7 +169,7 @@ const Tutorial = ({
         }`}
       ></div>
       <div
-        className={`relative max-w-[25rem] p-3 drop-shadow-md self-center
+        className={`relative w-full sm:w-[25rem] p-3 drop-shadow-md self-center
                     shadow-black bg-white rounded top-1/2 left-1/2 z-[55]
                     ${show ? '' : 'hidden'}`}
         ref={tutorialTooltipRef}

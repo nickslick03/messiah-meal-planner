@@ -9,6 +9,7 @@ import meals from '../static/mealsDatabase';
 import MealReference from '../types/MealReference';
 import { UserSelectedMealsObjectType } from '../types/userSelectedMealsObject';
 import Meal from '../types/Meal';
+import { ALACARTE_DISCOUNT } from '../static/discounts';
 
 describe('applyDiscount', () => {
   it('should work for Lottie', () => {
@@ -27,7 +28,7 @@ describe('applyDiscount', () => {
 describe('getMealDayTotal', () => {
   const mealList = meals.filter((m) =>
     [
-      'Breakfast', // 6.3
+      'Breakfast', // 6.55
       'Smash Burger', // 4.15
       'Grain Bowl', // 8
       'Soda/Water' // 2.25
@@ -35,18 +36,24 @@ describe('getMealDayTotal', () => {
   );
 
   it('should work', () => {
-    expect(getMealDayTotal(mealList, 1)).toBe(6.3 + 4.5 + 8 + 2.25);
+    expect(getMealDayTotal(mealList, 1)).toBeCloseTo(
+      (6.55 + 4.5 + 8 + 2.25) * (1 - ALACARTE_DISCOUNT),
+      2
+    );
 
-    expect(getMealDayTotal(mealList, 2)).toBe((6.3 + 4.5 + 8 + 2.25) * 2);
+    expect(getMealDayTotal(mealList, 2)).toBeCloseTo(
+      (6.55 + 4.5 + 8 + 2.25) * 2 * (1 - ALACARTE_DISCOUNT),
+      1
+    );
   });
 
   it('should work with discount', () => {
     expect(getMealDayTotal(mealList, 1, true)).toBe(
-      6.3 * 0.48 + 4.5 * 0.7 + 8 * 0.7 + 2.25
+      6.55 * 0.48 + 4.5 * 0.7 + 8 * 0.7 + 2.25
     );
 
     expect(getMealDayTotal(mealList, 2, true)).toBe(
-      (6.3 * 0.48 + 4.5 * 0.7 + 8 * 0.7 + 2.25) * 2
+      (6.55 * 0.48 + 4.5 * 0.7 + 8 * 0.7 + 2.25) * 2
     );
   });
 });
@@ -55,7 +62,7 @@ describe('getMealTotal', () => {
   const mealList1: MealReference[] = meals
     .filter((m) =>
       [
-        'Breakfast', // 6.3
+        'Breakfast', // 6.55
         'Grain Bowl' // 8
       ].some((mName) => m.name === mName)
     ) // Lottie and Falcon
@@ -81,22 +88,22 @@ describe('getMealTotal', () => {
   it('should work for 1 day', () => {
     expect(
       getMealTotal(userMeals, [0, 1, 0, 0, 0, 0, 0], false, meals) // mealList1
-    ).toBe(14.3);
+    ).toBeCloseTo((6.55 + 8) * (1 - ALACARTE_DISCOUNT), 2);
     expect(
       getMealTotal(userMeals, [1, 0, 0, 0, 0, 0, 0], false, meals) // mealList2
-    ).toBe(6.75);
+    ).toBeCloseTo(6.75 * (1 - ALACARTE_DISCOUNT), 2);
   });
 
   it('should work for multiple days', () => {
-    expect(getMealTotal(userMeals, [1, 1, 0, 0, 0, 0, 0], false, meals)).toBe(
-      21.05
-    );
+    expect(
+      getMealTotal(userMeals, [1, 1, 0, 0, 0, 0, 0], false, meals)
+    ).toBeCloseTo((6.55 + 8 + 6.75) * (1 - ALACARTE_DISCOUNT), 2);
   });
 
   it('should work for discount', () => {
     expect(
       getMealTotal(userMeals, [0, 1, 0, 0, 0, 0, 0], true, meals)
-    ).toBeCloseTo(3.02 + 5.6);
+    ).toBeCloseTo(6.55 * 0.48 + 5.6);
   });
 });
 
@@ -104,7 +111,7 @@ describe('calculateDateWhenRunOut', () => {
   const mealList1: MealReference[] = meals
     .filter((m) =>
       [
-        'Breakfast', // 6.3
+        'Breakfast', // 6.55
         'Grain Bowl' // 8
       ].some((mName) => m.name === mName)
     ) // Lottie and Falcon
@@ -136,7 +143,7 @@ describe('calculateDateWhenRunOut', () => {
         new Date('06/08/2024'),
         35
       )
-    ).toStrictEqual(new Date('05/07/2024'));
+    ).toStrictEqual(new Date('05/08/2024'));
   });
   it('should return the end date if money never runs out', () => {
     expect(

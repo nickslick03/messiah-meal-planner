@@ -1,5 +1,6 @@
 import { IoAdd } from 'react-icons/io5';
 import { TUTORIAL_ICON_SIZE as ICON_SIZE } from './constants';
+import BetaNotice from '../components/other/BetaNotice';
 
 interface TutorialStep {
   /**
@@ -36,12 +37,15 @@ const tutorialSteps: TutorialStep[] = [
     position: 'center',
     title: 'Tutorial Intro',
     description: (
-      <p>
-        Welcome to the Messiah Meal Planner! This website allows you to plan
-        your meals for the semester and budget your dining dollars. Follow this
-        tutorial to learn more about Messiah's student meal plan and how to
-        budget for it.
-      </p>
+      <>
+        <p>
+          Welcome to the Messiah Meal Planner! This website allows you to plan
+          your meals for the semester and budget your dining dollars. Follow this
+          tutorial to learn more about Messiah's student meal plan and how to
+          budget for it.   
+        </p>
+        <BetaNotice />
+      </>
     )
   },
   {
@@ -61,10 +65,10 @@ const tutorialSteps: TutorialStep[] = [
         . If this is your first semester, here is some info to help:
         <ul className='list-disc ml-5'>
           <li>
-            If you live in the residence halls, check the "Dining Dollars
-            Discount."
+            If you live in the residence halls, set the meal plan type to
+            "Dining Dollars".
           </li>
-          <li>Set the starting balance to 1200.</li>
+          <li>Set the starting balance to 1145.</li>
         </ul>
       </div>
     ),
