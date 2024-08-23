@@ -17,6 +17,8 @@ import {
   Weekday
 } from '../../types/userSelectedMealsObject';
 import mapUserMeals from '../../lib/mapUserMeals';
+import ModalContainer from '../containers/ModalContainer';
+import Notification from '../other/Notification';
 
 interface AvailableMealsProps {
   /** The order this component should appear. */
@@ -41,6 +43,11 @@ const AvailableMeals = ({ order }: AvailableMealsProps) => {
   const [isEditingCustomMeal, setIsEditingCustomMeal] = useState(false);
 
   /**
+   * Shows confirm modal to delete selected custom meal.
+   */
+  const [isDeletingCustomMeal, setIsDeletingCustomMeal] = useState(false);
+
+  /**
    * State variable to track the current custom meal editing data.
    */
   const [currentCustomData, setCurrentCustomData] = useState<Meal>();
@@ -49,6 +56,11 @@ const AvailableMeals = ({ order }: AvailableMealsProps) => {
    * State variable to track the ID of the next custom meal.
    */
   const [newCustomMealID, setNewCustomMealID] = useState<string>();
+
+  /**
+   * state for notification message
+   */
+  const [message, setMessage] = useState({ text: '' });
 
   /**
    * Updates a custom meal in the customMeals context with the provided location, name, and price.
@@ -85,11 +97,8 @@ const AvailableMeals = ({ order }: AvailableMealsProps) => {
    * Deletes a custom meal from the customMeals context.
    * Also removes the custom meal from the meal queue and any days it has been added to.
    */
-  const onDeleteCustomMeal = () => {
-    const shouldDelete = confirm(
-      "This custom meal will be deleted from your available meals, your meal queue, and any days you've added it to. You can't undo this action. Delete this meal?"
-    );
-    if (!shouldDelete) return;
+  const deleteCustomMeal = () => {
+    const customMealName = currentCustomData?.name;
     customMeals.setValue(
       customMeals.value.filter((val) => val.id !== currentCustomData?.id)
     );
@@ -104,7 +113,9 @@ const AvailableMeals = ({ order }: AvailableMealsProps) => {
         )
       ]) as UserSelectedMealsObjectType
     );
+    setIsDeletingCustomMeal(false);
     setIsEditingCustomMeal(false);
+    setMessage({ text: `Deleted Custom Meal ${customMealName ?? ''}` });
   };
 
   /**
@@ -171,13 +182,32 @@ const AvailableMeals = ({ order }: AvailableMealsProps) => {
             onCancel={() => {
               setIsEditingCustomMeal(false);
             }}
-            onDelete={onDeleteCustomMeal}
+            onDelete={() => setIsDeletingCustomMeal(true)}
             visible={isEditingCustomMeal}
           />
         ) : (
           <></>
         )
       }
+      {
+        isDeletingCustomMeal ? (
+          <ModalContainer
+            title={`Delete ${currentCustomData?.name}`}
+            confirmText='Delete'
+            confirmDisabled={false}
+            minimalSpace={true}
+            onConfirm={deleteCustomMeal}
+            onCancel={() => setIsDeletingCustomMeal(false)}
+          >
+            <p>
+              This custom meal will be deleted from your available meals,<br />
+              your meal queue, and any days you've added it to.<br /> 
+              You can't undo this action. Delete this meal?
+            </p>
+          </ModalContainer>
+        ) : ''
+      }
+    <Notification message={message} />
     </>
   );
 };

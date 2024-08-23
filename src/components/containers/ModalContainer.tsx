@@ -86,9 +86,8 @@ const ModalContainer = ({
   const handleCancel = onCancel || toggleVisible;
 
   return (
-    <div className={isVisible ? '' : 'hidden'}>
-      {/* Fullscreen translucent black div to disable everything and focus attention on the modal */}
-      <div className='h-screen w-screen bg-opacity-50 bg-slate-900 fixed top-0 left-0 flex items-center justify-center z-50'>
+      <div className={`${isVisible ? '' : 'hidden'} h-screen w-screen bg-opacity-50 bg-slate-900 
+        fixed top-0 left-0 flex items-center justify-center z-50`}>
         {/* The actual modal component */}
         <div
           className={`text-center bg-white p-5 m-4 flex flex-col rounded-lg
@@ -133,7 +132,6 @@ const ModalContainer = ({
           </div>
         </div>
       </div>
-    </div>
   );
 };
 

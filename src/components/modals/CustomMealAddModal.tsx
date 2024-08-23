@@ -108,7 +108,7 @@ const CustomMealAddModal = ({
       }}
       confirmDisabled={isIncomplete}
     >
-      <form className='flex flex-col mt-4 gap-4'>
+      <div className='flex flex-col mt-4 gap-4'>
         <Select
           label='Place:'
           list={['Select Place...', ...DINING_LOCATIONS]}
@@ -143,7 +143,7 @@ const CustomMealAddModal = ({
             title='Delete Meal'
           ></Button>
         )}
-      </form>
+      </div>
     </ModalContainer>
   ) : (
     <></>
