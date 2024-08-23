@@ -18,10 +18,16 @@ import { getWeekdaysBetween } from '../../lib/dateCalcuation';
 import { getMealDayTotal } from '../../lib/calculationEngine';
 import formatCurrency from '../../lib/formatCurrency';
 import DaySelector from '../form_elements/DaySelector';
-import { Weekday } from '../../types/userSelectedMealsObject';
+import {
+  UserSelectedMealsObject,
+  Weekday
+} from '../../types/userSelectedMealsObject';
 import mapUserMeals from '../../lib/mapUserMeals';
 import dereferenceMeal from '../../lib/dereferenceMeal';
 import tooltip from '../../static/tooltip';
+import Button from '../form_elements/Button';
+import ModalContainer from '../containers/ModalContainer';
+import Notification from '../other/Notification';
 
 interface DayEditorProps {
   /** The order this component should appear. */
@@ -65,6 +71,13 @@ const DayEditor = ({ order }: DayEditorProps) => {
    * State variable to track which day the user is editing
    */
   const [weekdayIndex, setWeekdayIndex] = useState(0);
+
+  /**
+   * Whether the confirm message to clear all selected meals is visible.
+   */
+  const [confirmIsVisible, setConfirmIsVisible] = useState(false);
+
+  const [message, setMessage] = useState({ text: '' });
 
   /**
    * Get the day of the week the user is editing
@@ -123,52 +136,107 @@ const DayEditor = ({ order }: DayEditorProps) => {
     });
   };
 
+  /**
+   * Clears all meals from the specified day.
+   * @param weekday - The specifiecd weekday.
+   * */
+  const clearDay = (weekday: string) => {
+    userSelectedMeals.setValue({
+      ...userSelectedMeals.value,
+      [weekday]: []
+    });
+  };
+
+  /**
+   * Clears all the meals from the user selected meals object.
+   */
+  const clearAll = () => {
+    userSelectedMeals.setValue(new UserSelectedMealsObject());
+  };
+
   return (
-    <MealContainer
-      title='Day Editor'
-      daySelector={
-        <div className='w-full bg-gray-300 rounded-lg mt-4'>
-          <DaySelector
-            daysSelected={new Array(7)
-              .fill(false)
-              .map((_, day) => day === weekdayIndex)}
-            onChange={setWeekdayIndex}
-            numOfMeals={numOfMeals}
-            slideHighlight
+    <>
+      <MealContainer
+        title='Day Editor'
+        daySelector={
+          <div className='w-full bg-gray-300 rounded-lg mt-4'>
+            <DaySelector
+              daysSelected={new Array(7)
+                .fill(false)
+                .map((_, day) => day === weekdayIndex)}
+              onChange={setWeekdayIndex}
+              numOfMeals={numOfMeals}
+              slideHighlight
+            />
+          </div>
+        }
+        addOrRemove='Del'
+        meals={dayMealList}
+        buttonOnClick={removeMeal}
+        createNotification={(name) => `Removed ${name} from ${weekday}`}
+        searchable={false}
+        tooltip={tooltip.dayEditor}
+        setRef={(ref) => tutorialRefs.setValue(ref, 'Day Editor')}
+        order={order}
+      >
+        <div className='flex gap-2 my-4'>
+          <Button
+            title={`Clear ${weekday} Meals`}
+            onClick={() => {
+              clearDay(weekday);
+              setMessage({ text: `Cleared Selected Meals on ${weekday}` });
+            }}
+            disabled={userSelectedMealsValue[weekday].length === 0}
+          />
+          <Button
+            title={`Clear All Meals`}
+            onClick={() => setConfirmIsVisible(true)}
+            disabled={Object.getOwnPropertyNames(userSelectedMealsValue).every(
+              (weekday) => userSelectedMealsValue[weekday].length === 0
+            )}
           />
         </div>
-      }
-      addOrRemove='Del'
-      meals={dayMealList}
-      buttonOnClick={removeMeal}
-      createNotification={(name) => `Removed ${name} from ${weekday}`}
-      searchable={false}
-      tooltip={tooltip.dayEditor}
-      setRef={(ref) => tutorialRefs.setValue(ref, 'Day Editor')}
-      order={order}
-    >
-      <Divider />
-      <DotLeader
-        info={[
-          {
-            title: `Total for One ${weekday}`,
-            value: `${formatCurrency(mealDayTotal)}`,
-            resultsStyle: 'text-messiah-red'
-          },
-          {
-            title: `Number of ${weekday}(s)`,
-            value: `${numOfWeekdays[weekdayIndex]}`
-          },
-          {
-            title: `Total of All ${weekday}s`,
-            value: `${formatCurrency(
-              mealDayTotal * numOfWeekdays[weekdayIndex] // Convert from Monday to Sunday start
-            )}`,
-            resultsStyle: 'text-messiah-red'
-          }
-        ]}
-      />
-    </MealContainer>
+        <Divider />
+        <DotLeader
+          info={[
+            {
+              title: `Total for One ${weekday}`,
+              value: `${formatCurrency(mealDayTotal)}`,
+              resultsStyle: 'text-messiah-red'
+            },
+            {
+              title: `Number of ${weekday}(s)`,
+              value: `${numOfWeekdays[weekdayIndex]}`
+            },
+            {
+              title: `Total of All ${weekday}s`,
+              value: `${formatCurrency(
+                mealDayTotal * numOfWeekdays[weekdayIndex] // Convert from Monday to Sunday start
+              )}`,
+              resultsStyle: 'text-messiah-red'
+            }
+          ]}
+        />
+      </MealContainer>
+      <Notification message={message} />
+      {confirmIsVisible ? (
+        <ModalContainer
+          title={'Clear All Selected Meals'}
+          onCancel={() => setConfirmIsVisible(false)}
+          onConfirm={() => {
+            setConfirmIsVisible(false);
+            clearAll();
+            setMessage({ text: 'Cleared All Selected Meals' });
+          }}
+          minimalSpace={true}
+          confirmDisabled={false}
+        >
+          Are you sure you want to clear all selected meals?
+        </ModalContainer>
+      ) : (
+        ''
+      )}
+    </>
   );
 };
 
