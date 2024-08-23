@@ -112,7 +112,7 @@ const Tutorial = ({
     (i: number) => {
       const div = tutorialRefs.value[i];
       if (div !== null) {
-        div.style.zIndex = '0';
+        div.style.zIndex = '';
       }
     },
     [tutorialRefs]
