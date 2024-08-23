@@ -6,6 +6,8 @@ import { GrPowerReset } from 'react-icons/gr';
 import ResetModal from '../modals/ResetModal';
 import PresetMealPlanModal from '../modals/PresetMealPlanModal';
 import BetaNotice from './BetaNotice';
+import { FaClock } from 'react-icons/fa';
+import LocationHoursModal from '../modals/LocationHoursModal';
 
 /**
  * The main menu component of the app.
@@ -27,6 +29,11 @@ const Menu = () => {
    * State for reset modal visibility.
    */
   const [isResetModalVisible, setIsResetModalVisible] = useState(false);
+
+  /**
+   * State for location modal visibility.
+   */
+  const [isLocationHoursModalVisible, setIsLocationHoursModalVisible] = useState(false);
 
   /**
    * State for preset modal visibility.
@@ -111,6 +118,12 @@ const Menu = () => {
         <ul className='flex-1 select-none text-lg flex flex-col gap-2'>
           <li
             className='hover:underline cursor-pointer flex items-center gap-2'
+            onClick={() => setIsLocationHoursModalVisible(true)}
+          >
+            <FaClock /> Location Hours
+          </li>
+          <li
+            className='hover:underline cursor-pointer flex items-center gap-2'
             onClick={() => setIsPresetModalVisible(true)}
           >
             <IoIosDocument /> Preset Meal Plans
@@ -142,6 +155,10 @@ const Menu = () => {
           </a>
         </footer>
       </div>
+      <LocationHoursModal 
+        isVisible={isLocationHoursModalVisible}
+        setIsVisible={setIsLocationHoursModalVisible}
+      />
       <ResetModal
         onConfirm={() => {}}
         onCancel={() => setIsResetModalVisible(false)}
