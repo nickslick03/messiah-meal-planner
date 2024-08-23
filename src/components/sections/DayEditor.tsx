@@ -24,6 +24,7 @@ import dereferenceMeal from '../../lib/dereferenceMeal';
 import tooltip from '../../static/tooltip';
 import Button from '../form_elements/Button';
 import ModalContainer from '../containers/ModalContainer';
+import Notification from '../other/Notification';
 
 interface DayEditorProps {
   /** The order this component should appear. */
@@ -71,7 +72,9 @@ const DayEditor = ({ order }: DayEditorProps) => {
   /**
    * Whether the confirm message to clear all selected meals is visible.
    */
-  const [confirmVisible, setConfirmVisible] = useState(false);
+  const [confirmIsVisible, setConfirmIsVisible] = useState(false);
+
+  const [message, setMessage] = useState({ text: '' });
 
   /**
    * Get the day of the week the user is editing
@@ -176,12 +179,15 @@ const DayEditor = ({ order }: DayEditorProps) => {
         <div className='flex gap-2 my-4'>
           <Button
             title={`Clear ${weekday} Meals`}
-            onClick={() => clearDay(weekday)}
+            onClick={() => {
+              clearDay(weekday);
+              setMessage({ text: `Cleared Selected Meals on ${weekday}`});
+            }}
             disabled={userSelectedMealsValue[weekday].length === 0}
           />
           <Button
             title={`Clear all Meals`}
-            onClick={() => setConfirmVisible(true)}
+            onClick={() => setConfirmIsVisible(true)}
             disabled={
               Object.getOwnPropertyNames(userSelectedMealsValue)
               .every(weekday => userSelectedMealsValue[weekday].length === 0)
@@ -210,14 +216,16 @@ const DayEditor = ({ order }: DayEditorProps) => {
           ]}
         />
       </MealContainer>
+      <Notification message={message} />
       {
-      confirmVisible 
+      confirmIsVisible 
         ? <ModalContainer 
             title={'Clear All Selected Meals'}
-            onCancel={() => setConfirmVisible(false)}
+            onCancel={() => setConfirmIsVisible(false)}
             onConfirm={() => {
-              setConfirmVisible(false);
+              setConfirmIsVisible(false);
               clearAll();
+              setMessage({ text: 'Cleared All Selected Meals' });
             }}
             minimalSpace={true}
             confirmDisabled={false}
