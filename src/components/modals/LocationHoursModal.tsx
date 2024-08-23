@@ -21,8 +21,9 @@ const LocationHoursModal = ({
       cancelText='Close'
       onCancel={() => setIsVisible(false)}
       onlyCancel={true}
+      centered={false}
     >
-    <div className=''>
+    <div className='text-center'>
         {locationHours.map((location, i) => 
             <div>
                 <h2 className='text-3xl font-bold mb-4'>{location.name}</h2>
