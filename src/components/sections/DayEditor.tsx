@@ -18,7 +18,10 @@ import { getWeekdaysBetween } from '../../lib/dateCalcuation';
 import { getMealDayTotal } from '../../lib/calculationEngine';
 import formatCurrency from '../../lib/formatCurrency';
 import DaySelector from '../form_elements/DaySelector';
-import { UserSelectedMealsObject, Weekday } from '../../types/userSelectedMealsObject';
+import {
+  UserSelectedMealsObject,
+  Weekday
+} from '../../types/userSelectedMealsObject';
 import mapUserMeals from '../../lib/mapUserMeals';
 import dereferenceMeal from '../../lib/dereferenceMeal';
 import tooltip from '../../static/tooltip';
@@ -133,8 +136,8 @@ const DayEditor = ({ order }: DayEditorProps) => {
     });
   };
 
-  /** 
-   * Clears all meals from the specified day. 
+  /**
+   * Clears all meals from the specified day.
    * @param weekday - The specifiecd weekday.
    * */
   const clearDay = (weekday: string) => {
@@ -149,7 +152,7 @@ const DayEditor = ({ order }: DayEditorProps) => {
    */
   const clearAll = () => {
     userSelectedMeals.setValue(new UserSelectedMealsObject());
-  }
+  };
 
   return (
     <>
@@ -181,17 +184,16 @@ const DayEditor = ({ order }: DayEditorProps) => {
             title={`Clear ${weekday} Meals`}
             onClick={() => {
               clearDay(weekday);
-              setMessage({ text: `Cleared Selected Meals on ${weekday}`});
+              setMessage({ text: `Cleared Selected Meals on ${weekday}` });
             }}
             disabled={userSelectedMealsValue[weekday].length === 0}
           />
           <Button
-            title={`Clear all Meals`}
+            title={`Clear All Meals`}
             onClick={() => setConfirmIsVisible(true)}
-            disabled={
-              Object.getOwnPropertyNames(userSelectedMealsValue)
-              .every(weekday => userSelectedMealsValue[weekday].length === 0)
-            }
+            disabled={Object.getOwnPropertyNames(userSelectedMealsValue).every(
+              (weekday) => userSelectedMealsValue[weekday].length === 0
+            )}
           />
         </div>
         <Divider />
@@ -217,23 +219,23 @@ const DayEditor = ({ order }: DayEditorProps) => {
         />
       </MealContainer>
       <Notification message={message} />
-      {
-      confirmIsVisible 
-        ? <ModalContainer 
-            title={'Clear All Selected Meals'}
-            onCancel={() => setConfirmIsVisible(false)}
-            onConfirm={() => {
-              setConfirmIsVisible(false);
-              clearAll();
-              setMessage({ text: 'Cleared All Selected Meals' });
-            }}
-            minimalSpace={true}
-            confirmDisabled={false}
-          >
-            Are you sure you want to clear all selected meals?
-          </ModalContainer>
-        : ''
-      }
+      {confirmIsVisible ? (
+        <ModalContainer
+          title={'Clear All Selected Meals'}
+          onCancel={() => setConfirmIsVisible(false)}
+          onConfirm={() => {
+            setConfirmIsVisible(false);
+            clearAll();
+            setMessage({ text: 'Cleared All Selected Meals' });
+          }}
+          minimalSpace={true}
+          confirmDisabled={false}
+        >
+          Are you sure you want to clear all selected meals?
+        </ModalContainer>
+      ) : (
+        ''
+      )}
     </>
   );
 };
