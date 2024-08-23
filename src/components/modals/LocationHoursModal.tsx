@@ -2,7 +2,6 @@ import { Dispatch, SetStateAction } from 'react';
 import ModalContainer from '../containers/ModalContainer';
 import locationHours from '../../static/locationHours';
 import DotLeader from '../other/DotLeader';
-import { IMPORTANCE_CLASSES } from '../../static/constants';
 
 interface LocationHoursModalProps {
     isVisible: boolean;
