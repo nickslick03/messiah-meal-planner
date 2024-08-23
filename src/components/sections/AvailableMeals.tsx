@@ -18,6 +18,7 @@ import {
 } from '../../types/userSelectedMealsObject';
 import mapUserMeals from '../../lib/mapUserMeals';
 import ModalContainer from '../containers/ModalContainer';
+import Notification from '../other/Notification';
 
 interface AvailableMealsProps {
   /** The order this component should appear. */
@@ -57,6 +58,11 @@ const AvailableMeals = ({ order }: AvailableMealsProps) => {
   const [newCustomMealID, setNewCustomMealID] = useState<string>();
 
   /**
+   * state for notification message
+   */
+  const [message, setMessage] = useState({ text: '' });
+
+  /**
    * Updates a custom meal in the customMeals context with the provided location, name, and price.
    *
    * @param {string} location - The new location for the custom meal.
@@ -92,6 +98,7 @@ const AvailableMeals = ({ order }: AvailableMealsProps) => {
    * Also removes the custom meal from the meal queue and any days it has been added to.
    */
   const deleteCustomMeal = () => {
+    const customMealName = currentCustomData?.name;
     customMeals.setValue(
       customMeals.value.filter((val) => val.id !== currentCustomData?.id)
     );
@@ -108,6 +115,7 @@ const AvailableMeals = ({ order }: AvailableMealsProps) => {
     );
     setIsDeletingCustomMeal(false);
     setIsEditingCustomMeal(false);
+    setMessage({ text: `Deleted Custom Meal ${customMealName ?? ''}` });
   };
 
   /**
@@ -199,6 +207,7 @@ const AvailableMeals = ({ order }: AvailableMealsProps) => {
           </ModalContainer>
         ) : ''
       }
+    <Notification message={message} />
     </>
   );
 };
