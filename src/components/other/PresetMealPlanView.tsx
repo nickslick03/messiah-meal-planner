@@ -33,7 +33,7 @@ export const PresetMealPlanView = ({
 
   return (
     <div>
-      <h3 className='text-lg font-bold mb-2'>{presetMealPlan.name}</h3>
+      <h3 className='text-lg text-center font-bold mb-2'>{presetMealPlan.name}</h3>
       <div className='flex justify-between'>
         <div className='text-left flex flex-col gap-2'>
           <p className='pr-12'>{presetMealPlan.description}</p>
