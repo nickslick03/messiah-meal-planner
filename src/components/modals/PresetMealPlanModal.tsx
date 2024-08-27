@@ -77,6 +77,7 @@ const PresetMealPlanModal = ({
             onlyCancel={true}
             title='Preset Meal Plans'
             onCancel={onCancel}
+            centered={false}
           >
             {PresetMealPlans.map((plan, i) => (
               <React.Fragment key={i}>
