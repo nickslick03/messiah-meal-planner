@@ -86,52 +86,56 @@ const ModalContainer = ({
   const handleCancel = onCancel || toggleVisible;
 
   return (
-      <div className={`${isVisible ? '' : 'hidden'} h-screen w-screen bg-opacity-50 bg-slate-900 
-        fixed top-0 left-0 flex items-center justify-center z-50`}>
-        {/* The actual modal component */}
-        <div
-          className={`text-center bg-white p-5 m-4 flex flex-col rounded-lg
+    <div
+      className={`${
+        isVisible ? '' : 'hidden'
+      } h-screen w-screen bg-opacity-50 bg-slate-900 
+        fixed top-0 left-0 flex items-center justify-center z-50`}
+    >
+      {/* The actual modal component */}
+      <div
+        className={`text-center bg-white p-5 m-4 flex flex-col rounded-lg
           ${
             minimalSpace
               ? ''
               : 'w-full h-[80%] sm:w-auto sm:h-auto sm:min-w-[500px] sm:min-h-[500px] sm:max-w-[800px] sm:max-h-screen'
           }`}
-        >
-          {
-            /* Title goes here */
-            title !== null && title !== undefined ? (
-              <SectionHeader text={title} />
-            ) : (
-              <></>
-            )
-          }
-          {/* Content goes here */}
-          <div
-            className={`flex-grow flex flex-col 
+      >
+        {
+          /* Title goes here */
+          title !== null && title !== undefined ? (
+            <SectionHeader text={title} />
+          ) : (
+            <></>
+          )
+        }
+        {/* Content goes here */}
+        <div
+          className={`flex-grow flex flex-col 
               ${minimalSpace ? '' : 'overflow-y-scroll'}
               ${
                 centered
                   ? 'justify-center'
                   : 'justify-start align-center text-left'
               } mt-4`}
-          >
-            {children}
-          </div>
-          {/* Confirm and cancel buttons */}
-          <div className='flex-shrink flex flex-row justify-center'>
-            {!onlyCancel ? (
-              <Button
-                title={confirmText}
-                onClick={handleConfirm}
-                disabled={confirmDisabled}
-              />
-            ) : (
-              ''
-            )}
-            <Button title={cancelText} onClick={handleCancel} frame />
-          </div>
+        >
+          {children}
+        </div>
+        {/* Confirm and cancel buttons */}
+        <div className='flex-shrink flex flex-row justify-center'>
+          {!onlyCancel ? (
+            <Button
+              title={confirmText}
+              onClick={handleConfirm}
+              disabled={confirmDisabled}
+            />
+          ) : (
+            ''
+          )}
+          <Button title={cancelText} onClick={handleCancel} frame />
         </div>
       </div>
+    </div>
   );
 };
 
