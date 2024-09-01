@@ -431,7 +431,7 @@ const meals: Meal[] = [
   },
   {
     location: 'Falcon',
-    name: 'Expresso',
+    name: 'Espresso',
     price: 1
   },
   {
