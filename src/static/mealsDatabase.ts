@@ -321,18 +321,18 @@ const meals: Meal[] = [
   },
   {
     location: 'Falcon',
-    name: 'Grain Bowl',
+    name: 'Crispy Chicken',
+    price: 5.5
+  },
+  {
+    location: 'Falcon',
+    name: 'Chicken Tenders',
+    price: 6
+  },
+  {
+    location: 'Falcon',
+    name: 'Create Your Own Bowl',
     price: 8
-  },
-  {
-    location: 'Falcon',
-    name: 'Noodle Bowl',
-    price: 7.5
-  },
-  {
-    location: 'Falcon',
-    name: 'Green Bowl',
-    price: 8.25
   },
   {
     location: 'Falcon',
@@ -401,6 +401,11 @@ const meals: Meal[] = [
   },
   {
     location: 'Falcon',
+    name: 'Mochas, Caramel Macchiato and Iced Latte 24oz',
+    price: 5.6
+  },
+  {
+    location: 'Falcon',
     name: 'Americano 12oz',
     price: 2.5
   },
@@ -418,6 +423,16 @@ const meals: Meal[] = [
     location: 'Falcon',
     name: 'Chai Latte 16oz',
     price: 4.6
+  },
+  {
+    location: 'Falcon',
+    name: 'soup',
+    price: 3.75
+  },
+  {
+    location: 'Falcon',
+    name: 'Espresso',
+    price: 1
   },
   {
     location: 'Falcon',
@@ -463,6 +478,11 @@ const meals: Meal[] = [
     location: 'Vending',
     name: 'Candy bar',
     price: 2
+  },
+  {
+    location: 'Vending',
+    name: 'Coffee',
+    price: 3
   }
 ].map((m) => ({ ...m, id: generateId(m.location, m.name) }));
 
