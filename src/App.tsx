@@ -31,6 +31,7 @@ import Tutorial from './components/modals/Tutorial';
 import tutorialSteps from './static/tutorialSteps';
 import AvailableMeals from './components/sections/AvailableMeals';
 import Menu from './components/other/Menu';
+import WhatsNewModal from './components/modals/WhatsNewModal';
 
 function App() {
   /**
@@ -271,6 +272,7 @@ function App() {
                       >
                         <Menu />
                         <ScreenContainer>
+                          <WhatsNewModal />
                           <header className='bg-messiah-blue rounded-xl border-4 border-white shadow-md w-full mb-4'>
                             <h1 className='font-semibold text-4xl text-white text-center p-8'>
                               Messiah Meal Planner
