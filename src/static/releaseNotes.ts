@@ -10,7 +10,7 @@ const releaseNotes: ReleaseNoteType[] = [
     versionNumber: '0.0.1',
     bugFixes: [],
     enhancements: [
-      'Updated union prices for 2024-25 school year.',
+      'Updated Union, Falcon, and Vending prices for 2024-25 school year.',
       'Added logo.'
     ]
   }
