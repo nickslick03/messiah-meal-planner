@@ -32,7 +32,6 @@ import tutorialSteps from './static/tutorialSteps';
 import AvailableMeals from './components/sections/AvailableMeals';
 import Menu from './components/other/Menu';
 import WhatsNewModal from './components/modals/WhatsNewModal';
-import favicon from '../favicon.png';
 
 function App() {
   /**
@@ -275,10 +274,6 @@ function App() {
                         <ScreenContainer>
                           <WhatsNewModal />
                           <header className='bg-messiah-blue rounded-xl border-4 border-white shadow-md w-full mb-4 flex flex-row justify-center items-center gap-4'>
-                            <img
-                              src={favicon}
-                              className='w-16 h-16 rounded-xl hidden sm:block'
-                            />
                             <h1 className='font-semibold text-4xl text-white text-center py-8'>
                               Messiah Meal Planner
                             </h1>
