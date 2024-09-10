@@ -27,6 +27,11 @@ interface DaySelectorProps {
    * Defaults to false.
    */
   slideHighlight?: boolean;
+  /**
+   * Optional list of booleans indicating whether each day should be highlighted red for an error.
+   * Defaults to [false, false, false, false, false, false, false].
+   */
+  daysWithErrors?: boolean[];
 }
 
 /**
@@ -40,7 +45,8 @@ const DaySelector = ({
   onChange,
   square = false,
   numOfMeals,
-  slideHighlight = false
+  slideHighlight = false,
+  daysWithErrors = [false, false, false, false, false, false, false]
 }: DaySelectorProps) => {
   const daySelectorId = `dayselector-${uuid()}`;
   return (
@@ -65,7 +71,7 @@ const DaySelector = ({
                 : slideHighlight
                 ? 'bg-transparent sm:hover:bg-gray-200 sm:active:bg-gray-400 transition duration-50'
                 : 'bg-gray-300 sm:hover:bg-gray-200 sm:active:bg-gray-400 transition duration-50'
-            }`}
+            } ${daysWithErrors[i] && 'text-messiah-red'}`}
             onClick={() => onChange(i)}
           >
             <p className='text-14'>{day}</p>
