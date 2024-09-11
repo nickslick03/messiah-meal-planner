@@ -123,7 +123,7 @@ export const PresetMealPlans = [
       Monday: [
         createMealReference('Falcon', 'Bacon, Egg & Cheese Sandwich'),
         createMealReference('Union', 'Grilled Chicken Sandwich'),
-        createMealReference('Union', 'Italian Stromboli')
+        createMealReference('Union', 'Italian Pesto Wrap')
       ],
       Tuesday: [
         createMealReference('Falcon', 'Bacon, Egg & Cheese Sandwich'),
@@ -132,17 +132,17 @@ export const PresetMealPlans = [
       ],
       Wednesday: [
         createMealReference('Falcon', 'Bacon, Egg & Cheese Sandwich'),
-        createMealReference('Union', 'Grilled Cheese'),
+        createMealReference('Union', 'Grilled Chicken Sandwich'),
         createMealReference('Union', 'Chipotle Grilled Chicken')
       ],
       Thursday: [
         createMealReference('Falcon', 'Bacon, Egg & Cheese Sandwich'),
         createMealReference('Union', 'Turkey BLT'),
-        createMealReference('Union', 'Bone In Chicken Wings')
+        createMealReference('Union', 'Buffalo Chicken Wrap')
       ],
       Friday: [
         createMealReference('Falcon', 'Bacon, Egg & Cheese Sandwich'),
-        createMealReference('Union', 'Smoked Brisket Sandwich'),
+        createMealReference('Union', 'Turkey BLT'),
         createMealReference('Union', 'Blackbean Burger')
       ],
       Saturday: [

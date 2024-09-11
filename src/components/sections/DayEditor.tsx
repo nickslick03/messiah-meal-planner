@@ -124,6 +124,21 @@ const DayEditor = ({ order }: DayEditorProps) => {
   );
 
   /**
+   * Checks for days with undefined meals
+   */
+  const daysWithErrors = useMemo(
+    () =>
+      Object.values(userSelectedMealsValue).map((day) =>
+        day.some(
+          (m) =>
+            Object.values(m).filter((m) => m === undefined || isNaN(m)).length >
+            0
+        )
+      ),
+    [userSelectedMealsValue]
+  );
+
+  /**
    * Removes a meal from the currently selected day.
    * @param meal - The meal to be removed
    */
@@ -164,6 +179,7 @@ const DayEditor = ({ order }: DayEditorProps) => {
               daysSelected={new Array(7)
                 .fill(false)
                 .map((_, day) => day === weekdayIndex)}
+              daysWithErrors={daysWithErrors}
               onChange={setWeekdayIndex}
               numOfMeals={numOfMeals}
               slideHighlight
@@ -201,7 +217,9 @@ const DayEditor = ({ order }: DayEditorProps) => {
           info={[
             {
               title: `Total for One ${weekday}`,
-              value: `${formatCurrency(mealDayTotal)}`,
+              value: `${
+                isNaN(mealDayTotal) ? 'ERROR' : formatCurrency(mealDayTotal)
+              }`,
               resultsStyle: 'text-messiah-red'
             },
             {
@@ -210,9 +228,13 @@ const DayEditor = ({ order }: DayEditorProps) => {
             },
             {
               title: `Total of All ${weekday}s`,
-              value: `${formatCurrency(
-                mealDayTotal * numOfWeekdays[weekdayIndex] // Convert from Monday to Sunday start
-              )}`,
+              value: `${
+                isNaN(mealDayTotal)
+                  ? 'ERROR'
+                  : formatCurrency(
+                      mealDayTotal * numOfWeekdays[weekdayIndex] // Convert from Monday to Sunday start
+                    )
+              }`,
               resultsStyle: 'text-messiah-red'
             }
           ]}

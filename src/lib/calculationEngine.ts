@@ -15,7 +15,9 @@ import { getAllDatesBetween } from './dateCalcuation';
  * @returns The discounted price of the meal.
  */
 export function applyDiscount(meal: Meal) {
-  return DISCOUNTS[meal.location] === undefined
+  return meal === undefined
+    ? 0
+    : DISCOUNTS[meal.location] === undefined
     ? meal.price
     : meal.price * (1 - DISCOUNTS[meal.location]);
 }
