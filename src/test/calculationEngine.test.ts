@@ -29,31 +29,31 @@ describe('getMealDayTotal', () => {
   const mealList = meals.filter((m) =>
     [
       'Breakfast', // 6.55
-      'Smash Burger', // 4.15
-      'Grain Bowl', // 8
+      'Smash Burger', // 4.75
+      'Create Your Own Bowl', // 8
       'Soda/Water' // 2.25
     ].some((mName) => m.name === mName)
   );
 
   it('should work', () => {
     expect(getMealDayTotal(mealList, 1)).toBeCloseTo(
-      (6.55 + 4.5 + 8 + 2.25) * (1 - ALACARTE_DISCOUNT),
+      (6.55 + 4.75 + 8 + 2.25) * (1 - ALACARTE_DISCOUNT),
       2
     );
 
     expect(getMealDayTotal(mealList, 2)).toBeCloseTo(
-      (6.55 + 4.5 + 8 + 2.25) * 2 * (1 - ALACARTE_DISCOUNT),
+      (6.55 + 4.75 + 8 + 2.25) * 2 * (1 - ALACARTE_DISCOUNT),
       1
     );
   });
 
   it('should work with discount', () => {
     expect(getMealDayTotal(mealList, 1, true)).toBe(
-      6.55 * 0.48 + 4.5 * 0.7 + 8 * 0.7 + 2.25
+      6.55 * 0.48 + 4.75 * 0.7 + 8 * 0.7 + 2.25
     );
 
     expect(getMealDayTotal(mealList, 2, true)).toBe(
-      (6.55 * 0.48 + 4.5 * 0.7 + 8 * 0.7 + 2.25) * 2
+      (6.55 * 0.48 + 4.75 * 0.7 + 8 * 0.7 + 2.25) * 2
     );
   });
 });
@@ -63,14 +63,14 @@ describe('getMealTotal', () => {
     .filter((m) =>
       [
         'Breakfast', // 6.55
-        'Grain Bowl' // 8
+        'Create Your Own Bowl' // 8
       ].some((mName) => m.name === mName)
     ) // Lottie and Falcon
     .map((m) => ({ id: m.id as string, instanceId: ':P' }));
   const mealList2: MealReference[] = meals
     .filter((m) =>
       [
-        'Smash Burger', // 4.5
+        'Smash Burger', // 4.75
         'Soda/Water' // 2.25
       ].some((mName) => m.name === mName)
     ) // Union and Vending
@@ -91,13 +91,13 @@ describe('getMealTotal', () => {
     ).toBeCloseTo((6.55 + 8) * (1 - ALACARTE_DISCOUNT), 2);
     expect(
       getMealTotal(userMeals, [1, 0, 0, 0, 0, 0, 0], false, meals) // mealList2
-    ).toBeCloseTo(6.75 * (1 - ALACARTE_DISCOUNT), 2);
+    ).toBeCloseTo(7 * (1 - ALACARTE_DISCOUNT), 2);
   });
 
   it('should work for multiple days', () => {
     expect(
       getMealTotal(userMeals, [1, 1, 0, 0, 0, 0, 0], false, meals)
-    ).toBeCloseTo((6.55 + 8 + 6.75) * (1 - ALACARTE_DISCOUNT), 2);
+    ).toBeCloseTo((6.55 + 8 + 7) * (1 - ALACARTE_DISCOUNT), 2);
   });
 
   it('should work for discount', () => {
@@ -112,14 +112,14 @@ describe('calculateDateWhenRunOut', () => {
     .filter((m) =>
       [
         'Breakfast', // 6.55
-        'Grain Bowl' // 8
+        'Create Your Own Bowl' // 8
       ].some((mName) => m.name === mName)
     ) // Lottie and Falcon
     .map((m) => ({ id: m.id as string, instanceId: ':P' }));
   const mealList2: MealReference[] = meals
     .filter((m) =>
       [
-        'Smash Burger', // 4.5
+        'Smash Burger', // 4.75
         'Soda/Water' // 2.25
       ].some((mName) => m.name === mName)
     ) // Union and Vending

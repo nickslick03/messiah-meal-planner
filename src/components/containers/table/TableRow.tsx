@@ -92,9 +92,16 @@ const TableRow = ({
   return (
     <>
       <tr ref={tr}>
-        <TableCell data={data.location} importance={newImportanceIndex(1)} />
         <TableCell
-          data={data.name}
+          data={
+            data.location ?? <span className='text-messiah-red'>UNKNOWN</span>
+          }
+          importance={newImportanceIndex(1)}
+        />
+        <TableCell
+          data={
+            data.name ?? <span className='text-messiah-red'>INVALID MEAL</span>
+          }
           isCustom={data.isCustom}
           importance={newImportanceIndex(2)}
           onCustomClick={
@@ -104,7 +111,7 @@ const TableRow = ({
           }
         />
         <TableCell
-          data={formatCurrency(price)}
+          data={isNaN(price) ? 'N/A' : formatCurrency(price)}
           importance={newImportanceIndex(2)}
         />
         {buttonIcon && buttonOnClick ? (

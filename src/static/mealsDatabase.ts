@@ -52,12 +52,12 @@ const meals: Meal[] = [
   {
     location: 'Union',
     name: 'Smash Burger',
-    price: 4.5
+    price: 4.75
   },
   {
     location: 'Union',
     name: 'Crispy Chicken Sandwich',
-    price: 5.5
+    price: 5.75
   },
   {
     location: 'Union',
@@ -77,67 +77,82 @@ const meals: Meal[] = [
   {
     location: 'Union',
     name: 'Blackbean Burger',
-    price: 5
+    price: 5.5
   },
   {
     location: 'Union',
     name: 'Chicken Tenders',
-    price: 4.75
+    price: 5
   },
   {
     location: 'Union',
     name: 'Mozzarella Sticks',
-    price: 5.25
+    price: 5.5
   },
   {
     location: 'Union',
     name: 'French Fries',
-    price: 2
-  },
-  {
-    location: 'Union',
-    name: 'Bone In Chicken Wings',
-    price: 13
-  },
-  {
-    location: 'Union',
-    name: 'Italian Stromboli',
-    price: 7.25
+    price: 2.25
   },
   {
     location: 'Union',
     name: 'CYO Sandwich',
-    price: 10
+    price: 10.75
   },
   {
     location: 'Union',
-    name: 'Smoked Brisket Sandwich',
-    price: 13
-  },
-  {
-    location: 'Union',
-    name: 'Chipotle Grilled Chicken',
+    name: 'BBQ Beef and Cheddar Wrap',
     price: 12
   },
   {
     location: 'Union',
-    name: 'Grilled Cheese',
-    price: 11
+    name: 'Chipotle Grilled Chicken',
+    price: 11.5
+  },
+  {
+    location: 'Union',
+    name: 'Chicken Caesar Wrap',
+    price: 11.5
+  },
+  {
+    location: 'Union',
+    name: 'Buffalo Chicken Wrap',
+    price: 11.5
+  },
+  {
+    location: 'Union',
+    name: 'Chicken Bacon Ranch Wrap',
+    price: 11.5
+  },
+  {
+    location: 'Union',
+    name: 'Ham and Provolone Wrap',
+    price: 11.5
+  },
+  {
+    location: 'Union',
+    name: 'Italian Pesto Wrap',
+    price: 11.5
+  },
+  {
+    location: 'Union',
+    name: 'Ultimate Club Wrap',
+    price: 12
   },
   {
     location: 'Union',
     name: 'Turkey BLT',
-    price: 12.75
+    price: 11.5
   },
   {
     location: 'Union',
     name: 'CYO GF Flatbread Pizza',
-    price: 6
+    price: 6.75
   },
   {
     location: 'Union',
     name: 'CYO Flatbread Pizza',
-    price: 5
+    price: 5.75
   },
   {
     location: 'Union',
@@ -147,6 +162,11 @@ const meals: Meal[] = [
   {
     location: 'Union',
     name: 'UCreate Box',
+    price: 6
+  },
+  {
+    location: 'Union',
+    name: 'Burrito',
     price: 6
   },
   {
@@ -163,6 +183,16 @@ const meals: Meal[] = [
     location: 'Union',
     name: 'Meatlovers Pizza',
     price: 19
+  },
+  {
+    location: 'Union',
+    name: 'Buffalo Chicken Pizza',
+    price: 18
+  },
+  {
+    location: 'Union',
+    name: 'Supreme Pizza',
+    price: 18
   },
   {
     location: 'Union',
@@ -187,7 +217,7 @@ const meals: Meal[] = [
   {
     location: 'Union',
     name: 'Hot Cappuccino',
-    price: 3.95
+    price: 4.6
   },
   {
     location: 'Union',
@@ -213,6 +243,16 @@ const meals: Meal[] = [
     location: 'Union',
     name: 'UC 1 Shot Espresso',
     price: 1
+  },
+  {
+    location: 'Union',
+    name: 'UC 2 Shots of Espresso',
+    price: 2
+  },
+  {
+    location: 'Union',
+    name: 'UC 3 Shots of Espresso',
+    price: 3
   },
   {
     location: 'Union',
@@ -271,43 +311,28 @@ const meals: Meal[] = [
   },
   {
     location: 'Union',
-    name: 'Pina Colada',
-    price: 5
-  },
-  {
-    location: 'Union',
     name: 'CYO Smoothie',
     price: 5
   },
   {
     location: 'Union',
     name: 'Acai Bowl',
-    price: 3.25
-  },
-  {
-    location: 'Union',
-    name: 'CYO Fruit Cup',
-    price: 5
-  },
-  {
-    location: 'Union',
-    name: 'CYO Parfait',
-    price: 4.5
+    price: 0.25
   },
   {
     location: 'Falcon',
-    name: 'Grain Bowl',
+    name: 'Crispy Chicken',
+    price: 5.5
+  },
+  {
+    location: 'Falcon',
+    name: 'Chicken Tenders',
+    price: 6
+  },
+  {
+    location: 'Falcon',
+    name: 'Create Your Own Bowl',
     price: 8
-  },
-  {
-    location: 'Falcon',
-    name: 'Noodle Bowl',
-    price: 7.5
-  },
-  {
-    location: 'Falcon',
-    name: 'Green Bowl',
-    price: 8.25
   },
   {
     location: 'Falcon',
@@ -376,6 +401,11 @@ const meals: Meal[] = [
   },
   {
     location: 'Falcon',
+    name: 'Mochas, Caramel Macchiato and Iced Latte 24oz',
+    price: 5.6
+  },
+  {
+    location: 'Falcon',
     name: 'Americano 12oz',
     price: 2.5
   },
@@ -393,6 +423,16 @@ const meals: Meal[] = [
     location: 'Falcon',
     name: 'Chai Latte 16oz',
     price: 4.6
+  },
+  {
+    location: 'Falcon',
+    name: 'soup',
+    price: 3.75
+  },
+  {
+    location: 'Falcon',
+    name: 'Espresso',
+    price: 1
   },
   {
     location: 'Falcon',
@@ -438,6 +478,11 @@ const meals: Meal[] = [
     location: 'Vending',
     name: 'Candy bar',
     price: 2
+  },
+  {
+    location: 'Vending',
+    name: 'Coffee',
+    price: 3
   }
 ].map((m) => ({ ...m, id: generateId(m.location, m.name) }));
 

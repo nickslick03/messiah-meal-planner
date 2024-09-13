@@ -78,6 +78,8 @@ const TableCell = ({
             ''
           )}
         </button>
+      ) : data === 'N/A' ? (
+        <span className='text-messiah-red'>{data}</span>
       ) : (
         data
       )}
