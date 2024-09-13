@@ -38,4 +38,20 @@ interface Meal {
   unavailable?: number[];
 }
 
+/**
+ * A type guard for the Meal type.
+ *
+ * @param m The object to check.
+ * @returns true if the object is a Meal, false otherwise.
+ */
+export const isMeal = (m: unknown): m is Meal => {
+  return (
+    typeof m === 'object' &&
+    m !== null &&
+    'location' in m &&
+    'name' in m &&
+    'price' in m
+  );
+};
+
 export default Meal;
