@@ -13,6 +13,13 @@ const releaseNotes: ReleaseNoteType[] = [
       'Updated Union, Falcon, and Vending prices for 2024-25 school year.',
       'Added logo.'
     ]
+  },
+  {
+    versionNumber: '0.0.2',
+    bugFixes: [
+      'Fixed an issue where all meals would trigger the error highlighting in the day editor.'
+    ],
+    enhancements: []
   }
 ];
 
