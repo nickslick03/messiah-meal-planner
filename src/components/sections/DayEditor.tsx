@@ -11,7 +11,7 @@ import {
 } from '../../static/context';
 import Divider from '../other/Divider';
 import MealContainer from '../containers/MealContainer';
-import Meal from '../../types/Meal';
+import Meal, { isMeal } from '../../types/Meal';
 import meals from '../../static/mealsDatabase';
 import { CustomMealsCtx } from '../../static/context';
 import { getWeekdaysBetween } from '../../lib/dateCalcuation';
@@ -129,11 +129,7 @@ const DayEditor = ({ order }: DayEditorProps) => {
   const daysWithErrors = useMemo(
     () =>
       Object.values(userSelectedMealsValue).map((day) =>
-        day.some(
-          (m) =>
-            Object.values(m).filter((m) => m === undefined || isNaN(m)).length >
-            0
-        )
+        day.some((m) => !isMeal(m))
       ),
     [userSelectedMealsValue]
   );
