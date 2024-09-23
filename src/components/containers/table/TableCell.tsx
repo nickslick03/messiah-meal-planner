@@ -58,7 +58,7 @@ const TableCell = ({
   const importanceStyle = IMPORTANCE_CLASSES[importance] ?? 'font-normal';
 
   return (
-    <td className={`${importanceStyle} p-2 text-center`}>
+    <td className={`${importanceStyle} p-1 py-2 sm:p-2 text-center`}>
       {onCustomClick !== undefined ? (
         <button
           className={`${
