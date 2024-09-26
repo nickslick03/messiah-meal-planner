@@ -248,6 +248,7 @@ const DayEditor = ({ order }: DayEditorProps) => {
           }}
           minimalSpace={true}
           confirmDisabled={false}
+          zIndex={60}
         >
           Are you sure you want to clear all selected meals?
         </ModalContainer>

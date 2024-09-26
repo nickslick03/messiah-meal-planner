@@ -52,6 +52,11 @@ interface ModalContainerProps {
    * if true, only the cancel button is shown
    */
   onlyCancel?: boolean;
+
+  /**
+   * If specificed, sets the z-index of the modal
+   */
+  zIndex?: number;
 }
 
 /**
@@ -70,7 +75,8 @@ const ModalContainer = ({
   confirmDisabled = true,
   centered = true,
   minimalSpace = false,
-  onlyCancel = false
+  onlyCancel = false,
+  zIndex = 50,
 }: ModalContainerProps): JSX.Element => {
   // Keep track of whether or not the modal is visible
   const [isVisible, setIsVisible] = useState(true);
@@ -90,7 +96,10 @@ const ModalContainer = ({
       className={`${
         isVisible ? '' : 'hidden'
       } h-screen w-screen bg-opacity-50 bg-slate-900 
-        fixed top-0 left-0 flex items-center justify-center z-50`}
+        fixed top-0 left-0 flex items-center justify-center`}
+      style={{
+        zIndex
+      }}
     >
       {/* The actual modal component */}
       <div

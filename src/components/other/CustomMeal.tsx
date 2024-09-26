@@ -46,6 +46,7 @@ const CustomMeal = ({ setNewCustomMealID }: CustomMealProps) => {
         }}
         onCancel={() => setIsAddingCustomMeal(false)}
         visible={isAddingCustomMeal}
+        
       />
     </>
   );

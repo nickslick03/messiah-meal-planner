@@ -198,6 +198,7 @@ const AvailableMeals = ({ order }: AvailableMealsProps) => {
             minimalSpace={true}
             onConfirm={deleteCustomMeal}
             onCancel={() => setIsDeletingCustomMeal(false)}
+            zIndex={60}
           >
             <p>
               This custom meal will be deleted from your available meals,<br />
