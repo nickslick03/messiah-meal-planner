@@ -82,7 +82,7 @@ const Highlighter = ({
    * Initial render to set position without transition
    */
   useEffect(() => {
-    updateHighlightPosition();
+    requestAnimationFrame(updateHighlightPosition);
     setRenderNumber(renderNumber < 2 ? renderNumber + 1 : renderNumber); // Disable initial render flag
   }, [renderNumber, updateHighlightPosition]);
 
