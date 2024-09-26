@@ -58,14 +58,14 @@ const TableCell = ({
   const importanceStyle = IMPORTANCE_CLASSES[importance] ?? 'font-normal';
 
   return (
-    <td className={`${importanceStyle} p-2 text-center`}>
+    <td className={`${importanceStyle} p-1 py-2 sm:p-2 text-center`}>
       {onCustomClick !== undefined ? (
         <button
           className={`${
             isCustom || sortState !== SortState.NONE ? 'text-messiah-blue' : ''
           } 
           bg-transparent border-none font-inter underline 
-          hover:text-messiah-blue-hover p-0 m-0 text-nowrap inline-flex transition duration-50`}
+          hover:text-messiah-blue-hover p-0 m-0 text-left inline-flex transition duration-50`}
           type='button'
           onClick={onCustomClick}
         >
