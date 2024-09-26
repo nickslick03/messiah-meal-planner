@@ -170,7 +170,7 @@ const Tutorial = ({
       ></div>
       <div
         className={`relative w-full sm:w-[25rem] p-3 drop-shadow-md self-center
-                    shadow-black bg-white rounded top-1/2 left-1/2 z-[55]
+                    shadow-black bg-white rounded top-1/2 left-1/2 z-[50]
                     ${show ? '' : 'hidden'}`}
         ref={tutorialTooltipRef}
       >
