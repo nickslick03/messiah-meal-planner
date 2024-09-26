@@ -317,7 +317,7 @@ const meals: Meal[] = [
   {
     location: 'Union',
     name: 'Acai Bowl',
-    price: 0.25
+    price: 8
   },
   {
     location: 'Falcon',

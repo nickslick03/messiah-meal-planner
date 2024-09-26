@@ -19,7 +19,9 @@ const releaseNotes: ReleaseNoteType[] = [
     bugFixes: [
       'Fixed an issue where all meals would trigger the error highlighting in the day editor.',
       'Fixed issue where tutorial would cover up the notifications.',
-      'Fixed meal table overflow.'
+      'Fixed meal table overflow.',
+      'Fixed the price of Union Acai bowls',
+      'Fixed an issue where all meals would trigger the error highlighting in the day editor.'
     ],
     enhancements: []
   }
