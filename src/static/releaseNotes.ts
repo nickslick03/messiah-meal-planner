@@ -18,7 +18,9 @@ const releaseNotes: ReleaseNoteType[] = [
     versionNumber: '0.0.2',
     bugFixes: [
       'Fixed an issue where all meals would trigger the error highlighting in the day editor.',
-      'Fixed issue where tutorial would cover up the notifications.'
+      'Fixed issue where tutorial would cover up the notifications.',
+      'Fixed the price of Union Acai bowls',
+      'Fixed an issue where all meals would trigger the error highlighting in the day editor.'
     ],
     enhancements: []
   }
