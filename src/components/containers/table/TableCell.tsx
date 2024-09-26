@@ -65,7 +65,7 @@ const TableCell = ({
             isCustom || sortState !== SortState.NONE ? 'text-messiah-blue' : ''
           } 
           bg-transparent border-none font-inter underline 
-          hover:text-messiah-blue-hover p-0 m-0 text-nowrap inline-flex transition duration-50`}
+          hover:text-messiah-blue-hover p-0 m-0 text-left inline-flex transition duration-50`}
           type='button'
           onClick={onCustomClick}
         >
