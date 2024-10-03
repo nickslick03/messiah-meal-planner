@@ -32,7 +32,7 @@ export const locationClosures: Record<string, number[]> = {
 const API_URL =
   'https://script.google.com/macros/s/AKfycbweFjflkyhI6l-nmDDsw68_a0L8r6kaJI5RZ_uUEepAbxBSOCiS12z7fj-x2pWeABmy_w/exec';
 
-const getMeals = async (): Promise<Meal[]> => {
+export const getMeals = async (): Promise<Meal[]> => {
   try {
     const resp = await fetch(API_URL);
     const json = await resp.json();
@@ -46,15 +46,3 @@ const getMeals = async (): Promise<Meal[]> => {
     return [];
   }
 };
-
-/**
- * The list of all available meals at Messiah (that we have catalogued)
- */
-const meals: Meal[] = await getMeals();
-
-/**
- * An array of all meal locations in the database.
- */
-export const mealLocations = [...new Set(meals.map((m) => m.location))];
-
-export default meals;

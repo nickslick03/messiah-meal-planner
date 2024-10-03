@@ -1,7 +1,8 @@
 import { getMealTotal } from '../lib/calculationEngine';
+import Meal from '../types/Meal';
 import MealReference from '../types/MealReference';
 import { UserSelectedMealsObjectType } from '../types/userSelectedMealsObject';
-import meals, { generateId } from './mealsDatabase';
+import { generateId } from './mealsDatabase';
 import { v4 as uuid } from 'uuid';
 
 /**
@@ -36,7 +37,7 @@ export class PresetMealPlan {
   /**
    * Returns the weekly price of the meal plan.
    */
-  weekPrice(isDiscount: boolean) {
+  weekPrice(isDiscount: boolean, meals: Meal[]) {
     return getMealTotal(
       this.userSelectedMealPlan(),
       Array(7).fill(1),
@@ -53,7 +54,11 @@ export class PresetMealPlan {
  * @param {string} name - The name of the meal.
  * @return {MealReference} - The created meal reference.
  */
-function createMealReference(location: string, name: string): MealReference {
+function createMealReference(
+  location: string,
+  name: string,
+  meals: Meal[]
+): MealReference {
   const id = generateId(location, name);
   try {
     if (!meals.some((meal) => meal.id === id))
@@ -72,43 +77,43 @@ function createMealReference(location: string, name: string): MealReference {
 /**
  * An array of preset meal plans.
  */
-export const PresetMealPlans = [
+export const PresetMealPlans = (meals: Meal[]) => [
   new PresetMealPlan(
     'Lottie for Life',
     'Contains Lottie for breakfast, lunch, and dinner on weekdays, Lottie lunch and dinner on the weekends.',
     () => ({
       Sunday: [
-        createMealReference('Lottie', 'Lunch'),
-        createMealReference('Lottie', 'Dinner')
+        createMealReference('Lottie', 'Lunch', meals),
+        createMealReference('Lottie', 'Dinner', meals)
       ],
       Monday: [
-        createMealReference('Lottie', 'Breakfast'),
-        createMealReference('Lottie', 'Lunch'),
-        createMealReference('Lottie', 'Dinner')
+        createMealReference('Lottie', 'Breakfast', meals),
+        createMealReference('Lottie', 'Lunch', meals),
+        createMealReference('Lottie', 'Dinner', meals)
       ],
       Tuesday: [
-        createMealReference('Lottie', 'Breakfast'),
-        createMealReference('Lottie', 'Lunch'),
-        createMealReference('Lottie', 'Dinner')
+        createMealReference('Lottie', 'Breakfast', meals),
+        createMealReference('Lottie', 'Lunch', meals),
+        createMealReference('Lottie', 'Dinner', meals)
       ],
       Wednesday: [
-        createMealReference('Lottie', 'Breakfast'),
-        createMealReference('Lottie', 'Lunch'),
-        createMealReference('Lottie', 'Dinner')
+        createMealReference('Lottie', 'Breakfast', meals),
+        createMealReference('Lottie', 'Lunch', meals),
+        createMealReference('Lottie', 'Dinner', meals)
       ],
       Thursday: [
-        createMealReference('Lottie', 'Breakfast'),
-        createMealReference('Lottie', 'Lunch'),
-        createMealReference('Lottie', 'Dinner')
+        createMealReference('Lottie', 'Breakfast', meals),
+        createMealReference('Lottie', 'Lunch', meals),
+        createMealReference('Lottie', 'Dinner', meals)
       ],
       Friday: [
-        createMealReference('Lottie', 'Breakfast'),
-        createMealReference('Lottie', 'Lunch'),
-        createMealReference('Lottie', 'Dinner')
+        createMealReference('Lottie', 'Breakfast', meals),
+        createMealReference('Lottie', 'Lunch', meals),
+        createMealReference('Lottie', 'Dinner', meals)
       ],
       Saturday: [
-        createMealReference('Lottie', 'Lunch'),
-        createMealReference('Lottie', 'Dinner')
+        createMealReference('Lottie', 'Lunch', meals),
+        createMealReference('Lottie', 'Dinner', meals)
       ]
     })
   ),
@@ -117,37 +122,37 @@ export const PresetMealPlans = [
     "Features Falcon breakfast sandwiches on weekdays and an array of Union meals for lunch and dinner. Doesn't include drinks or deserts.",
     () => ({
       Sunday: [
-        createMealReference('Union', 'Chicken Tenders'),
-        createMealReference('Union', 'Cheesesteak')
+        createMealReference('Union', 'Chicken Tenders', meals),
+        createMealReference('Union', 'Cheesesteak', meals)
       ],
       Monday: [
-        createMealReference('Falcon', 'Bacon, Egg & Cheese Sandwich'),
-        createMealReference('Union', 'Grilled Chicken Sandwich'),
-        createMealReference('Union', 'Italian Pesto Wrap')
+        createMealReference('Falcon', 'Bacon, Egg & Cheese Sandwich', meals),
+        createMealReference('Union', 'Grilled Chicken Sandwich', meals),
+        createMealReference('Union', 'Italian Pesto Wrap', meals)
       ],
       Tuesday: [
-        createMealReference('Falcon', 'Bacon, Egg & Cheese Sandwich'),
-        createMealReference('Union', 'Beyond Meat Burger'),
-        createMealReference('Union', 'CYO Sandwich')
+        createMealReference('Falcon', 'Bacon, Egg & Cheese Sandwich', meals),
+        createMealReference('Union', 'Beyond Meat Burger', meals),
+        createMealReference('Union', 'CYO Sandwich', meals)
       ],
       Wednesday: [
-        createMealReference('Falcon', 'Bacon, Egg & Cheese Sandwich'),
-        createMealReference('Union', 'Grilled Chicken Sandwich'),
-        createMealReference('Union', 'Chipotle Grilled Chicken')
+        createMealReference('Falcon', 'Bacon, Egg & Cheese Sandwich', meals),
+        createMealReference('Union', 'Grilled Chicken Sandwich', meals),
+        createMealReference('Union', 'Chipotle Grilled Chicken', meals)
       ],
       Thursday: [
-        createMealReference('Falcon', 'Bacon, Egg & Cheese Sandwich'),
-        createMealReference('Union', 'Turkey BLT'),
-        createMealReference('Union', 'Buffalo Chicken Wrap')
+        createMealReference('Falcon', 'Bacon, Egg & Cheese Sandwich', meals),
+        createMealReference('Union', 'Turkey BLT', meals),
+        createMealReference('Union', 'Buffalo Chicken Wrap', meals)
       ],
       Friday: [
-        createMealReference('Falcon', 'Bacon, Egg & Cheese Sandwich'),
-        createMealReference('Union', 'Turkey BLT'),
-        createMealReference('Union', 'Blackbean Burger')
+        createMealReference('Falcon', 'Bacon, Egg & Cheese Sandwich', meals),
+        createMealReference('Union', 'Turkey BLT', meals),
+        createMealReference('Union', 'Blackbean Burger', meals)
       ],
       Saturday: [
-        createMealReference('Union', 'Pasta'),
-        createMealReference('Union', 'Crispy Chicken Sandwich')
+        createMealReference('Union', 'Pasta', meals),
+        createMealReference('Union', 'Crispy Chicken Sandwich', meals)
       ]
     })
   )

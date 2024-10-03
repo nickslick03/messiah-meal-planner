@@ -36,7 +36,9 @@ export function getMealDayTotal(meals: Meal[], days: number, discount = false) {
   let total = 0;
   meals.forEach(
     (m) =>
-      (total += discount ? applyDiscount(m) : m.price * (1 - ALACARTE_DISCOUNT))
+      (total += discount
+        ? applyDiscount(m)
+        : m?.price * (1 - ALACARTE_DISCOUNT))
   );
   return total * days;
 }

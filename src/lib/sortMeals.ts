@@ -18,14 +18,14 @@ const sortMeals = (
     switch (sortedBy) {
       case 'Place':
         return sortDirection
-          ? a.location.localeCompare(b.location)
-          : b.location.localeCompare(a.location);
+          ? a?.location?.localeCompare(b?.location)
+          : b?.location?.localeCompare(a?.location);
       case 'Name':
         return sortDirection
-          ? a.name.localeCompare(b.name)
-          : b.name.localeCompare(a.name);
+          ? a?.name?.localeCompare(b?.name)
+          : b?.name?.localeCompare(a?.name);
       case 'Price':
-        return sortDirection ? a.price - b.price : b.price - a.price;
+        return sortDirection ? a?.price - b?.price : b?.price - a?.price;
       default:
         return 0;
     }

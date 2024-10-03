@@ -10,7 +10,9 @@ import {
   CustomMealsCtx,
   WeeksOffCtx,
   TutorialElementsCtx,
-  TutorialControlCtx
+  TutorialControlCtx,
+  MealsCtx,
+  LocationsCtx
 } from './static/context';
 import { useState, useEffect, useMemo, useRef } from 'react';
 import Meal from './types/Meal';
@@ -24,7 +26,7 @@ import {
   UserSelectedMealsObjectType
 } from './types/userSelectedMealsObject';
 import usePersistentState from './hooks/usePersistentState';
-import meals from './static/mealsDatabase';
+import { getMeals } from './static/mealsDatabase';
 import { getMealTotal, calculateDateWhenRunOut } from './lib/calculationEngine';
 import { getWeekdaysBetween } from './lib/dateCalcuation';
 import Tutorial from './components/modals/Tutorial';
@@ -101,6 +103,16 @@ function App() {
   );
 
   /**
+   * Stores all meals that are available for the user to select
+   */
+  const [meals, setMeals] = useState<Meal[]>([]);
+
+  /**
+   * Stores all meal locations
+   */
+  const [mealLocations, setMealLocations] = useState<string[]>([]);
+
+  /**
    * An array of refs to the tutorial divs
    */
   const tutorialDivs = useRef<(HTMLElement | null)[]>(
@@ -136,6 +148,24 @@ function App() {
   const [areDetailsEntered, setAreDetailsEntered] = useState(false);
 
   /**
+   * Load meals from api
+   */
+  useEffect(() => {
+    (async () => {
+      setMeals(await getMeals());
+    })();
+  }, []);
+
+  /**
+   * Load meal locations from api
+   */
+  useEffect(() => {
+    (async () => {
+      setMealLocations(Array.from(new Set(meals.map((m) => m.location))));
+    })();
+  }, [meals]);
+
+  /**
    * Remove dangling meal references from mealQueue
    */
   useEffect(() => {
@@ -145,7 +175,7 @@ function App() {
     if (newMealQueue.length !== mealQueue.length) {
       setMealQueue(newMealQueue);
     }
-  }, [mealQueue, customMeals, setMealQueue]);
+  }, [mealQueue, customMeals, setMealQueue, meals]);
 
   /**
    * Remove dangling meal references from userSelectedMeals
@@ -165,7 +195,7 @@ function App() {
     ) {
       setUserSelectedMeals(newUserSelectedMeals);
     }
-  }, [userSelectedMeals, customMeals, setUserSelectedMeals]);
+  }, [userSelectedMeals, customMeals, setUserSelectedMeals, meals]);
 
   /**
    * The grand total cost of all the meals from the start date to the end date.
@@ -190,7 +220,8 @@ function App() {
       mealPlan,
       startDate,
       userSelectedMeals,
-      weeksOff
+      weeksOff,
+      meals
     ]
   );
 
@@ -234,100 +265,112 @@ function App() {
       startDate,
       endDate,
       balance,
-      weeksOff
+      weeksOff,
+      meals
     ]
   );
 
   return (
-    <TutorialControlCtx.Provider value={{ setShowTutorial, setTutorialStep }}>
-      <TutorialElementsCtx.Provider
-        value={{ value: tutorialDivs.current, setValue: addRef }}
+    <MealsCtx.Provider value={{ value: meals, setValue: setMeals }}>
+      <LocationsCtx.Provider
+        value={{ value: mealLocations, setValue: setMealLocations }}
       >
-        <WeeksOffCtx.Provider
-          value={{ value: weeksOff, setValue: setWeeksOff }}
+        <TutorialControlCtx.Provider
+          value={{ setShowTutorial, setTutorialStep }}
         >
-          <MealPlanCtx.Provider
-            value={{ value: mealPlan, setValue: setMealPlan }}
+          <TutorialElementsCtx.Provider
+            value={{ value: tutorialDivs.current, setValue: addRef }}
           >
-            <BalanceCtx.Provider
-              value={{ value: balance, setValue: setBalance }}
+            <WeeksOffCtx.Provider
+              value={{ value: weeksOff, setValue: setWeeksOff }}
             >
-              <StartDateCtx.Provider
-                value={{ value: startDate, setValue: setStartDate }}
+              <MealPlanCtx.Provider
+                value={{ value: mealPlan, setValue: setMealPlan }}
               >
-                <EndDateCtx.Provider
-                  value={{ value: endDate, setValue: setEndDate }}
+                <BalanceCtx.Provider
+                  value={{ value: balance, setValue: setBalance }}
                 >
-                  <UserSelectedMealsCtx.Provider
-                    value={{
-                      value: userSelectedMeals,
-                      setValue: setUserSelectedMeals
-                    }}
+                  <StartDateCtx.Provider
+                    value={{ value: startDate, setValue: setStartDate }}
                   >
-                    <MealQueueCtx.Provider
-                      value={{ value: mealQueue, setValue: setMealQueue }}
+                    <EndDateCtx.Provider
+                      value={{ value: endDate, setValue: setEndDate }}
                     >
-                      <CustomMealsCtx.Provider
-                        value={{ value: customMeals, setValue: setCustomMeals }}
+                      <UserSelectedMealsCtx.Provider
+                        value={{
+                          value: userSelectedMeals,
+                          setValue: setUserSelectedMeals
+                        }}
                       >
-                        <Menu />
-                        <ScreenContainer>
-                          <WhatsNewModal />
-                          <header className='bg-messiah-blue rounded-xl border-4 border-white shadow-md w-full mb-4 flex flex-row justify-center items-center gap-4'>
-                            <h1 className='font-semibold text-4xl text-white text-center py-8'>
-                              Messiah Meal Planner
-                            </h1>
-                          </header>
-                          <div className='flex flex-col relative gap-4'>
-                            <Tutorial
-                              show={showTutorial}
-                              setShow={setShowTutorial}
-                              step={tutorialStep}
-                              setStep={setTutorialStep}
-                              areDetailsEntered={areDetailsEntered}
-                            />
-                            <MealPlanInfo
-                              onEnterDetails={setAreDetailsEntered}
-                              order={1}
-                            />
-                            {areDetailsEntered ? (
-                              <>
-                                <AvailableMeals order={2} />
-                                <MealQueue order={3} />
-                                <DayEditor order={4} />
-                                <Results
-                                  order={5}
-                                  grandTotal={grandTotal}
-                                  isUnderBalance={isUnderBalance}
-                                  difference={difference}
-                                  dayWhenRunOut={dayWhenRunOut}
+                        <MealQueueCtx.Provider
+                          value={{ value: mealQueue, setValue: setMealQueue }}
+                        >
+                          <CustomMealsCtx.Provider
+                            value={{
+                              value: customMeals,
+                              setValue: setCustomMeals
+                            }}
+                          >
+                            <Menu />
+                            <ScreenContainer>
+                              <WhatsNewModal />
+                              <header className='bg-messiah-blue rounded-xl border-4 border-white shadow-md w-full mb-4 flex flex-row justify-center items-center gap-4'>
+                                <h1 className='font-semibold text-4xl text-white text-center py-8'>
+                                  Messiah Meal Planner
+                                </h1>
+                              </header>
+                              <div className='flex flex-col relative gap-4'>
+                                <Tutorial
+                                  show={showTutorial}
+                                  setShow={setShowTutorial}
+                                  step={tutorialStep}
+                                  setStep={setTutorialStep}
+                                  areDetailsEntered={areDetailsEntered}
                                 />
-                                <ResultsBar
-                                  order={6}
-                                  grandTotal={grandTotal}
-                                  isUnderBalance={isUnderBalance}
-                                  difference={difference}
+                                <MealPlanInfo
+                                  onEnterDetails={setAreDetailsEntered}
+                                  order={1}
                                 />
-                              </>
-                            ) : (
-                              <div className='flex flex-col items-center order-1'>
-                                <p className='text-gray-400'>
-                                  Enter meal plan info to continue planning.
-                                </p>
+                                {areDetailsEntered ? (
+                                  <>
+                                    <AvailableMeals order={2} />
+                                    <MealQueue order={3} />
+                                    <DayEditor order={4} />
+                                    <Results
+                                      order={5}
+                                      grandTotal={grandTotal}
+                                      isUnderBalance={isUnderBalance}
+                                      difference={difference}
+                                      dayWhenRunOut={dayWhenRunOut}
+                                    />
+                                    <ResultsBar
+                                      order={6}
+                                      grandTotal={grandTotal}
+                                      isUnderBalance={isUnderBalance}
+                                      difference={difference}
+                                    />
+                                  </>
+                                ) : (
+                                  <div className='flex flex-col items-center order-1'>
+                                    <p className='text-gray-400'>
+                                      Enter meal plan info to continue planning.
+                                    </p>
+                                  </div>
+                                )}
                               </div>
-                            )}
-                          </div>
-                        </ScreenContainer>
-                      </CustomMealsCtx.Provider>
-                    </MealQueueCtx.Provider>
-                  </UserSelectedMealsCtx.Provider>
-                </EndDateCtx.Provider>
-              </StartDateCtx.Provider>
-            </BalanceCtx.Provider>
-          </MealPlanCtx.Provider>
-        </WeeksOffCtx.Provider>
-      </TutorialElementsCtx.Provider>
-    </TutorialControlCtx.Provider>
+                            </ScreenContainer>
+                          </CustomMealsCtx.Provider>
+                        </MealQueueCtx.Provider>
+                      </UserSelectedMealsCtx.Provider>
+                    </EndDateCtx.Provider>
+                  </StartDateCtx.Provider>
+                </BalanceCtx.Provider>
+              </MealPlanCtx.Provider>
+            </WeeksOffCtx.Provider>
+          </TutorialElementsCtx.Provider>
+        </TutorialControlCtx.Provider>
+      </LocationsCtx.Provider>
+    </MealsCtx.Provider>
   );
 }
 
