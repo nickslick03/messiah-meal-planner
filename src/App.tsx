@@ -1,3 +1,9 @@
+import useAsync from './hooks/useAsync';
+import {
+  IfFulfilled,
+  IfPending,
+  IfRejected
+} from './components/other/AsyncComponents';
 import ScreenContainer from './components/containers/ScreenContainer';
 import MealPlanInfo from './components/sections/MealPlanInfo';
 import {
@@ -36,6 +42,21 @@ import Menu from './components/other/Menu';
 import WhatsNewModal from './components/modals/WhatsNewModal';
 
 function App() {
+  /**
+   * Fetch meals
+   */
+  const mealsState = useAsync<Meal[]>(getMeals);
+
+  /**
+   * Stores the list of available meals
+   */
+  const meals = useMemo(() => mealsState.data as Meal[], [mealsState.data]);
+
+  /**
+   * Stores the error state of the meal database
+   */
+  const error = useMemo(() => mealsState.error, [mealsState.error]);
+
   /**
    * Stores the user's chosen number of weeks off
    */
@@ -103,11 +124,6 @@ function App() {
   );
 
   /**
-   * Stores all meals that are available for the user to select
-   */
-  const [meals, setMeals] = useState<Meal[]>([]);
-
-  /**
    * Stores all meal locations
    */
   const [mealLocations, setMealLocations] = useState<string[]>([]);
@@ -148,30 +164,24 @@ function App() {
   const [areDetailsEntered, setAreDetailsEntered] = useState(false);
 
   /**
-   * Load meals from api
-   */
-  useEffect(() => {
-    (async () => {
-      setMeals(await getMeals());
-    })();
-  }, []);
-
-  /**
    * Load meal locations from api
    */
   useEffect(() => {
-    setMealLocations(Array.from(new Set(meals.map((m) => m.location))));
+    if (meals)
+      setMealLocations(Array.from(new Set(meals.map((m) => m.location))));
   }, [meals]);
 
   /**
    * Remove dangling meal references from mealQueue
    */
   useEffect(() => {
-    const newMealQueue = mealQueue.filter((mr) =>
-      [...meals, ...customMeals].find((m) => m.id === mr.id)
-    );
-    if (newMealQueue.length !== mealQueue.length) {
-      setMealQueue(newMealQueue);
+    if (meals) {
+      const newMealQueue = mealQueue.filter((mr) =>
+        [...meals, ...customMeals].find((m) => m.id === mr.id)
+      );
+      if (newMealQueue.length !== mealQueue.length) {
+        setMealQueue(newMealQueue);
+      }
     }
   }, [mealQueue, customMeals, setMealQueue, meals]);
 
@@ -179,19 +189,21 @@ function App() {
    * Remove dangling meal references from userSelectedMeals
    */
   useEffect(() => {
-    const newUserSelectedMeals = Object.fromEntries(
-      Object.entries(userSelectedMeals).map(([key, value]) => [
-        key,
-        value.filter((mr: MealReference) =>
-          [...meals, ...customMeals].find((m) => m.id === mr.id)
-        )
-      ])
-    ) as UserSelectedMealsObjectType;
-    if (
-      Object.keys(newUserSelectedMeals).length !==
-      Object.keys(userSelectedMeals).length
-    ) {
-      setUserSelectedMeals(newUserSelectedMeals);
+    if (meals) {
+      const newUserSelectedMeals = Object.fromEntries(
+        Object.entries(userSelectedMeals).map(([key, value]) => [
+          key,
+          value.filter((mr: MealReference) =>
+            [...meals, ...customMeals].find((m) => m.id === mr.id)
+          )
+        ])
+      ) as UserSelectedMealsObjectType;
+      if (
+        Object.keys(newUserSelectedMeals).length !==
+        Object.keys(userSelectedMeals).length
+      ) {
+        setUserSelectedMeals(newUserSelectedMeals);
+      }
     }
   }, [userSelectedMeals, customMeals, setUserSelectedMeals, meals]);
 
@@ -200,16 +212,18 @@ function App() {
    */
   const grandTotal = useMemo(
     () =>
-      startDate !== null &&
-      endDate !== null &&
-      balance !== null &&
-      weeksOff !== null
-        ? getMealTotal(
-            userSelectedMeals,
-            getWeekdaysBetween(startDate, endDate, weeksOff),
-            mealPlan ?? false,
-            [...meals, ...customMeals]
-          )
+      meals
+        ? startDate !== null &&
+          endDate !== null &&
+          balance !== null &&
+          weeksOff !== null
+          ? getMealTotal(
+              userSelectedMeals,
+              getWeekdaysBetween(startDate, endDate, weeksOff),
+              mealPlan ?? false,
+              [...meals, ...customMeals]
+            )
+          : 0
         : 0,
     [
       balance,
@@ -247,15 +261,17 @@ function App() {
    */
   const dayWhenRunOut = useMemo(
     () =>
-      calculateDateWhenRunOut(
-        userSelectedMeals,
-        mealPlan ?? false,
-        [...meals, ...customMeals],
-        startDate ?? new Date(),
-        endDate ?? new Date(),
-        balance ?? 0,
-        weeksOff ?? 0
-      ),
+      meals
+        ? calculateDateWhenRunOut(
+            userSelectedMeals,
+            mealPlan ?? false,
+            [...meals, ...customMeals],
+            startDate ?? new Date(),
+            endDate ?? new Date(),
+            balance ?? 0,
+            weeksOff ?? 0
+          )
+        : null,
     [
       userSelectedMeals,
       mealPlan,
@@ -269,7 +285,7 @@ function App() {
   );
 
   return (
-    <MealsCtx.Provider value={{ value: meals, setValue: setMeals }}>
+    <MealsCtx.Provider value={{ value: meals, setValue: () => {} }}>
       <LocationsCtx.Provider
         value={{ value: mealLocations, setValue: setMealLocations }}
       >
@@ -331,22 +347,40 @@ function App() {
                                 />
                                 {areDetailsEntered ? (
                                   <>
-                                    <AvailableMeals order={2} />
-                                    <MealQueue order={3} />
-                                    <DayEditor order={4} />
-                                    <Results
-                                      order={5}
-                                      grandTotal={grandTotal}
-                                      isUnderBalance={isUnderBalance}
-                                      difference={difference}
-                                      dayWhenRunOut={dayWhenRunOut}
-                                    />
-                                    <ResultsBar
-                                      order={6}
-                                      grandTotal={grandTotal}
-                                      isUnderBalance={isUnderBalance}
-                                      difference={difference}
-                                    />
+                                    <IfRejected state={mealsState}>
+                                      <div className='flex flex-col items-center order-1'>
+                                        <p className='text-red-500'>
+                                          Something went wrong: {error?.message}
+                                        </p>
+                                      </div>
+                                    </IfRejected>
+                                    <IfPending state={mealsState}>
+                                      <div className='flex flex-col items-center order-1'>
+                                        <p className='text-gray-400'>
+                                          Loading Menu...
+                                        </p>
+                                      </div>
+                                    </IfPending>
+                                    <IfFulfilled state={mealsState}>
+                                      <>
+                                        <AvailableMeals order={2} />
+                                        <MealQueue order={3} />
+                                        <DayEditor order={4} />
+                                        <Results
+                                          order={5}
+                                          grandTotal={grandTotal}
+                                          isUnderBalance={isUnderBalance}
+                                          difference={difference}
+                                          dayWhenRunOut={dayWhenRunOut}
+                                        />
+                                        <ResultsBar
+                                          order={6}
+                                          grandTotal={grandTotal}
+                                          isUnderBalance={isUnderBalance}
+                                          difference={difference}
+                                        />
+                                      </>
+                                    </IfFulfilled>
                                   </>
                                 ) : (
                                   <div className='flex flex-col items-center order-1'>

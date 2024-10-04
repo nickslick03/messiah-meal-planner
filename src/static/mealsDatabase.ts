@@ -32,9 +32,17 @@ export const locationClosures: Record<string, number[]> = {
 const API_URL =
   'https://script.google.com/macros/s/AKfycbweFjflkyhI6l-nmDDsw68_a0L8r6kaJI5RZ_uUEepAbxBSOCiS12z7fj-x2pWeABmy_w/exec';
 
+/**
+ * Fetches the meals from the API and returns an array of meal objects.
+ *
+ * @returns An array of meal objects
+ */
 export const getMeals = async (): Promise<Meal[]> => {
   try {
     const resp = await fetch(API_URL);
+    if (!resp.ok) {
+      throw new Error(`Unable to find the menu. status: ${resp.status}`);
+    }
     const json = await resp.json();
     const meals = (json as Meal[]).map((m) => ({
       ...m,
@@ -42,7 +50,9 @@ export const getMeals = async (): Promise<Meal[]> => {
     }));
     return meals;
   } catch (error) {
-    console.log(error);
-    return [];
+    console.error('Error fetching meals:', error);
+    throw new Error(
+      'Unable to fetch the menu. Please refresh the page or try again in a few minutes.'
+    );
   }
 };
