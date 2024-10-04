@@ -25,7 +25,9 @@ const releaseNotes: ReleaseNoteType[] = [
       'Fixed the price of Union Acai bowls.',
       'Fixed an issue where all meals would trigger the error highlighting in the day editor.'
     ],
-    enhancements: []
+    enhancements: [
+      'We can now update the menu without needing to update the app. This should keep it more up-to-date.'
+    ]
   }
 ];
 
