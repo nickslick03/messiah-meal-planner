@@ -160,9 +160,7 @@ function App() {
    * Load meal locations from api
    */
   useEffect(() => {
-    (async () => {
-      setMealLocations(Array.from(new Set(meals.map((m) => m.location))));
-    })();
+    setMealLocations(Array.from(new Set(meals.map((m) => m.location))));
   }, [meals]);
 
   /**
