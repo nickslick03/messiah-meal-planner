@@ -23,7 +23,7 @@ const useAsync = <T>(promiseFn: () => Promise<T>): AsyncState<T> => {
       .catch((error) => {
         setState({ data: null, error, isPending: false });
       });
-  }, [promiseFn]); // Always use an empty array literal here
+  }, [promiseFn]);
 
   return state;
 };
