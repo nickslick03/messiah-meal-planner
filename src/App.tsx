@@ -297,7 +297,9 @@ function App() {
       customMeals={customMeals}
       setCustomMeals={setCustomMeals}
     >
-      <Menu />
+    <IfFulfilled state={mealsState}>
+      <Menu /> 
+    </IfFulfilled>  
       <ScreenContainer>
         <WhatsNewModal />
         <header className='bg-messiah-blue rounded-xl border-4 border-white shadow-md w-full mb-4 flex flex-row justify-center items-center gap-4'>
