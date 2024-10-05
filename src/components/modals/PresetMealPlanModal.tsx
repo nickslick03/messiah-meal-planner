@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { PresetMealPlans } from '../../static/PresetMealPlans';
 import ModalContainer from '../containers/ModalContainer';
 import { PresetMealPlanView } from '../other/PresetMealPlanView';
-import { UserSelectedMealsCtx } from '../../static/context';
+import { MealsCtx, UserSelectedMealsCtx } from '../../static/context';
 import Notification from '../other/Notification';
 
 interface PresetMealPlanModalProps {
@@ -28,6 +28,7 @@ const PresetMealPlanModal = ({
   onCancel
 }: PresetMealPlanModalProps) => {
   const userSelectedMeals = useContext(UserSelectedMealsCtx);
+  const meals = useContext(MealsCtx);
 
   /**
    * Whether or not the confirmation modal is visible.
@@ -57,12 +58,14 @@ const PresetMealPlanModal = ({
    */
   const onConfirmSet = () => {
     userSelectedMeals.setValue(
-      PresetMealPlans[selectedPlan].userSelectedMealPlan()
+      PresetMealPlans(meals.value)[selectedPlan].userSelectedMealPlan()
     );
     setShowConfirm(false);
     onCancel();
     setMessage({
-      text: `Set meal plan to ${PresetMealPlans[selectedPlan].name}`
+      text: `Set meal plan to ${
+        PresetMealPlans(meals.value)[selectedPlan].name
+      }`
     });
   };
 
@@ -79,13 +82,13 @@ const PresetMealPlanModal = ({
             onCancel={onCancel}
             centered={false}
           >
-            {PresetMealPlans.map((plan, i) => (
+            {PresetMealPlans(meals.value).map((plan, i) => (
               <React.Fragment key={i}>
                 <PresetMealPlanView
                   presetMealPlan={plan}
                   onSet={() => onSet(i)}
                 />
-                {i + 1 != PresetMealPlans.length ? (
+                {i + 1 != PresetMealPlans(meals.value).length ? (
                   <div className='w-full h-[1px] bg-gray-300 my-5'></div>
                 ) : (
                   ''
@@ -103,7 +106,8 @@ const PresetMealPlanModal = ({
               onCancel={() => setShowConfirm(false)}
             >
               This will replace the current meal plan with the "
-              {PresetMealPlans[selectedPlan].name}" meal plan. Are you sure?
+              {PresetMealPlans(meals.value)[selectedPlan].name}" meal plan. Are
+              you sure?
             </ModalContainer>
           ) : (
             <></>

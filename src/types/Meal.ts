@@ -33,6 +33,11 @@ interface Meal {
   price: number;
 
   /**
+   * Whether or not the meal is legacy.
+   */
+  legacy?: boolean;
+
+  /**
    * An array of weekday indices denoting when the meal is unavailable.
    */
   unavailable?: number[];
