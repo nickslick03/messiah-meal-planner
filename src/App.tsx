@@ -28,6 +28,7 @@ import Menu from './components/other/Menu';
 import WhatsNewModal from './components/modals/WhatsNewModal';
 import ContextProvider from './components/other/ContextProvider';
 import dereferenceMeal from './lib/dereferenceMeal';
+import InvalidModal from './components/modals/InvalidModal';
 
 function App() {
   /**
@@ -317,6 +318,7 @@ function App() {
         <Menu />
       </IfFulfilled>
       <ScreenContainer>
+        {isDataInvalid && <InvalidModal />}
         <WhatsNewModal />
         <header className='bg-messiah-blue rounded-xl border-4 border-white shadow-md w-full mb-4 flex flex-row justify-center items-center gap-4'>
           <h1 className='font-semibold text-4xl text-white text-center py-8'>
