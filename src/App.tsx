@@ -27,6 +27,7 @@ import AvailableMeals from './components/sections/AvailableMeals';
 import Menu from './components/other/Menu';
 import WhatsNewModal from './components/modals/WhatsNewModal';
 import ContextProvider from './components/other/ContextProvider';
+import dereferenceMeal from './lib/dereferenceMeal';
 
 function App() {
   /**
@@ -120,6 +121,21 @@ function App() {
    */
   const tutorialDivs = useRef<(HTMLElement | null)[]>(
     Array(tutorialSteps.length).fill(null)
+  );
+
+  /**
+   * Keeps track of whether or not legacy meals are in the userSelectedMeals object
+   */
+  const isDataInvalid = useMemo(
+    () =>
+      Object.values(userSelectedMeals).some((userMeals) =>
+        userMeals.some(
+          (meal: MealReference) =>
+            dereferenceMeal(meal, meals ?? [], customMeals ?? [])?.legacy ===
+            true
+        )
+      ),
+    [userSelectedMeals, meals, customMeals]
   );
 
   /**
@@ -337,9 +353,7 @@ function App() {
                   <DayEditor order={4} />
                   <Results
                     order={5}
-                    dataIsInvalid={Object.values(userSelectedMeals).some(
-                      (meals) => meals.some((meal: Meal) => meal?.legacy)
-                    )}
+                    dataIsInvalid={isDataInvalid}
                     grandTotal={grandTotal}
                     isUnderBalance={isUnderBalance}
                     difference={difference}

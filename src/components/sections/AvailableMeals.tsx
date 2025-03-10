@@ -142,7 +142,7 @@ const AvailableMeals = ({ order }: AvailableMealsProps) => {
       ...userSelectedMeals.value,
       [day]: [
         ...(userSelectedMeals.value[day] ?? []),
-        { ...meal, instanceId: uuid() }
+        { id: meal.id ?? '', instanceId: uuid() }
       ]
     });
   };
