@@ -12,6 +12,11 @@ interface ContextType<T> {
   setValue: Dispatch<SetStateAction<T>>;
 }
 
+export const ColorPreferenceCtx = createContext<ContextType<string | null>>({
+  value: null,
+  setValue: () => {}
+});
+
 export const WeeksOffCtx = createContext<ContextType<number | null>>({
   value: null,
   setValue: () => {}

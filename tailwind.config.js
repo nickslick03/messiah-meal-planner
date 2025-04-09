@@ -14,7 +14,11 @@ export default {
         'messiah-red': 'hsl(359, 50%, 43%)',
         'messiah-red-hover': 'hsl(359, 50%, 53%)',
         'messiah-red-active': 'hsl(359, 50%, 33%)',
-        'messiah-green': 'hsl(173, 83%, 25%)'
+        'messiah-green': 'hsl(173, 83%, 25%)',
+        'background-dark': 'hsl(0, 0%, 10%)',
+        'card-background-dark': 'hsl(0, 0%, 25%)',
+        'text-dark': 'white',
+        'card-border-dark': 'hsl(210, 20%, 70%)'
       },
       overflow: {
         visible: 'visible'
@@ -43,5 +47,6 @@ export default {
       }
     }
   },
-  plugins: []
+  plugins: [],
+  darkMode: 'class'
 };

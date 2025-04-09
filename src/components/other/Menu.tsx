@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { IoMenu } from 'react-icons/io5';
+import { useContext, useEffect, useState } from 'react';
+import { IoMenu, IoMoon, IoSunny } from 'react-icons/io5';
 import SectionHeader from '../containers/SectionHeader';
 import { IoIosDocument, IoMdClose } from 'react-icons/io';
 import { GrPowerReset } from 'react-icons/gr';
@@ -8,6 +8,8 @@ import PresetMealPlanModal from '../modals/PresetMealPlanModal';
 import BetaNotice from './BetaNotice';
 import { FaClock } from 'react-icons/fa';
 import LocationHoursModal from '../modals/LocationHoursModal';
+import Switch from '../form_elements/Switch';
+import { ColorPreferenceCtx } from '../../static/context';
 
 /**
  * The main menu component of the app.
@@ -49,6 +51,8 @@ const Menu = () => {
    * State for whether the menu icon is visible.
    */
   const [isIconVisible, setIsIconVisible] = useState(true);
+
+  const colorPreference = useContext(ColorPreferenceCtx);
 
   /**
    * Updates the scroll distance and icon visibility on scroll.
@@ -135,6 +139,16 @@ const Menu = () => {
             <GrPowerReset /> Reset
           </li>
         </ul>
+        <div>
+          <Switch
+            offIcon={<IoSunny />}
+            offText='Light'
+            onIcon={<IoMoon />}
+            onText='Dark'
+            state={colorPreference.value === 'dark'}
+            setState={(isDark) => colorPreference.setValue(isDark ? 'dark' : 'light')}
+          />
+        </div>
         <footer className='text-gray-500 text-sm text-center'>
           <BetaNotice />
           By{' '}

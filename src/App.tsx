@@ -10,7 +10,8 @@ import {
   CustomMealsCtx,
   WeeksOffCtx,
   TutorialElementsCtx,
-  TutorialControlCtx
+  TutorialControlCtx,
+  ColorPreferenceCtx
 } from './static/context';
 import { useState, useEffect, useMemo, useRef } from 'react';
 import Meal from './types/Meal';
@@ -34,6 +35,14 @@ import Menu from './components/other/Menu';
 import WhatsNewModal from './components/modals/WhatsNewModal';
 
 function App() {
+  /**
+   * Stores if the user prefers dark mode.
+   */
+  const [colorPreference, setColorPreference] = usePersistentState<string | null>(
+    'colorPreference',
+    null
+  );
+
   /**
    * Stores the user's chosen number of weeks off
    */
@@ -238,96 +247,108 @@ function App() {
     ]
   );
 
+  useEffect(() => {
+    const root = document.getElementById('root')!;
+    if (colorPreference === 'dark')
+      root.classList.add('dark');
+    else
+      root.classList.remove('dark');
+  }, [colorPreference]);
+
   return (
-    <TutorialControlCtx.Provider value={{ setShowTutorial, setTutorialStep }}>
-      <TutorialElementsCtx.Provider
-        value={{ value: tutorialDivs.current, setValue: addRef }}
-      >
-        <WeeksOffCtx.Provider
-          value={{ value: weeksOff, setValue: setWeeksOff }}
-        >
-          <MealPlanCtx.Provider
-            value={{ value: mealPlan, setValue: setMealPlan }}
+    <div className={`dark:bg-background-dark dark:text-white`}>
+      <ColorPreferenceCtx.Provider value={{ value: colorPreference, setValue: setColorPreference }}>
+        <TutorialControlCtx.Provider value={{ setShowTutorial, setTutorialStep }}>
+          <TutorialElementsCtx.Provider
+            value={{ value: tutorialDivs.current, setValue: addRef }}
           >
-            <BalanceCtx.Provider
-              value={{ value: balance, setValue: setBalance }}
+            <WeeksOffCtx.Provider
+              value={{ value: weeksOff, setValue: setWeeksOff }}
             >
-              <StartDateCtx.Provider
-                value={{ value: startDate, setValue: setStartDate }}
+              <MealPlanCtx.Provider
+                value={{ value: mealPlan, setValue: setMealPlan }}
               >
-                <EndDateCtx.Provider
-                  value={{ value: endDate, setValue: setEndDate }}
+                <BalanceCtx.Provider
+                  value={{ value: balance, setValue: setBalance }}
                 >
-                  <UserSelectedMealsCtx.Provider
-                    value={{
-                      value: userSelectedMeals,
-                      setValue: setUserSelectedMeals
-                    }}
+                  <StartDateCtx.Provider
+                    value={{ value: startDate, setValue: setStartDate }}
                   >
-                    <MealQueueCtx.Provider
-                      value={{ value: mealQueue, setValue: setMealQueue }}
+                    <EndDateCtx.Provider
+                      value={{ value: endDate, setValue: setEndDate }}
                     >
-                      <CustomMealsCtx.Provider
-                        value={{ value: customMeals, setValue: setCustomMeals }}
+                      <UserSelectedMealsCtx.Provider
+                        value={{
+                          value: userSelectedMeals,
+                          setValue: setUserSelectedMeals
+                        }}
                       >
-                        <Menu />
-                        <ScreenContainer>
-                          <WhatsNewModal />
-                          <header className='bg-messiah-blue rounded-xl border-4 border-white shadow-md w-full mb-4 flex flex-row justify-center items-center gap-4'>
-                            <h1 className='font-semibold text-4xl text-white text-center py-8'>
-                              Messiah Meal Planner
-                            </h1>
-                          </header>
-                          <div className='flex flex-col relative gap-4'>
-                            <Tutorial
-                              show={showTutorial}
-                              setShow={setShowTutorial}
-                              step={tutorialStep}
-                              setStep={setTutorialStep}
-                              areDetailsEntered={areDetailsEntered}
-                            />
-                            <MealPlanInfo
-                              onEnterDetails={setAreDetailsEntered}
-                              order={1}
-                            />
-                            {areDetailsEntered ? (
-                              <>
-                                <AvailableMeals order={2} />
-                                <MealQueue order={3} />
-                                <DayEditor order={4} />
-                                <Results
-                                  order={5}
-                                  grandTotal={grandTotal}
-                                  isUnderBalance={isUnderBalance}
-                                  difference={difference}
-                                  dayWhenRunOut={dayWhenRunOut}
+                        <MealQueueCtx.Provider
+                          value={{ value: mealQueue, setValue: setMealQueue }}
+                        >
+                          <CustomMealsCtx.Provider
+                            value={{ value: customMeals, setValue: setCustomMeals }}
+                          >
+                            <Menu />
+                            <ScreenContainer>
+                              <WhatsNewModal />
+                              <header className='bg-messiah-blue rounded-xl border-4 border-white shadow-md w-full mb-4 flex flex-row justify-center items-center gap-4'>
+                                <h1 className='font-semibold text-4xl text-white text-center py-8'>
+                                  Messiah Meal Planner
+                                </h1>
+                              </header>
+                              <div className='flex flex-col relative gap-4'>
+                                <Tutorial
+                                  show={showTutorial}
+                                  setShow={setShowTutorial}
+                                  step={tutorialStep}
+                                  setStep={setTutorialStep}
+                                  areDetailsEntered={areDetailsEntered}
                                 />
-                                <ResultsBar
-                                  order={6}
-                                  grandTotal={grandTotal}
-                                  isUnderBalance={isUnderBalance}
-                                  difference={difference}
+                                <MealPlanInfo
+                                  onEnterDetails={setAreDetailsEntered}
+                                  order={1}
                                 />
-                              </>
-                            ) : (
-                              <div className='flex flex-col items-center order-1'>
-                                <p className='text-gray-400'>
-                                  Enter meal plan info to continue planning.
-                                </p>
+                                {areDetailsEntered ? (
+                                  <>
+                                    <AvailableMeals order={2} />
+                                    <MealQueue order={3} />
+                                    <DayEditor order={4} />
+                                    <Results
+                                      order={5}
+                                      grandTotal={grandTotal}
+                                      isUnderBalance={isUnderBalance}
+                                      difference={difference}
+                                      dayWhenRunOut={dayWhenRunOut}
+                                    />
+                                    <ResultsBar
+                                      order={6}
+                                      grandTotal={grandTotal}
+                                      isUnderBalance={isUnderBalance}
+                                      difference={difference}
+                                    />
+                                  </>
+                                ) : (
+                                  <div className='flex flex-col items-center order-1'>
+                                    <p className='text-gray-400'>
+                                      Enter meal plan info to continue planning.
+                                    </p>
+                                  </div>
+                                )}
                               </div>
-                            )}
-                          </div>
-                        </ScreenContainer>
-                      </CustomMealsCtx.Provider>
-                    </MealQueueCtx.Provider>
-                  </UserSelectedMealsCtx.Provider>
-                </EndDateCtx.Provider>
-              </StartDateCtx.Provider>
-            </BalanceCtx.Provider>
-          </MealPlanCtx.Provider>
-        </WeeksOffCtx.Provider>
-      </TutorialElementsCtx.Provider>
-    </TutorialControlCtx.Provider>
+                            </ScreenContainer>
+                          </CustomMealsCtx.Provider>
+                        </MealQueueCtx.Provider>
+                      </UserSelectedMealsCtx.Provider>
+                    </EndDateCtx.Provider>
+                  </StartDateCtx.Provider>
+                </BalanceCtx.Provider>
+              </MealPlanCtx.Provider>
+            </WeeksOffCtx.Provider>
+          </TutorialElementsCtx.Provider>
+        </TutorialControlCtx.Provider>
+      </ColorPreferenceCtx.Provider>  
+    </div>
   );
 }
 
