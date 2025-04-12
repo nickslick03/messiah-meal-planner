@@ -15,7 +15,8 @@ import Results from './components/sections/Results';
 import ResultsBar from './components/sections/ResultsBar';
 import {
   UserSelectedMealsObject,
-  UserSelectedMealsObjectType
+  UserSelectedMealsObjectType,
+  Weekday
 } from './types/userSelectedMealsObject';
 import usePersistentState from './hooks/usePersistentState';
 import { getMeals } from './static/mealsDatabase';
@@ -27,6 +28,9 @@ import AvailableMeals from './components/sections/AvailableMeals';
 import Menu from './components/other/Menu';
 import WhatsNewModal from './components/modals/WhatsNewModal';
 import ContextProvider from './components/other/ContextProvider';
+import dereferenceMeal from './lib/dereferenceMeal';
+import InvalidModal from './components/modals/InvalidModal';
+import mapUserMeals from './lib/mapUserMeals';
 
 function App() {
   /**
@@ -120,6 +124,34 @@ function App() {
    */
   const tutorialDivs = useRef<(HTMLElement | null)[]>(
     Array(tutorialSteps.length).fill(null)
+  );
+
+  /**
+   * Keeps track of all legacy meals
+   */
+  const invalidMeals = useMemo(
+    () =>
+      mapUserMeals((day: Weekday) => [
+        day,
+        userSelectedMeals[day]
+          .filter(
+            (meal: MealReference) =>
+              dereferenceMeal(meal, meals ?? [], customMeals ?? [])?.legacy ===
+              true
+          )
+          .map((meal: MealReference) =>
+            dereferenceMeal(meal, meals ?? [], customMeals ?? [])
+          ) as Meal[]
+      ]) as { [key: string]: Meal[] },
+    [userSelectedMeals, meals, customMeals]
+  );
+
+  /**
+   * Keeps track of whether or not legacy meals are in the userSelectedMeals object
+   */
+  const hasInvalidMeals = useMemo(
+    () => Object.values(invalidMeals).some((meals) => meals.length > 0),
+    [invalidMeals]
   );
 
   /**
@@ -297,10 +329,11 @@ function App() {
       customMeals={customMeals}
       setCustomMeals={setCustomMeals}
     >
-    <IfFulfilled state={mealsState}>
-      <Menu /> 
-    </IfFulfilled>  
+      <IfFulfilled state={mealsState}>
+        <Menu />
+      </IfFulfilled>
       <ScreenContainer>
+        {hasInvalidMeals && <InvalidModal invalidMeals={invalidMeals} />}
         <WhatsNewModal />
         <header className='bg-messiah-blue rounded-xl border-4 border-white shadow-md w-full mb-4 flex flex-row justify-center items-center gap-4'>
           <h1 className='font-semibold text-4xl text-white text-center py-8'>
@@ -337,6 +370,7 @@ function App() {
                   <DayEditor order={4} />
                   <Results
                     order={5}
+                    dataIsInvalid={hasInvalidMeals}
                     grandTotal={grandTotal}
                     isUnderBalance={isUnderBalance}
                     difference={difference}
