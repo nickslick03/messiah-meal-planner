@@ -58,7 +58,7 @@ const tutorialSteps: TutorialStep[] = [
           href='https://www.messiah.edu/homepage/1346/academic_calendars_for_messiah_college'
           target='_blank'
           rel='noopener noreferrer'
-          className='text-indigo-900 underline'
+          className='text-indigo-900 dark:text-indigo-200 underline'
         >
           here
         </a>

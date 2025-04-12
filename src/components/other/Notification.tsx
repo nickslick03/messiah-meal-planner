@@ -39,7 +39,7 @@ const Notification = ({ message }: NotificationProps) => {
     >
       <div
         className='w-full bg-messiah-light-blue drop-shadow-dark p-2 my-4 mx-4 md:mx-0 rounded 
-            text-center text-lg font-semibold bg-opacity-80 backdrop-blur-sm'
+            text-center text-lg font-semibold bg-opacity-80 backdrop-blur-sm text-black'
       >
         {message.text}
       </div>

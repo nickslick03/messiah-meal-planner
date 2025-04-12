@@ -256,7 +256,7 @@ function App() {
   }, [colorPreference]);
 
   return (
-    <div className={`dark:bg-background-dark dark:text-white`}>
+    <div className={`dark:bg-gray-900 dark:text-white min-h-screen py-4`}>
       <ColorPreferenceCtx.Provider value={{ value: colorPreference, setValue: setColorPreference }}>
         <TutorialControlCtx.Provider value={{ setShowTutorial, setTutorialStep }}>
           <TutorialElementsCtx.Provider

@@ -89,7 +89,8 @@ const Input = <T,>({
   clearable
 }: InputProps<T>): JSX.Element => {
   const importanceStyle = IMPORTANCE_CLASSES[importance] ?? 'font-normal';
-  const styles = `border border-black rounded focus:outline focus:outline-2 focus:outline-messiah-blue 
+  const styles = `border border-black rounded focus:outline focus:outline-2 
+  dark:bg-gray-500 dark:outline-none dark:border-none
     ${
       type === 'number'
         ? 'w-16 text-right px-1'

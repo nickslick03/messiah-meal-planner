@@ -80,7 +80,8 @@ const Menu = () => {
       <div
         className={`${isIconVisible ? 'top-8' : '-top-8'} 
                 fixed z-50 left-4 bg-white p-1 rounded-full shadow shadow-[rgba(0,0,0,.4)]
-                hover:shadow-[rgba(0,0,0,.5)] hover:shadow-md transition-all duration-200 cursor-pointer`}
+                hover:shadow-[rgba(0,0,0,.5)] hover:shadow-md transition-all duration-200 cursor-pointer
+                dark:bg-gray-500`}
         onClick={() => {
           setIsVisible(true);
           setIsInFront(true);
@@ -93,7 +94,7 @@ const Menu = () => {
         className={`${isVisible ? 'opacity-100' : 'opacity-0'} 
                 ${isInFront ? 'z-50' : '-z-10'} 
                 transition-opacity duration-500
-                fixed top-0 left-0 w-screen h-screen bg-opacity-50 bg-slate-900`}
+                fixed top-0 left-0 w-screen h-screen bg-opacity-50 bg-slate-900 backdrop-blur-[3px]`}
         onClick={() => setIsVisible(false)}
         onTransitionEnd={() => setIsInFront(isVisible ? isInFront : false)}
       ></div>
@@ -107,7 +108,8 @@ const Menu = () => {
                 ${isInFront ? 'z-50' : '-z-10'} 
                 transition-transform duration-500
                 fixed top-0 right-full w-full max-w-80 h-full bg-white
-                py-4 flex flex-col gap-4 justify-between items-center`}
+                py-4 flex flex-col gap-4 justify-between items-center
+                dark:bg-gray-700`}
       >
         {/* Close button */}
         <button
@@ -149,13 +151,13 @@ const Menu = () => {
             setState={(isDark) => colorPreference.setValue(isDark ? 'dark' : 'light')}
           />
         </div>
-        <footer className='text-gray-500 text-sm text-center'>
+        <footer className='text-gray-500 dark:text-gray-200 text-sm text-center'>
           <BetaNotice />
           By{' '}
           <a
             target='_blank'
             href='https://www.linkedin.com/in/caleb-rice-2626-cs/'
-            className='text-indigo-900 underline'
+            className='text-indigo-900 underline dark:text-indigo-300'
           >
             Caleb Rice
           </a>{' '}
@@ -163,7 +165,7 @@ const Menu = () => {
           <a
             target='_blank'
             href='https://www.linkedin.com/in/nicholas-epps-597b94295/'
-            className='text-indigo-900 underline'
+            className='text-indigo-900 underline dark:text-indigo-300'
           >
             Nicholas Epps
           </a>

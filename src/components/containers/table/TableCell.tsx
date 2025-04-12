@@ -62,10 +62,11 @@ const TableCell = ({
       {onCustomClick !== undefined ? (
         <button
           className={`${
-            isCustom || sortState !== SortState.NONE ? 'text-messiah-blue' : ''
+            isCustom || sortState !== SortState.NONE ? 'text-messiah-blue dark:text-messiah-light-blue' : ''
           } 
           bg-transparent border-none font-inter underline 
-          hover:text-messiah-blue-hover p-0 m-0 text-left inline-flex transition duration-50`}
+          hover:text-messiah-blue-hover p-0 m-0 text-left inline-flex transition duration-50
+          dark:hover:text-messiah-light-blue`}
           type='button'
           onClick={onCustomClick}
         >

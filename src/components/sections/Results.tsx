@@ -1,4 +1,4 @@
-import { useContext, useMemo } from 'react';
+import { useContext, useEffect, useMemo } from 'react';
 import SectionContainer from '../containers/SectionContainer';
 import DotLeader from '../other/DotLeader';
 import {
@@ -7,7 +7,8 @@ import {
   UserSelectedMealsCtx,
   CustomMealsCtx,
   WeeksOffCtx,
-  TutorialElementsCtx
+  TutorialElementsCtx,
+  ColorPreferenceCtx
 } from '../../static/context';
 import formatCurrency from '../../lib/formatCurrency';
 import { getMealTotal } from '../../lib/calculationEngine';
@@ -19,6 +20,7 @@ import { userMealsToStackedChart } from '../../lib/mealChartFormat';
 import Divider from '../other/Divider';
 import { TooltipItem } from 'chart.js/auto';
 import tooltip from '../../static/tooltip';
+import { Chart as ChartJS } from 'chart.js';
 
 interface ResultsProps {
   /**
@@ -88,6 +90,9 @@ const Results = ({
   const customMeals = useContext(CustomMealsCtx);
   const userSelectedMeals = useContext(UserSelectedMealsCtx);
   const tutorialRefs = useContext(TutorialElementsCtx);
+  const colorPreference = useContext(ColorPreferenceCtx);
+
+  const color = useMemo(() => colorPreference.value === 'dark' ? 'white' : 'black', [colorPreference]);
 
   /**
    * The meal total for one week.
@@ -164,7 +169,13 @@ const Results = ({
       plugins: {
         title: {
           display: true,
-          text: 'Meals by Weekly Price'
+          text: 'Meals by Weekly Price',
+          color,
+        },
+        legend: {
+          labels: {
+            color
+          }
         },
         tooltip: {
           callbacks: {
@@ -188,7 +199,7 @@ const Results = ({
         }
       }
     }),
-    [pieChartData.datasets]
+    [pieChartData.datasets, color]
   );
 
   /**
@@ -205,7 +216,13 @@ const Results = ({
       plugins: {
         title: {
           display: true,
-          text: 'Meals by Weekday'
+          text: 'Meals by Weekday',
+          color,
+        },
+        legend: {
+          labels: {
+            color
+          }
         },
         tooltip: {
           callbacks: {
@@ -220,12 +237,16 @@ const Results = ({
       },
       scales: {
         x: {
-          stacked: true
+          stacked: true,
+          ticks: {
+            color,
+          }
         },
         y: {
           beginAtZero: true,
           stacked: true,
           ticks: {
+            color,
             callback: function (tickValue: string | number) {
               const value =
                 typeof tickValue === 'string'
@@ -237,8 +258,14 @@ const Results = ({
         }
       }
     }),
-    [barChartData.datasets]
+    [barChartData.datasets, color]
   );
+
+  useEffect(() => {
+    //ChartJS.defaults.color = color;
+    //ChartJS.defaults.plugins.title.color = color;
+    //ChartJS.defaults.plugins.legend.labels.color = color;
+  }, [colorPreference]);
 
   return (
     <SectionContainer
@@ -264,17 +291,17 @@ const Results = ({
           {
             title: 'Starting Balance',
             value: formatCurrency(balance.value || 0),
-            resultsStyle: 'text-messiah-green'
+            resultsStyle: 'text-messiah-green dark:text-messiah-green-light'
           },
           {
             title: 'Weekly Total',
             value: `${formatCurrency(weekTotal)}`,
-            resultsStyle: 'text-messiah-red'
+            resultsStyle: 'text-messiah-red dark:text-messiah-red-light'
           },
           {
             title: 'Grand Total',
             value: `${formatCurrency(grandTotal)}`,
-            resultsStyle: 'text-messiah-red'
+            resultsStyle: 'text-messiah-red dark:text-messiah-red-light'
           }
         ].concat(
           !isUnderBalance && dayWhenRunOut !== null
@@ -289,7 +316,7 @@ const Results = ({
                   value: `${
                     dayWhenRunOut.getMonth() + 1
                   }/${dayWhenRunOut.getDate()}/${dayWhenRunOut.getFullYear()}`,
-                  resultsStyle: 'text-black'
+                  resultsStyle: 'text-black dark:text-white'
                 }
               ]
             : []
@@ -297,7 +324,7 @@ const Results = ({
       />
       <div
         className={`${
-          isUnderBalance ? 'text-messiah-green' : 'text-messiah-red'
+          isUnderBalance ? 'text-messiah-green dark:text-messiah-green-light ' : 'text-messiah-red dark:text-messiah-red-light'
         } text-xl font-bold mt-4 text-center`}
       >
         {isUnderBalance

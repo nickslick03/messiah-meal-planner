@@ -216,7 +216,7 @@ const DayEditor = ({ order }: DayEditorProps) => {
               value: `${
                 isNaN(mealDayTotal) ? 'ERROR' : formatCurrency(mealDayTotal)
               }`,
-              resultsStyle: 'text-messiah-red'
+              resultsStyle: 'text-messiah-red dark:text-messiah-red-light'
             },
             {
               title: `Number of ${weekday}(s)`,
@@ -231,7 +231,7 @@ const DayEditor = ({ order }: DayEditorProps) => {
                       mealDayTotal * numOfWeekdays[weekdayIndex] // Convert from Monday to Sunday start
                     )
               }`,
-              resultsStyle: 'text-messiah-red'
+              resultsStyle: 'text-messiah-red dark:text-messiah-red-light'
             }
           ]}
         />

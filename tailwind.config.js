@@ -12,13 +12,12 @@ export default {
         'messiah-light-blue-hover': 'hsl(210, 20%, 80%)',
         'messiah-light-blue-active': 'hsl(210, 20%, 60%)',
         'messiah-red': 'hsl(359, 50%, 43%)',
+        'messiah-red-light': 'hsl(359, 50%, 63%)',        
         'messiah-red-hover': 'hsl(359, 50%, 53%)',
         'messiah-red-active': 'hsl(359, 50%, 33%)',
         'messiah-green': 'hsl(173, 83%, 25%)',
-        'background-dark': 'hsl(0, 0%, 10%)',
-        'card-background-dark': 'hsl(0, 0%, 25%)',
-        'text-dark': 'white',
-        'card-border-dark': 'hsl(210, 20%, 70%)'
+        'messiah-green-light': 'hsl(173, 83%, 45%)',
+
       },
       overflow: {
         visible: 'visible'
