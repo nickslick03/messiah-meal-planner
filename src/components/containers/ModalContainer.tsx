@@ -107,7 +107,7 @@ const ModalContainer = ({
     >
       {/* The actual modal component */}
       <div
-        className={`text-center bg-white p-5 m-4 flex flex-col rounded-lg
+        className={`text-center bg-white p-5 m-4 flex flex-col rounded-lg py-2 max-h-[calc(100% - 48px)]
           dark:bg-gray-700
           ${
             minimalSpace
