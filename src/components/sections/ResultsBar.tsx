@@ -65,7 +65,7 @@ const ResultsBar = ({
     <div
       id={'resultsBar'}
       ref={ref}
-      className={`sticky w-full bottom-[-1px] p-2 bg-messiah-light-blue drop-shadow-dark 
+      className={`sticky w-full bottom-[-1px] p-2 bg-messiah-light-blue drop-shadow-dark text-black
       rounded-t-xl flex gap-6 justify-around text-center bg-opacity-80 z-40 backdrop-blur-sm ${
         isAtBottom ? 'rounded-bl-xl rounded-br-xl' : ''
       }`}
