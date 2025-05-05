@@ -8,7 +8,7 @@ import {
   CustomMealsCtx,
   WeeksOffCtx,
   TutorialElementsCtx,
-  ColorPreferenceCtx
+  ColorPreferenceCtx,
   MealsCtx,
   LocationsCtx
 } from '../../static/context';
@@ -21,6 +21,7 @@ import { userMealsToStackedChart } from '../../lib/mealChartFormat';
 import Divider from '../other/Divider';
 import { TooltipItem } from 'chart.js/auto';
 import tooltip from '../../static/tooltip';
+import { MdErrorOutline } from 'react-icons/md';
 
 interface ResultsProps {
   /**
@@ -98,7 +99,10 @@ const Results = ({
   const tutorialRefs = useContext(TutorialElementsCtx);
   const colorPreference = useContext(ColorPreferenceCtx);
 
-  const color = useMemo(() => colorPreference.value === 'dark' ? 'white' : 'black', [colorPreference]);
+  const color = useMemo(
+    () => (colorPreference.value === 'dark' ? 'white' : 'black'),
+    [colorPreference]
+  );
   const meals = useContext(MealsCtx);
   const mealLocations = useContext(LocationsCtx);
 
@@ -192,7 +196,7 @@ const Results = ({
         title: {
           display: true,
           text: 'Meals by Weekly Price',
-          color,
+          color
         },
         legend: {
           labels: {
@@ -239,7 +243,7 @@ const Results = ({
         title: {
           display: true,
           text: 'Meals by Weekday',
-          color,
+          color
         },
         legend: {
           labels: {
@@ -261,7 +265,7 @@ const Results = ({
         x: {
           stacked: true,
           ticks: {
-            color,
+            color
           }
         },
         y: {
@@ -353,7 +357,9 @@ const Results = ({
       />
       <div
         className={`${
-          isUnderBalance ? 'text-messiah-green dark:text-messiah-green-light ' : 'text-messiah-red dark:text-messiah-red-light'
+          isUnderBalance
+            ? 'text-messiah-green dark:text-messiah-green-light '
+            : 'text-messiah-red dark:text-messiah-red-light'
         } text-xl font-bold mt-4 text-center`}
       >
         {isUnderBalance

@@ -6,19 +6,7 @@ import {
 } from './components/other/AsyncComponents';
 import ScreenContainer from './components/containers/ScreenContainer';
 import MealPlanInfo from './components/sections/MealPlanInfo';
-import {
-  MealPlanCtx,
-  BalanceCtx,
-  StartDateCtx,
-  EndDateCtx,
-  UserSelectedMealsCtx,
-  MealQueueCtx,
-  CustomMealsCtx,
-  WeeksOffCtx,
-  TutorialElementsCtx,
-  TutorialControlCtx,
-  ColorPreferenceCtx
-} from './static/context';
+import { ColorPreferenceCtx } from './static/context';
 import { useState, useEffect, useMemo, useRef } from 'react';
 import Meal from './types/Meal';
 import MealReference from './types/MealReference';
