@@ -351,7 +351,7 @@ function App() {
         <ScreenContainer>
           {hasInvalidMeals && <InvalidModal invalidMeals={invalidMeals} />}
           <WhatsNewModal />
-          <header className='bg-messiah-blue rounded-xl border-4 border-white shadow-md w-full mb-4 flex flex-row justify-center items-center gap-4'>
+          <header className='bg-messiah-blue rounded-xl border-4 border-white dark:border-messiah-light-blue shadow-md w-full mb-4 zflex flex-row justify-center items-center gap-4'>
             <h1 className='font-semibold text-4xl text-white text-center py-8'>
               Messiah Meal Planner
             </h1>
