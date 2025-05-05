@@ -17,6 +17,16 @@ export const ColorPreferenceCtx = createContext<ContextType<string | null>>({
   setValue: () => {}
 });
 
+export const MealsCtx = createContext<ContextType<Meal[]>>({
+  value: [],
+  setValue: () => {}
+});
+
+export const LocationsCtx = createContext<ContextType<string[]>>({
+  value: [],
+  setValue: () => {}
+});
+
 export const WeeksOffCtx = createContext<ContextType<number | null>>({
   value: null,
   setValue: () => {}

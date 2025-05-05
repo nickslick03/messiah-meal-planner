@@ -5,7 +5,7 @@ import {
   getMealTotal,
   calculateDateWhenRunOut
 } from '../lib/calculationEngine';
-import meals from '../static/mealsDatabase';
+import { getMeals } from '../static/mealsDatabase';
 import MealReference from '../types/MealReference';
 import { UserSelectedMealsObjectType } from '../types/userSelectedMealsObject';
 import Meal from '../types/Meal';
@@ -25,7 +25,8 @@ describe('applyDiscount', () => {
   });
 });
 
-describe('getMealDayTotal', () => {
+describe('getMealDayTotal', async () => {
+  const meals = await getMeals();
   const mealList = meals.filter((m) =>
     [
       'Breakfast', // 6.55
@@ -58,7 +59,8 @@ describe('getMealDayTotal', () => {
   });
 });
 
-describe('getMealTotal', () => {
+describe('getMealTotal', async () => {
+  const meals = await getMeals();
   const mealList1: MealReference[] = meals
     .filter((m) =>
       [
@@ -107,7 +109,8 @@ describe('getMealTotal', () => {
   });
 });
 
-describe('calculateDateWhenRunOut', () => {
+describe('calculateDateWhenRunOut', async () => {
+  const meals = await getMeals();
   const mealList1: MealReference[] = meals
     .filter((m) =>
       [

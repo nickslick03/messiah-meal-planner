@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { PresetMealPlan } from '../../static/PresetMealPlans';
-import { MealPlanCtx } from '../../static/context';
+import { MealPlanCtx, MealsCtx } from '../../static/context';
 import Button from '../form_elements/Button';
 import formatCurrency from '../../lib/formatCurrency';
 
@@ -26,14 +26,17 @@ export const PresetMealPlanView = ({
   onSet
 }: PresetMealPlanViewProps) => {
   const hasDiscount = useContext(MealPlanCtx);
+  const meals = useContext(MealsCtx);
 
   const weekPrice = formatCurrency(
-    presetMealPlan.weekPrice(hasDiscount.value ?? false)
+    presetMealPlan.weekPrice(hasDiscount.value ?? false, meals.value)
   );
 
   return (
     <div>
-      <h3 className='text-lg text-center font-bold mb-2'>{presetMealPlan.name}</h3>
+      <h3 className='text-lg text-center font-bold mb-2'>
+        {presetMealPlan.name}
+      </h3>
       <div className='flex justify-between'>
         <div className='text-left flex flex-col gap-2'>
           <p className='pr-12'>{presetMealPlan.description}</p>

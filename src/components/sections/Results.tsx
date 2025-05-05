@@ -9,10 +9,11 @@ import {
   WeeksOffCtx,
   TutorialElementsCtx,
   ColorPreferenceCtx
+  MealsCtx,
+  LocationsCtx
 } from '../../static/context';
 import formatCurrency from '../../lib/formatCurrency';
 import { getMealTotal } from '../../lib/calculationEngine';
-import meals, { mealLocations } from '../../static/mealsDatabase';
 import { Bar, Pie } from 'react-chartjs-2';
 import 'chart.js/auto';
 import { WEEKDAYS } from '../../static/constants';
@@ -20,7 +21,6 @@ import { userMealsToStackedChart } from '../../lib/mealChartFormat';
 import Divider from '../other/Divider';
 import { TooltipItem } from 'chart.js/auto';
 import tooltip from '../../static/tooltip';
-import { Chart as ChartJS } from 'chart.js';
 
 interface ResultsProps {
   /**
@@ -47,6 +47,11 @@ interface ResultsProps {
    * The order of this component relative to others.
    */
   order: number;
+
+  /**
+   * Whether the data is invalid.
+   */
+  dataIsInvalid: boolean;
 }
 
 /**
@@ -81,7 +86,8 @@ const Results = ({
   difference,
   grandTotal,
   dayWhenRunOut,
-  order
+  order,
+  dataIsInvalid
 }: ResultsProps) => {
   const balance = useContext(BalanceCtx);
   const weeksOff = useContext(WeeksOffCtx);
@@ -93,6 +99,8 @@ const Results = ({
   const colorPreference = useContext(ColorPreferenceCtx);
 
   const color = useMemo(() => colorPreference.value === 'dark' ? 'white' : 'black', [colorPreference]);
+  const meals = useContext(MealsCtx);
+  const mealLocations = useContext(LocationsCtx);
 
   /**
    * The meal total for one week.
@@ -103,9 +111,9 @@ const Results = ({
         userMeals.value,
         Array<number>(7).fill(1),
         isDiscount.value || false,
-        [...meals, ...customMeals.value]
+        [...meals.value, ...customMeals.value]
       ),
-    [customMeals.value, isDiscount.value, userMeals.value]
+    [customMeals.value, isDiscount.value, userMeals.value, meals]
   );
 
   /**
@@ -114,13 +122,14 @@ const Results = ({
   const barChartData = useMemo(() => {
     const locationMap = userMealsToStackedChart(
       userSelectedMeals.value,
-      meals,
+      mealLocations.value,
+      meals.value,
       customMeals.value,
       isDiscount.value ?? false
     );
     return {
       labels: [...WEEKDAYS],
-      datasets: mealLocations.map((location, i) => ({
+      datasets: mealLocations.value.map((location, i) => ({
         label: location,
         data: locationMap.get(location) ?? [],
         backgroundColor: backgroundColor[i],
@@ -128,7 +137,13 @@ const Results = ({
         borderWidth: 1
       }))
     };
-  }, [customMeals.value, userSelectedMeals.value, isDiscount.value]);
+  }, [
+    customMeals.value,
+    userSelectedMeals.value,
+    isDiscount.value,
+    meals.value,
+    mealLocations.value
+  ]);
 
   /**
    * The data for the pie chart, splits up weekly meal prices by location.
@@ -136,7 +151,8 @@ const Results = ({
   const pieChartData = useMemo(() => {
     const locationMap = userMealsToStackedChart(
       userSelectedMeals.value,
-      meals,
+      mealLocations.value,
+      meals.value,
       customMeals.value,
       isDiscount.value ?? false
     );
@@ -145,7 +161,7 @@ const Results = ({
       priceMap.push(prices.reduce((p, c) => p + c))
     );
     return {
-      labels: mealLocations,
+      labels: mealLocations.value,
       datasets: [
         {
           data: priceMap,
@@ -155,7 +171,13 @@ const Results = ({
         }
       ]
     };
-  }, [customMeals.value, userSelectedMeals.value, isDiscount.value]);
+  }, [
+    customMeals.value,
+    userSelectedMeals.value,
+    isDiscount.value,
+    meals.value,
+    mealLocations.value
+  ]);
 
   /** The options for the pie chart:
    *    Adds the title
@@ -274,6 +296,13 @@ const Results = ({
       setRef={(ref) => tutorialRefs.setValue(ref, 'Results')}
       order={order}
     >
+      {dataIsInvalid && (
+        <div className='bg-red-100 rounded-lg p-4 my-2 text-messiah-red w-full flex flex-row gap-2'>
+          <MdErrorOutline size={25} className='text-messiah-red' />
+          Your meal plan contains meals that no longer exist. Please update your
+          plan to remove these meals.
+        </div>
+      )}
       <div className='text-gray-400 mt-4 mb-1'>
         (Charts are based on the total for 1 week)
       </div>

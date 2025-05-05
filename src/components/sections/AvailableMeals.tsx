@@ -1,4 +1,3 @@
-import meals from '../../static/mealsDatabase';
 import Meal from '../../types/Meal';
 import MealContainer from '../containers/MealContainer';
 import CustomMeal from '../other/CustomMeal';
@@ -6,7 +5,8 @@ import {
   CustomMealsCtx,
   MealQueueCtx,
   TutorialElementsCtx,
-  UserSelectedMealsCtx
+  UserSelectedMealsCtx,
+  MealsCtx
 } from '../../static/context';
 import { useContext, useEffect, useState } from 'react';
 import { v4 as uuid } from 'uuid';
@@ -32,6 +32,7 @@ interface AvailableMealsProps {
  * @return {JSX.Element} The Available Meals section component.
  */
 const AvailableMeals = ({ order }: AvailableMealsProps) => {
+  const meals = useContext(MealsCtx);
   const mealQueue = useContext(MealQueueCtx);
   const customMeals = useContext(CustomMealsCtx);
   const userSelectedMeals = useContext(UserSelectedMealsCtx);
@@ -141,7 +142,7 @@ const AvailableMeals = ({ order }: AvailableMealsProps) => {
       ...userSelectedMeals.value,
       [day]: [
         ...(userSelectedMeals.value[day] ?? []),
-        { ...meal, instanceId: uuid() }
+        { id: meal.id ?? '', instanceId: uuid() }
       ]
     });
   };
@@ -151,7 +152,10 @@ const AvailableMeals = ({ order }: AvailableMealsProps) => {
       <MealContainer
         title='Available Meals'
         addOrRemove='Add'
-        meals={[...meals, ...customMeals.value]}
+        meals={[
+          ...meals.value.filter((meal) => !meal?.legacy),
+          ...customMeals.value
+        ]}
         buttonOnClick={addToQueue}
         buttonOnClickDay={addToDay}
         createNotification={(name) => `Added ${name} to meal queue`}
@@ -189,26 +193,28 @@ const AvailableMeals = ({ order }: AvailableMealsProps) => {
           <></>
         )
       }
-      {
-        isDeletingCustomMeal ? (
-          <ModalContainer
-            title={`Delete ${currentCustomData?.name}`}
-            confirmText='Delete'
-            confirmDisabled={false}
-            minimalSpace={true}
-            onConfirm={deleteCustomMeal}
-            onCancel={() => setIsDeletingCustomMeal(false)}
-            zIndex={60}
-          >
-            <p>
-              This custom meal will be deleted from your available meals,<br />
-              your meal queue, and any days you've added it to.<br /> 
-              You can't undo this action. Delete this meal?
-            </p>
-          </ModalContainer>
-        ) : ''
-      }
-    <Notification message={message} />
+      {isDeletingCustomMeal ? (
+        <ModalContainer
+          title={`Delete ${currentCustomData?.name}`}
+          confirmText='Delete'
+          confirmDisabled={false}
+          minimalSpace={true}
+          onConfirm={deleteCustomMeal}
+          onCancel={() => setIsDeletingCustomMeal(false)}
+          zIndex={60}
+        >
+          <p>
+            This custom meal will be deleted from your available meals,
+            <br />
+            your meal queue, and any days you've added it to.
+            <br />
+            You can't undo this action. Delete this meal?
+          </p>
+        </ModalContainer>
+      ) : (
+        ''
+      )}
+      <Notification message={message} />
     </>
   );
 };
