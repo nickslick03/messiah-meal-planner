@@ -75,20 +75,20 @@ const ResultsBar = ({
     >
       <div className='hidden sm:block'>
         <span className='font-bold'>Starting Balance: </span>
-        <span className='text-messiah-green dark:font-bold'>
+        <span className='text-messiah-green dark:text-messiah-green-dark dark:font-bold'>
           {formatCurrency(balance.value ?? 0)}
         </span>
       </div>
       <div>
         <span className='font-bold'>Grand Total: </span>
-        <span className='text-messiah-red  dark:font-bold'>{formatCurrency(grandTotal)}</span>
+        <span className='text-messiah-red dark:font-bold dark:text-messiah-red-dark'>{formatCurrency(grandTotal)}</span>
       </div>
       <div>
         <span className='font-bold'>
           $ {isUnderBalance ? 'Extra' : 'Short'}:{' '}
         </span>
         <span
-          className={`${isUnderBalance ? 'text-messiah-green' : 'text-messiah-red'} dark:font-bold`}
+          className={`${isUnderBalance ? 'text-messiah-green dark:text-messiah-green-dark' : 'text-messiah-red dark:text-messiah-red-dark'} dark:font-bold`}
         >
           {formatCurrency(difference)}
         </span>

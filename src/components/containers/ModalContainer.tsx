@@ -82,8 +82,6 @@ const ModalContainer = ({
   // Keep track of whether or not the modal is visible
   const [isVisible, setIsVisible] = useState(true);
 
-  const colorPreference = useContext(ColorPreferenceCtx);
-
   // Toggle the visibility of the modal
   const toggleVisible = () => {
     setIsVisible(!isVisible);
