@@ -26,7 +26,8 @@ const releaseNotes: ReleaseNoteType[] = [
       'Fixed an issue where all meals would trigger the error highlighting in the day editor.'
     ],
     enhancements: [
-      'We can now update the menu without needing to update the app. This should keep it more up-to-date.'
+      'We can now update the menu without needing to update the app. This should keep it more up-to-date.',
+      'Added a dark mode.'
     ]
   }
 ];
