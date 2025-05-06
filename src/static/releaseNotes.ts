@@ -15,7 +15,7 @@ const releaseNotes: ReleaseNoteType[] = [
     ]
   },
   {
-    versionNumber: '0.0.2',
+    versionNumber: '0.1.0',
     bugFixes: [
       'Fixed initial positioning of switches',
       'Fixed the price of Union Acai bowls',
