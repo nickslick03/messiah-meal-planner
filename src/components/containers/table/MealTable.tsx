@@ -189,7 +189,7 @@ const MealTable = ({
                 setValue={setSearchKey}
                 validator={(s) => s}
                 placeholder='Search for meals...'
-                cssClasses='w-full border-[2px] border-messiah-blue rounded-lg p-2 px-3 h-full'
+                cssClasses='w-full border-[2px] border-messiah-blue rounded-lg p-2 px-3 h-full dark:!border-messiah-light-blue'
                 clearable={true}
               />
             </div>
@@ -213,7 +213,7 @@ const MealTable = ({
         >
           <table className='w-full [&_tr>td:nth-child(-n+2)]:text-left [&_tr>td:nth-child(n+3)]:text-center relative'>
             {/* Table header */}
-            <thead className='sticky top-0 bg-white drop-shadow-dark z-20'>
+            <thead className='sticky top-0 bg-white drop-shadow-dark z-20 dark:bg-gray-700'>
               <tr>
                 {headers.map((header, index) =>
                   header !== null ? (

@@ -32,6 +32,7 @@ interface SectionContainerProps {
   order?: number;
 }
 
+
 /**
  * Renders a section container with a title and children
  *
@@ -48,7 +49,7 @@ const SectionContainer = ({
 
   return (
     <section
-      className='relative border-4 border-messiah-blue bg-white rounded-xl p-4 
+      className='relative border-4 border-messiah-blue bg-white dark:bg-gray-700 dark:border-messiah-blue-hover rounded-xl p-4 
       flex flex-col justify-center items-center w-full shadow-md'
       style={{
         order: order

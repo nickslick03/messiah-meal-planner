@@ -71,7 +71,8 @@ const Select = ({
         value={value}
         className={`${
           isTitle ? 'text-2xl' : ''
-        } border border-black rounded focus:outline focus:outline-2 focus:outline-messiah-blue ${cssClasses} p-1 relative`}
+        } border border-black rounded focus:outline focus:outline-2 focus:outline-messiah-blue ${cssClasses} p-1 relative
+        dark:border-none dark:bg-gray-500`}
         onChange={(e) => setSelected(e.target.value)}
       >
         {list.map((opt, i) => (

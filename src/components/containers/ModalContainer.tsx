@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import SectionHeader from './SectionHeader';
 import Button from '../form_elements/Button';
+import { ColorPreferenceCtx } from '../../static/context';
 
 interface ModalContainerProps {
   /**
@@ -96,14 +97,16 @@ const ModalContainer = ({
       className={`${
         isVisible ? '' : 'hidden'
       } h-screen w-screen bg-opacity-50 bg-slate-900 
-        fixed top-0 left-0 flex items-center justify-center`}
+        fixed top-0 left-0 flex items-center justify-center backdrop-blur-[3px]
+        dark:bg-opacity-85`}
       style={{
         zIndex
       }}
     >
       {/* The actual modal component */}
       <div
-        className={`text-center bg-white p-5 m-4 flex flex-col rounded-lg
+        className={`text-center bg-white p-5 m-4 flex flex-col rounded-lg py-2 max-h-[calc(100% - 48px)]
+          dark:bg-gray-700
           ${
             minimalSpace
               ? ''

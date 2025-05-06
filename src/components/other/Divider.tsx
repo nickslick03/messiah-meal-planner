@@ -5,7 +5,7 @@
  */
 const Divider = () => {
   return (
-    <div className='border-t-messiah-blue border-t-4 h-full w-full mb-4'></div>
+    <div className='border-t-messiah-blue border-t-4 h-full w-full mb-4 dark:border-t-messiah-light-blue'></div>
   );
 };
 
