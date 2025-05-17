@@ -4,7 +4,7 @@ import ButtonCell from './ButtonCell';
 import TableCell from './TableCell';
 import formatCurrency from '../../../lib/formatCurrency';
 import { useContext, useEffect, useMemo, useRef } from 'react';
-import { MealPlanCtx } from '../../../static/context';
+import { MealPlanCtx, ShowMealQueueCtx } from '../../../static/context';
 import { applyDiscount } from '../../../lib/calculationEngine';
 import { Weekday } from '../../../types/userSelectedMealsObject';
 import { ALACARTE_DISCOUNT } from '../../../static/discounts';
@@ -60,7 +60,7 @@ const TableRow = ({
   newCustomMealID
 }: TableRowProps): JSX.Element => {
   const isMealPlan = useContext(MealPlanCtx);
-  const showMealQueue = useContext(MealPlanCtx);
+  const showMealQueue = useContext(ShowMealQueueCtx);
 
   /**
    * The price of the meal based on whether or not the DD meal plan discount is enabled
