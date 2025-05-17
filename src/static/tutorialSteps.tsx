@@ -1,6 +1,7 @@
 import { IoAdd } from 'react-icons/io5';
 import { TUTORIAL_ICON_SIZE as ICON_SIZE } from './constants';
 import BetaNotice from '../components/other/BetaNotice';
+import isMobileDevice from '../lib/isMobile';
 
 interface TutorialStep {
   /**
@@ -32,7 +33,7 @@ interface TutorialStep {
 /**
  * Array of TutorialStep objects.
  */
-const tutorialSteps: TutorialStep[] = [
+const tutorialSteps = (showMealQueue: boolean): TutorialStep[] => [
   {
     position: 'center',
     title: 'Tutorial Intro',
@@ -40,9 +41,9 @@ const tutorialSteps: TutorialStep[] = [
       <>
         <p>
           Welcome to the Messiah Meal Planner! This website allows you to plan
-          your meals for the semester and budget your dining dollars. Follow this
-          tutorial to learn more about Messiah's student meal plan and how to
-          budget for it.   
+          your meals for the semester and budget your dining dollars. Follow
+          this tutorial to learn more about Messiah's student meal plan and how
+          to budget for it.
         </p>
         <BetaNotice />
       </>
@@ -80,7 +81,7 @@ const tutorialSteps: TutorialStep[] = [
       <p>
         You'll plan your meals with a 7-day template that's repeated the number
         of weeks in the semester. Add meals directly to a weekday by{' '}
-        {/Mobi|Android/i.test(navigator.userAgent) ? (
+        {isMobileDevice() ? (
           <span>
             long pressing a <IoAdd size={ICON_SIZE} className='inline' /> button
           </span>
@@ -89,31 +90,41 @@ const tutorialSteps: TutorialStep[] = [
             hovering over a <IoAdd size={ICON_SIZE} className='inline' /> button
           </span>
         )}
-        , or click a <IoAdd size={ICON_SIZE} className='inline' /> button to add
-        a meal to the meal queue.
+        {showMealQueue ? (
+          <>
+            , or click a <IoAdd size={ICON_SIZE} className='inline' /> button to
+            add a meal to the meal queue.
+          </>
+        ) : (
+          '.'
+        )}
       </p>
     ),
     action: (
       <strong>
-        Choose some meals that look good and add them to the meal queue.
+        Choose some meals that look good and add them to a day of your choice.
       </strong>
     )
   },
-  {
-    title: 'Meal Queue',
-    description: (
-      <p>
-        The meal queue allows you to add a group of meals to multiple days. Once
-        meals are added to the meal queue, select the preferred days and click
-        "Add to selected days".
-      </p>
-    ),
-    action: (
-      <strong>
-        Select a few days and click the "Add to selected days" button.
-      </strong>
-    )
-  },
+  ...(showMealQueue
+    ? [
+        {
+          title: 'Meal Queue',
+          description: (
+            <p>
+              The meal queue allows you to add a group of meals to multiple
+              days. Once meals are added to the meal queue, select the preferred
+              days and click "Add to selected days".
+            </p>
+          ),
+          action: (
+            <strong>
+              Select a few days and click the "Add to selected days" button.
+            </strong>
+          )
+        }
+      ]
+    : []),
   {
     title: 'Day Editor',
     description: (

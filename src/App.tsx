@@ -138,7 +138,7 @@ function App() {
    * An array of refs to the tutorial divs
    */
   const tutorialDivs = useRef<(HTMLElement | null)[]>(
-    Array(tutorialSteps.length).fill(null)
+    Array(tutorialSteps(showMealQueue).length).fill(null)
   );
 
   /**
@@ -176,7 +176,9 @@ function App() {
    */
   const addRef = (ref: HTMLElement | null, title: string) => {
     if (ref === null) return;
-    const index = tutorialSteps.findIndex((step) => step.title === title);
+    const index = tutorialSteps(showMealQueue).findIndex(
+      (step) => step.title === title
+    );
     if (index === -1)
       throw new Error(`Title ${title} is not part of the tutorial`);
     tutorialDivs.current[index] = ref;
