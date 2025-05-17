@@ -18,7 +18,12 @@ const usePersistentState = <T>(
    */
   const [value, setValue] = useState<T>(() => {
     const storedValue = localStorage.getItem(key);
-    if (storedValue !== 'null' && storedValue !== null) {
+    if (
+      storedValue !== 'null' &&
+      storedValue !== null &&
+      storedValue !== 'undefined' &&
+      storedValue !== undefined
+    ) {
       if (deserialize) {
         return deserialize(JSON.parse(storedValue));
       }

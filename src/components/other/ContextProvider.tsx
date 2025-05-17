@@ -11,7 +11,8 @@ import {
   EndDateCtx,
   UserSelectedMealsCtx,
   MealQueueCtx,
-  CustomMealsCtx
+  CustomMealsCtx,
+  ShowMealQueueCtx
 } from '../../static/context';
 import Meal from '../../types/Meal';
 import { UserSelectedMealsObjectType } from '../../types/userSelectedMealsObject';
@@ -43,6 +44,8 @@ interface ContextProviderProps {
   setShowTutorial: React.Dispatch<React.SetStateAction<boolean>>;
   setTutorialStep: React.Dispatch<React.SetStateAction<number>>;
   tutorialDivs: React.MutableRefObject<(HTMLElement | null)[]>;
+  showMealQueue: boolean;
+  setShowMealQueue: React.Dispatch<React.SetStateAction<boolean>>;
   addRef: (ref: HTMLElement | null, title: string) => void;
 }
 
@@ -70,7 +73,9 @@ const ContextProvider = ({
   mealQueue,
   setMealQueue,
   customMeals,
-  setCustomMeals
+  setCustomMeals,
+  showMealQueue,
+  setShowMealQueue
 }: ContextProviderProps) => {
   return (
     <MealsCtx.Provider value={{ value: meals, setValue: () => {} }}>
@@ -113,7 +118,14 @@ const ContextProvider = ({
                               setValue: setCustomMeals
                             }}
                           >
-                            {children}
+                            <ShowMealQueueCtx.Provider
+                              value={{
+                                value: showMealQueue,
+                                setValue: setShowMealQueue
+                              }}
+                            >
+                              {children}
+                            </ShowMealQueueCtx.Provider>
                           </CustomMealsCtx.Provider>
                         </MealQueueCtx.Provider>
                       </UserSelectedMealsCtx.Provider>

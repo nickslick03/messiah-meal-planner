@@ -120,6 +120,14 @@ function App() {
   const [mealLocations, setMealLocations] = useState<string[]>([]);
 
   /**
+   * Keeps track of whether or not to show the meal queue
+   */
+  const [showMealQueue, setShowMealQueue] = usePersistentState<boolean>(
+    'showMealQueue',
+    false
+  );
+
+  /**
    * An array of refs to the tutorial divs
    */
   const tutorialDivs = useRef<(HTMLElement | null)[]>(
@@ -328,6 +336,8 @@ function App() {
       setMealQueue={setMealQueue}
       customMeals={customMeals}
       setCustomMeals={setCustomMeals}
+      showMealQueue={showMealQueue}
+      setShowMealQueue={setShowMealQueue}
     >
       <IfFulfilled state={mealsState}>
         <Menu />
@@ -366,7 +376,7 @@ function App() {
               <IfFulfilled state={mealsState}>
                 <>
                   <AvailableMeals order={2} />
-                  <MealQueue order={3} />
+                  {showMealQueue ? <MealQueue order={3} /> : <></>}
                   <DayEditor order={4} />
                   <Results
                     order={5}

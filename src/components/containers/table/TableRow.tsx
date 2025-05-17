@@ -60,6 +60,7 @@ const TableRow = ({
   newCustomMealID
 }: TableRowProps): JSX.Element => {
   const isMealPlan = useContext(MealPlanCtx);
+  const showMealQueue = useContext(MealPlanCtx);
 
   /**
    * The price of the meal based on whether or not the DD meal plan discount is enabled
@@ -119,6 +120,7 @@ const TableRow = ({
             onClick={buttonOnClick}
             onClickDay={buttonOnClickDay}
             meal={data}
+            openOnClick={!showMealQueue.value}
           />
         ) : (
           <></>
