@@ -58,7 +58,7 @@ const Switch = ({
   const id = `dayselector-${uuid()}`;
 
   return (
-    <div className='relative' id={id}>
+    <div className='relative text-black' id={id}>
       <div className='text-sm h-full bg-gray-300 rounded-lg flex relative z-5'>
         <button
           id={`dayselector-${id}-0`}

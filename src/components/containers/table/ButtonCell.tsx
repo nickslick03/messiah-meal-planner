@@ -106,7 +106,7 @@ const ButtonCell = ({
   }, [isButtonHovered, isTooltipHovered]);
 
   return (
-    <td className='text-center'>
+    <td className='text-center text-black'>
       <div className='flex items-center h-full justify-center'>
         <div
           className='relative flex items-center justify-center h-full'

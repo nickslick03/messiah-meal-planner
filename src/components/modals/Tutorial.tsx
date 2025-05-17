@@ -164,19 +164,19 @@ const Tutorial = ({
   return (
     <>
       <div
-        className={`h-screen w-full bg-opacity-50 bg-slate-900 fixed top-0 left-0 z-50 ${
+        className={`h-screen w-full bg-opacity-50 bg-slate-900 fixed top-0 left-0 z-50 backdrop-blur-[3px] ${
           show ? '' : 'hidden'
         }`}
       ></div>
       <div
         className={`relative w-full sm:w-[25rem] p-3 drop-shadow-md self-center
-                    shadow-black bg-white rounded top-1/2 left-1/2 z-[50]
+                    shadow-black bg-white dark:bg-gray-500 rounded top-1/2 left-1/2 z-[50]
                     ${show ? '' : 'hidden'}`}
         ref={tutorialTooltipRef}
       >
         <h2 className={`${importance} text-xl text-center mb-2 relative`}>
           {tutorialSteps[step].title}
-          <span className='font-thin text-gray-500'>
+          <span className='font-thin text-gray-500 dark:text-gray-50'>
             {' '}
             ({step + 1}/{tutorialSteps.length})
           </span>
@@ -193,7 +193,7 @@ const Tutorial = ({
           <div
             className={`${
               moreDetails ? '' : 'hidden'
-            } text-indigo-900 underline text-sm cursor-pointer`}
+            } text-indigo-900 dark:text-indigo-200 underline text-sm cursor-pointer`}
             onClick={() => setShowDetails(!showDetails)}
           >
             {showDetails ? 'fewer details' : 'more details...'}
