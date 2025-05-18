@@ -30,7 +30,7 @@ export const locationClosures: Record<string, number[]> = {
 };
 
 const API_URL =
-  'https://script.google.com/macros/s/AKfycbweFjflkyhI6l-nmDDsw68_a0L8r6kaJI5RZ_uUEepAbxBSOCiS12z7fj-x2pWeABmy_w/exec';
+  'https://script.google.com/macros/s/AKfycbxup2Xf52sqi2bEn_rIjQFEajhp4GSi2IaPnefJgP52zHYpyLI-XIpKBQC3oNiQVTV3dQ/exec';
 
 /**
  * Fetches the meals from the API and returns an array of meal objects.
@@ -39,7 +39,11 @@ const API_URL =
  */
 export const getMeals = async (): Promise<Meal[]> => {
   try {
-    const resp = await fetch(API_URL);
+    const resp = await fetch(
+      `${API_URL}?entity=Meals`,
+      {
+        redirect: "follow",
+      });
     if (!resp.ok) {
       throw new Error(`Unable to find the menu. status: ${resp.status}`);
     }
@@ -53,6 +57,31 @@ export const getMeals = async (): Promise<Meal[]> => {
     console.error('Error fetching meals:', error);
     throw new Error(
       'Unable to fetch the menu. Please refresh the page or try again in a few minutes.'
+    );
+  }
+};
+
+/**
+ * Fetches the settings from the API and returns a setting object.
+ *
+ * @returns An array of meal objects
+ */
+export const getSettings = async (): Promise<Record<string, string | number>> => {
+  try {
+    const resp = await fetch(
+      `${API_URL}?entity=Settings`,
+    {
+       redirect: "follow",
+    });
+    if (!resp.ok) {
+      throw new Error(`Unable to find the settings. status: ${resp.status}`);
+    }
+    const json = await resp.json();
+    return json;
+  } catch (error) {
+    console.error('Error fetching settings:', error);
+    throw new Error(
+      'Unable to fetch the settings. Please refresh the page or try again in a few minutes.'
     );
   }
 };
