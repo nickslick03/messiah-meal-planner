@@ -57,9 +57,14 @@ const useLongPress = (
 
   /**
    * The function that will be called when the mouse is released
-   * Doesn't do anything currently, we don't need it for this app
    */
-  const handleMouseUp = () => {};
+  const handleMouseUp = () => {
+    if (timer.current) {
+      clearTimeout(timer.current);
+      timer.current = null;
+    }
+    isLongPress.current = false; // Reset the flag
+  };
 
   /**
    * The function that will be called when the touch is ended
@@ -67,10 +72,12 @@ const useLongPress = (
   const handleTouchEnd = () => {
     if (timer.current) {
       clearTimeout(timer.current);
-      if (!isLongPress.current && onClick) {
-        onClick();
-      }
+      timer.current = null;
     }
+    if (!isLongPress.current && onClick) {
+      onClick();
+    }
+    isLongPress.current = false; // Reset the flag
   };
 
   /**

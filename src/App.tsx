@@ -132,10 +132,18 @@ function App() {
   const [mealLocations, setMealLocations] = useState<string[]>([]);
 
   /**
+   * Keeps track of whether or not to show the meal queue
+   */
+  const [showMealQueue, setShowMealQueue] = usePersistentState<boolean>(
+    'showMealQueue',
+    false
+  );
+
+  /**
    * An array of refs to the tutorial divs
    */
   const tutorialDivs = useRef<(HTMLElement | null)[]>(
-    Array(tutorialSteps.length).fill(null)
+    Array(tutorialSteps(showMealQueue).length).fill(null)
   );
 
   /**
@@ -173,7 +181,9 @@ function App() {
    */
   const addRef = (ref: HTMLElement | null, title: string) => {
     if (ref === null) return;
-    const index = tutorialSteps.findIndex((step) => step.title === title);
+    const index = tutorialSteps(showMealQueue).findIndex(
+      (step) => step.title === title
+    );
     if (index === -1)
       throw new Error(`Title ${title} is not part of the tutorial`);
     tutorialDivs.current[index] = ref;
@@ -358,6 +368,8 @@ function App() {
         setCustomMeals={setCustomMeals}
         colorPreference={colorPreference}
         setColorPreference={setColorPreference}
+        showMealQueue={showMealQueue}
+        setShowMealQueue={setShowMealQueue}
       >
         <IfFulfilled state={mealsState}>
           <Menu />
@@ -396,7 +408,7 @@ function App() {
                 <IfFulfilled state={mealsState}>
                   <>
                     <AvailableMeals order={2} />
-                    <MealQueue order={3} />
+                    {showMealQueue ? <MealQueue order={3} /> : <></>}
                     <DayEditor order={4} />
                     <Results
                       order={5}

@@ -9,6 +9,8 @@ import BetaNotice from './BetaNotice';
 import { FaClock } from 'react-icons/fa';
 import LocationHoursModal from '../modals/LocationHoursModal';
 import Switch from '../form_elements/Switch';
+import { ShowMealQueueCtx } from '../../static/context';
+import { BiHide, BiShow } from 'react-icons/bi';
 import { ColorPreferenceCtx } from '../../static/context';
 
 /**
@@ -17,6 +19,7 @@ import { ColorPreferenceCtx } from '../../static/context';
  * @returns {JSX.Element} The rendered Menu component.
  */
 const Menu = () => {
+  const showMealQueue = useContext(ShowMealQueueCtx);
   /**
    * State for menu visibility.
    */
@@ -35,7 +38,8 @@ const Menu = () => {
   /**
    * State for location modal visibility.
    */
-  const [isLocationHoursModalVisible, setIsLocationHoursModalVisible] = useState(false);
+  const [isLocationHoursModalVisible, setIsLocationHoursModalVisible] =
+    useState(false);
 
   /**
    * State for preset modal visibility.
@@ -60,18 +64,25 @@ const Menu = () => {
   useEffect(() => {
     const handleScroll = () => {
       const newScrollDistance = Math.max(window.scrollY, 0);
-      const isAtBottom =
-        window.innerHeight + window.scrollY >=
-        document.documentElement.scrollHeight;
-      setIsIconVisible(
-        (scrollDistance > newScrollDistance || newScrollDistance === 0) &&
-          !isAtBottom
-      );
+      const isScrollingDown = scrollDistance > newScrollDistance;
+      const isAtTop = newScrollDistance === 0;
+      const isAtBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight;
+      setIsIconVisible(isScrollingDown || isAtTop || isAtBottom);
       setScrollDistance(newScrollDistance);
     };
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, [scrollDistance]);
+
+  /**
+   * Sets a timeout to show the menu icon after 5 seconds of inactivity.
+   */
+  useEffect(() => {
+    const timeoutID = isIconVisible 
+      ? -1
+      : setTimeout(() => setIsIconVisible(true), 5000);
+    return () => clearTimeout(timeoutID);
   }, [scrollDistance]);
 
   return (
@@ -140,6 +151,18 @@ const Menu = () => {
           >
             <GrPowerReset /> Reset
           </li>
+          <li className='flex items-center gap-2'>
+            Meal Queue
+            <Switch
+              state={showMealQueue.value}
+              setState={showMealQueue.setValue}
+              offIcon={<BiHide />}
+              offText='Off'
+              onIcon={<BiShow />}
+              onText='On'
+              shrinkable={true}
+            />
+          </li>
         </ul>
         <div>
           <Switch
@@ -148,7 +171,9 @@ const Menu = () => {
             onIcon={<IoMoon />}
             onText='Dark'
             state={colorPreference.value === 'dark'}
-            setState={(isDark) => colorPreference.setValue(isDark ? 'dark' : 'light')}
+            setState={(isDark) =>
+              colorPreference.setValue(isDark ? 'dark' : 'light')
+            }
           />
         </div>
         <footer className='text-gray-500 dark:text-gray-200 text-sm text-center'>
@@ -171,7 +196,7 @@ const Menu = () => {
           </a>
         </footer>
       </div>
-      <LocationHoursModal 
+      <LocationHoursModal
         isVisible={isLocationHoursModalVisible}
         setIsVisible={setIsLocationHoursModalVisible}
       />

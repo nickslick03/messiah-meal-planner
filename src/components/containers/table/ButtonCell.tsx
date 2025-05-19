@@ -6,6 +6,7 @@ import useLongPress from '../../../hooks/useLongPress';
 import useClickOutside from '../../../hooks/useClickOutside';
 import Meal from '../../../types/Meal';
 import { isMealAllowedOnDay } from '../../../static/mealsDatabase';
+import isMobileDevice from '../../../lib/isMobile';
 
 interface ButtonCellProps {
   /**
@@ -29,6 +30,11 @@ interface ButtonCellProps {
    * The meal this button correlates with.
    */
   meal: Meal;
+
+  /**
+   * Whether the button should be expanded to show the day buttons when clicked
+   */
+  openOnClick?: boolean;
 }
 
 /**
@@ -42,7 +48,8 @@ const ButtonCell = ({
   meal,
   icon,
   onClick = () => {},
-  onClickDay = () => {}
+  onClickDay = () => {},
+  openOnClick = false
 }: ButtonCellProps): JSX.Element => {
   /**
    * State for whether the button is hovered
@@ -60,12 +67,6 @@ const ButtonCell = ({
   const [isRounded, setIsRounded] = useState(true);
 
   /**
-   * Detector for whether or not the user is on a mobile device
-   * @returns {boolean} Whether the current device is a mobile device
-   */
-  const isMobileDevice = () => /Mobi|Android/i.test(navigator.userAgent);
-
-  /**
    * Ref to the button container, for handling outside click on mobile
    */
   const ref = useRef<HTMLDivElement>(null);
@@ -79,7 +80,11 @@ const ButtonCell = ({
           setIsTooltipHovered(true);
         }
       : () => {},
-    isMobileDevice() && icon.type == IoAdd ? onClick : () => {},
+    openOnClick
+      ? () => setIsTooltipHovered((state) => !state)
+      : isMobileDevice() && icon.type == IoAdd
+      ? onClick
+      : () => {},
     300
   );
 
@@ -116,7 +121,9 @@ const ButtonCell = ({
                      : 'rounded-full'
                  } text-center transition duration-50`}
             onClick={
-              !isMobileDevice() || icon.type !== IoAdd ? onClick : () => {}
+              (!isMobileDevice() || icon.type !== IoAdd) && !openOnClick
+                ? onClick
+                : () => {}
             }
             onMouseEnter={
               icon.type === IoAdd && !isMobileDevice()

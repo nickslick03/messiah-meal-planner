@@ -88,3 +88,8 @@ export const TutorialControlCtx = createContext<TutorialControl>({
   setShowTutorial: () => {},
   setTutorialStep: () => {}
 });
+
+export const ShowMealQueueCtx = createContext<ContextType<boolean>>({
+  value: false,
+  setValue: () => {}
+});
