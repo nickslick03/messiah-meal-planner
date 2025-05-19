@@ -19,7 +19,7 @@ import {
   Weekday
 } from './types/userSelectedMealsObject';
 import usePersistentState from './hooks/usePersistentState';
-import { getMeals } from './static/mealsDatabase';
+import { getMeals, getSettings } from './static/mealsDatabase';
 import { getMealTotal, calculateDateWhenRunOut } from './lib/calculationEngine';
 import { getWeekdaysBetween } from './lib/dateCalcuation';
 import Tutorial from './components/modals/Tutorial';
@@ -44,6 +44,11 @@ function App() {
    * Fetch meals
    */
   const mealsState = useAsync<Meal[]>(getMeals);
+
+  /**
+   * Fetch settings
+   */
+  const settings = useAsync<Record<string, string | number>>(getSettings);
 
   /**
    * Stores the list of available meals
@@ -84,7 +89,7 @@ function App() {
    */
   const [startDate, setStartDate] = usePersistentState<Date | null>(
     'startDate',
-    null,
+    new Date(),
     (str) => new Date(str)
   );
 
@@ -242,6 +247,14 @@ function App() {
       }
     }
   }, [userSelectedMeals, customMeals, setUserSelectedMeals, meals]);
+
+  useEffect(() => {
+    const isFufilled = !settings.isPending && !settings.error;
+    if (isFufilled && settings.data !== null) {
+      setBalance(balance ?? (settings.data['defaultBalance'] as number));
+      setWeeksOff(weeksOff ?? (settings.data['defaultWeeksOff'] as number));
+    }
+  }, [settings]);
 
   /**
    * The grand total cost of all the meals from the start date to the end date.
