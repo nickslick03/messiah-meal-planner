@@ -1,6 +1,6 @@
 import Meal from '../../types/Meal';
 import ModalContainer from '../containers/ModalContainer';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 const InvalidModal = ({
   invalidMeals
