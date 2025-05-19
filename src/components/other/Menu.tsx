@@ -5,13 +5,13 @@ import { IoIosDocument, IoMdClose } from 'react-icons/io';
 import { GrPowerReset } from 'react-icons/gr';
 import ResetModal from '../modals/ResetModal';
 import PresetMealPlanModal from '../modals/PresetMealPlanModal';
-import BetaNotice from './BetaNotice';
 import { FaClock } from 'react-icons/fa';
 import LocationHoursModal from '../modals/LocationHoursModal';
 import Switch from '../form_elements/Switch';
 import { ShowMealQueueCtx } from '../../static/context';
 import { BiHide, BiShow } from 'react-icons/bi';
 import { ColorPreferenceCtx } from '../../static/context';
+import { MdFeedback } from 'react-icons/md';
 
 /**
  * The main menu component of the app.
@@ -66,7 +66,9 @@ const Menu = () => {
       const newScrollDistance = Math.max(window.scrollY, 0);
       const isScrollingDown = scrollDistance > newScrollDistance;
       const isAtTop = newScrollDistance === 0;
-      const isAtBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight;
+      const isAtBottom =
+        window.innerHeight + window.scrollY >=
+        document.documentElement.scrollHeight;
       setIsIconVisible(isScrollingDown || isAtTop || isAtBottom);
       setScrollDistance(newScrollDistance);
     };
@@ -79,7 +81,7 @@ const Menu = () => {
    * Sets a timeout to show the menu icon after 5 seconds of inactivity.
    */
   useEffect(() => {
-    const timeoutID = isIconVisible 
+    const timeoutID = isIconVisible
       ? -1
       : setTimeout(() => setIsIconVisible(true), 5000);
     return () => clearTimeout(timeoutID);
@@ -151,6 +153,12 @@ const Menu = () => {
           >
             <GrPowerReset /> Reset
           </li>
+          <li className='hover:underline cursor-pointer flex items-center gap-2'>
+            <MdFeedback />
+            <a href='https://forms.gle/cMMqxgHpJBH2gSAp9' target='_blank'>
+              Feedback
+            </a>
+          </li>
           <li className='flex items-center gap-2'>
             Meal Queue
             <Switch
@@ -177,7 +185,6 @@ const Menu = () => {
           />
         </div>
         <footer className='text-gray-500 dark:text-gray-200 text-sm text-center'>
-          <BetaNotice />
           By{' '}
           <a
             target='_blank'
@@ -193,6 +200,22 @@ const Menu = () => {
             className='text-indigo-900 underline dark:text-indigo-300'
           >
             Nicholas Epps
+          </a>
+          <br />
+          <a
+            href='https://github.com/nickslick03/messiah-meal-planner'
+            className='text-indigo-900 underline dark:text-indigo-300'
+            target='_blank'
+          >
+            Source Code
+          </a>
+          <br />
+          <a
+            href='https://github.com/nickslick03/messiah-meal-planner/blob/master/LICENSE'
+            className='text-indigo-900 underline dark:text-indigo-300'
+            target='_blank'
+          >
+            Legal
           </a>
         </footer>
       </div>

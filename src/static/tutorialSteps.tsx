@@ -45,7 +45,17 @@ const tutorialSteps = (showMealQueue: boolean): TutorialStep[] => [
           this tutorial to learn more about Messiah's student meal plan and how
           to budget for it.
         </p>
-        <BetaNotice />
+        <p>
+          Messiah Meal Planner is licensed under the{' '}
+          <a
+            href='https://github.com/nickslick03/messiah-meal-planner/blob/master/LICENSE'
+            className='text-indigo-900 underline dark:text-indigo-300'
+            target='_blank'
+          >
+            MIT License
+          </a>
+          .
+        </p>
       </>
     )
   },
