@@ -13,8 +13,6 @@ const InvalidModal = ({
     setVisible(false);
   };
 
-  useEffect(() => console.log(invalidMeals), [invalidMeals]);
-
   return (
     visible && (
       <ModalContainer

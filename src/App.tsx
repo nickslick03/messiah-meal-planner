@@ -250,10 +250,9 @@ function App() {
 
   useEffect(() => {
     const isFufilled = !settings.isPending && !settings.error;
-    console.log({isFufilled, settings});
     if (isFufilled && settings.data !== null) {
-      setBalance(balance ?? settings.data["defaultBalance"] as number);
-      setWeeksOff(weeksOff ?? settings.data["defaultWeeksOff"] as number);
+      setBalance(balance ?? (settings.data['defaultBalance'] as number));
+      setWeeksOff(weeksOff ?? (settings.data['defaultWeeksOff'] as number));
     }
   }, [settings]);
 
