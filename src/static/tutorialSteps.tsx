@@ -1,6 +1,5 @@
 import { IoAdd } from 'react-icons/io5';
 import { TUTORIAL_ICON_SIZE as ICON_SIZE } from './constants';
-import BetaNotice from '../components/other/BetaNotice';
 import isMobileDevice from '../lib/isMobile';
 
 interface TutorialStep {
