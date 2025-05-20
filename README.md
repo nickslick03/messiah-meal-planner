@@ -58,7 +58,7 @@ This runs the build and pushes the result to the `gh-pages` branch, which deploy
 
 ## Project Structure
 
-- [`src/main.tsx`](src/main.tsx): Main entry point and application logic.
+- [`src/main.tsx`](src/main.tsx): Main entry point.
 - `src/components/`: React components for UI sections (meals, queue, editor, results, etc) as well as shared UI components.
 - `src/static/`: Static data, constants, and tooltips.
 - `src/types/`: TypeScript type definitions.
