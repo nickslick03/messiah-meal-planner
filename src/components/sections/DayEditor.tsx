@@ -7,12 +7,12 @@ import {
   StartDateCtx,
   TutorialElementsCtx,
   UserSelectedMealsCtx,
-  WeeksOffCtx
+  WeeksOffCtx,
+  MealsCtx
 } from '../../static/context';
 import Divider from '../other/Divider';
 import MealContainer from '../containers/MealContainer';
-import Meal from '../../types/Meal';
-import meals from '../../static/mealsDatabase';
+import Meal, { isMeal } from '../../types/Meal';
 import { CustomMealsCtx } from '../../static/context';
 import { getWeekdaysBetween } from '../../lib/dateCalcuation';
 import { getMealDayTotal } from '../../lib/calculationEngine';
@@ -49,6 +49,7 @@ const DayEditor = ({ order }: DayEditorProps) => {
   const startDate = useContext(StartDateCtx);
   const endDate = useContext(EndDateCtx);
   const discount = useContext(MealPlanCtx);
+  const meals = useContext(MealsCtx);
 
   /**
    * Transforms the userSelectedMeals object into an array of [day, [meal, meal, meal, ...]]
@@ -60,11 +61,11 @@ const DayEditor = ({ order }: DayEditorProps) => {
           [
             day,
             userSelectedMeals.value[day]
-              .map((mr) => dereferenceMeal(mr, meals, customMeals.value))
+              .map((mr) => dereferenceMeal(mr, meals.value, customMeals.value))
               .filter((m) => m !== undefined)
           ] as [string, Meal[]]
       ),
-    [userSelectedMeals, customMeals]
+    [userSelectedMeals, customMeals, meals]
   );
 
   /**
@@ -129,11 +130,7 @@ const DayEditor = ({ order }: DayEditorProps) => {
   const daysWithErrors = useMemo(
     () =>
       Object.values(userSelectedMealsValue).map((day) =>
-        day.some(
-          (m) =>
-            Object.values(m).filter((m) => m === undefined || isNaN(m)).length >
-            0
-        )
+        day.some((m) => !isMeal(m) || m?.legacy)
       ),
     [userSelectedMealsValue]
   );
@@ -220,7 +217,7 @@ const DayEditor = ({ order }: DayEditorProps) => {
               value: `${
                 isNaN(mealDayTotal) ? 'ERROR' : formatCurrency(mealDayTotal)
               }`,
-              resultsStyle: 'text-messiah-red'
+              resultsStyle: 'text-messiah-red dark:text-messiah-red-light'
             },
             {
               title: `Number of ${weekday}(s)`,
@@ -235,7 +232,7 @@ const DayEditor = ({ order }: DayEditorProps) => {
                       mealDayTotal * numOfWeekdays[weekdayIndex] // Convert from Monday to Sunday start
                     )
               }`,
-              resultsStyle: 'text-messiah-red'
+              resultsStyle: 'text-messiah-red dark:text-messiah-red-light'
             }
           ]}
         />
@@ -252,6 +249,7 @@ const DayEditor = ({ order }: DayEditorProps) => {
           }}
           minimalSpace={true}
           confirmDisabled={false}
+          zIndex={60}
         >
           Are you sure you want to clear all selected meals?
         </ModalContainer>

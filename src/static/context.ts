@@ -12,6 +12,21 @@ interface ContextType<T> {
   setValue: Dispatch<SetStateAction<T>>;
 }
 
+export const ColorPreferenceCtx = createContext<ContextType<string | null>>({
+  value: null,
+  setValue: () => {}
+});
+
+export const MealsCtx = createContext<ContextType<Meal[]>>({
+  value: [],
+  setValue: () => {}
+});
+
+export const LocationsCtx = createContext<ContextType<string[]>>({
+  value: [],
+  setValue: () => {}
+});
+
 export const WeeksOffCtx = createContext<ContextType<number | null>>({
   value: null,
   setValue: () => {}
@@ -72,4 +87,9 @@ interface TutorialControl {
 export const TutorialControlCtx = createContext<TutorialControl>({
   setShowTutorial: () => {},
   setTutorialStep: () => {}
+});
+
+export const ShowMealQueueCtx = createContext<ContextType<boolean>>({
+  value: false,
+  setValue: () => {}
 });

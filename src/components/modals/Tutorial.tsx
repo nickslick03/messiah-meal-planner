@@ -9,7 +9,7 @@ import {
 import { IMPORTANCE_CLASSES } from '../../static/constants';
 import Button from '../form_elements/Button';
 import { IoMdClose } from 'react-icons/io';
-import { TutorialElementsCtx } from '../../static/context';
+import { ShowMealQueueCtx, TutorialElementsCtx } from '../../static/context';
 import tutorialSteps from '../../static/tutorialSteps';
 import usePersistentState from '../../hooks/usePersistentState';
 import tooltip from '../../static/tooltip';
@@ -55,6 +55,7 @@ const Tutorial = ({
   areDetailsEntered
 }: TutorialProps) => {
   const tutorialRefs = useContext(TutorialElementsCtx);
+  const showMealQueue = useContext(ShowMealQueueCtx);
 
   /**
    * State for whether the user is a new user.
@@ -67,7 +68,7 @@ const Tutorial = ({
   const moreDetails = useMemo(
     () =>
       Object.values(tooltip).find(
-        (info) => info.title === tutorialSteps[step].title
+        (info) => info.title === tutorialSteps(showMealQueue.value)[step].title
       )?.text,
     [step]
   );
@@ -101,7 +102,10 @@ const Tutorial = ({
         title: 'Meal Plan Info',
         check: () => areDetailsEntered
       }
-    ].find((validation) => validation.title === tutorialSteps[step].title);
+    ].find(
+      (validation) =>
+        validation.title === tutorialSteps(showMealQueue.value)[step].title
+    );
     return !validation || validation.check();
   }, [step, areDetailsEntered]);
 
@@ -123,7 +127,7 @@ const Tutorial = ({
    */
   useEffect(() => {
     const tooltip = tutorialTooltipRef!.current!;
-    const position = tutorialSteps[step].position;
+    const position = tutorialSteps(showMealQueue.value)[step].position;
     let div: HTMLElement | null = null;
     if (tutorialRefs.value[step] !== null) {
       div = tutorialRefs.value[step];
@@ -135,16 +139,17 @@ const Tutorial = ({
       tooltip.style.order = `${
         1 +
         step -
-        tutorialSteps
+        tutorialSteps(showMealQueue.value)
           .slice(0, step)
           .reduce((p, c) => p + (c.position === 'center' ? 1 : 0), 0)
       }`;
-      (div !== null && tutorialSteps[step].position === 'end'
+      (div !== null &&
+      tutorialSteps(showMealQueue.value)[step].position === 'end'
         ? div
         : tooltip
       ).scrollIntoView({
         behavior: 'smooth',
-        block: tutorialSteps[step].position
+        block: tutorialSteps(showMealQueue.value)[step].position
       });
     } else {
       tooltip.style.position = 'absolute';
@@ -164,21 +169,21 @@ const Tutorial = ({
   return (
     <>
       <div
-        className={`h-screen w-full bg-opacity-50 bg-slate-900 fixed top-0 left-0 z-50 ${
+        className={`h-screen w-full bg-opacity-50 bg-slate-900 fixed top-0 left-0 z-50 backdrop-blur-[3px] ${
           show ? '' : 'hidden'
         }`}
       ></div>
       <div
         className={`relative w-full sm:w-[25rem] p-3 drop-shadow-md self-center
-                    shadow-black bg-white rounded top-1/2 left-1/2 z-[55]
+                    shadow-black bg-white dark:bg-gray-500 rounded top-1/2 left-1/2 z-[50]
                     ${show ? '' : 'hidden'}`}
         ref={tutorialTooltipRef}
       >
         <h2 className={`${importance} text-xl text-center mb-2 relative`}>
-          {tutorialSteps[step].title}
-          <span className='font-thin text-gray-500'>
+          {tutorialSteps(showMealQueue.value)[step].title}
+          <span className='font-thin text-gray-500 dark:text-gray-50'>
             {' '}
-            ({step + 1}/{tutorialSteps.length})
+            ({step + 1}/{tutorialSteps(showMealQueue.value).length})
           </span>
           <button
             className='absolute top-1 right-1'
@@ -188,17 +193,19 @@ const Tutorial = ({
           </button>
         </h2>
         <div className='text-sm flex-1 px-1 mb-1'>
-          {tutorialSteps[step].description}
+          {tutorialSteps(showMealQueue.value)[step].description}
           {showDetails ? moreDetails : ''}
           <div
             className={`${
               moreDetails ? '' : 'hidden'
-            } text-indigo-900 underline text-sm cursor-pointer`}
+            } text-indigo-900 dark:text-indigo-200 underline text-sm cursor-pointer`}
             onClick={() => setShowDetails(!showDetails)}
           >
             {showDetails ? 'fewer details' : 'more details...'}
           </div>
-          <div className='pt-3'>{tutorialSteps[step].action ?? ''}</div>
+          <div className='pt-3'>
+            {tutorialSteps(showMealQueue.value)[step].action ?? ''}
+          </div>
         </div>
         <div className='text-center'>
           <Button
@@ -211,12 +218,16 @@ const Tutorial = ({
             }}
           />
           <Button
-            title={step + 1 === tutorialSteps.length ? 'Finish' : 'Next'}
+            title={
+              step + 1 === tutorialSteps(showMealQueue.value).length
+                ? 'Finish'
+                : 'Next'
+            }
             style='text-sm mb-0'
             disabled={!isStepComplete}
             onClick={() => {
               resetPrevDiv(step);
-              step + 1 === tutorialSteps.length
+              step + 1 === tutorialSteps(showMealQueue.value).length
                 ? setShow(false)
                 : setStep(step + 1);
             }}

@@ -1,4 +1,4 @@
-import { useContext, useMemo } from 'react';
+import { useContext, useEffect, useMemo } from 'react';
 import SectionContainer from '../containers/SectionContainer';
 import DotLeader from '../other/DotLeader';
 import {
@@ -7,11 +7,13 @@ import {
   UserSelectedMealsCtx,
   CustomMealsCtx,
   WeeksOffCtx,
-  TutorialElementsCtx
+  TutorialElementsCtx,
+  ColorPreferenceCtx,
+  MealsCtx,
+  LocationsCtx
 } from '../../static/context';
 import formatCurrency from '../../lib/formatCurrency';
 import { getMealTotal } from '../../lib/calculationEngine';
-import meals, { mealLocations } from '../../static/mealsDatabase';
 import { Bar, Pie } from 'react-chartjs-2';
 import 'chart.js/auto';
 import { WEEKDAYS } from '../../static/constants';
@@ -19,6 +21,7 @@ import { userMealsToStackedChart } from '../../lib/mealChartFormat';
 import Divider from '../other/Divider';
 import { TooltipItem } from 'chart.js/auto';
 import tooltip from '../../static/tooltip';
+import { MdErrorOutline } from 'react-icons/md';
 
 interface ResultsProps {
   /**
@@ -45,6 +48,11 @@ interface ResultsProps {
    * The order of this component relative to others.
    */
   order: number;
+
+  /**
+   * Whether the data is invalid.
+   */
+  dataIsInvalid: boolean;
 }
 
 /**
@@ -79,7 +87,8 @@ const Results = ({
   difference,
   grandTotal,
   dayWhenRunOut,
-  order
+  order,
+  dataIsInvalid
 }: ResultsProps) => {
   const balance = useContext(BalanceCtx);
   const weeksOff = useContext(WeeksOffCtx);
@@ -88,6 +97,14 @@ const Results = ({
   const customMeals = useContext(CustomMealsCtx);
   const userSelectedMeals = useContext(UserSelectedMealsCtx);
   const tutorialRefs = useContext(TutorialElementsCtx);
+  const colorPreference = useContext(ColorPreferenceCtx);
+
+  const color = useMemo(
+    () => (colorPreference.value === 'dark' ? 'white' : 'black'),
+    [colorPreference]
+  );
+  const meals = useContext(MealsCtx);
+  const mealLocations = useContext(LocationsCtx);
 
   /**
    * The meal total for one week.
@@ -98,9 +115,9 @@ const Results = ({
         userMeals.value,
         Array<number>(7).fill(1),
         isDiscount.value || false,
-        [...meals, ...customMeals.value]
+        [...meals.value, ...customMeals.value]
       ),
-    [customMeals.value, isDiscount.value, userMeals.value]
+    [customMeals.value, isDiscount.value, userMeals.value, meals]
   );
 
   /**
@@ -109,13 +126,14 @@ const Results = ({
   const barChartData = useMemo(() => {
     const locationMap = userMealsToStackedChart(
       userSelectedMeals.value,
-      meals,
+      mealLocations.value,
+      meals.value,
       customMeals.value,
       isDiscount.value ?? false
     );
     return {
       labels: [...WEEKDAYS],
-      datasets: mealLocations.map((location, i) => ({
+      datasets: mealLocations.value.map((location, i) => ({
         label: location,
         data: locationMap.get(location) ?? [],
         backgroundColor: backgroundColor[i],
@@ -123,7 +141,13 @@ const Results = ({
         borderWidth: 1
       }))
     };
-  }, [customMeals.value, userSelectedMeals.value, isDiscount.value]);
+  }, [
+    customMeals.value,
+    userSelectedMeals.value,
+    isDiscount.value,
+    meals.value,
+    mealLocations.value
+  ]);
 
   /**
    * The data for the pie chart, splits up weekly meal prices by location.
@@ -131,7 +155,8 @@ const Results = ({
   const pieChartData = useMemo(() => {
     const locationMap = userMealsToStackedChart(
       userSelectedMeals.value,
-      meals,
+      mealLocations.value,
+      meals.value,
       customMeals.value,
       isDiscount.value ?? false
     );
@@ -140,7 +165,7 @@ const Results = ({
       priceMap.push(prices.reduce((p, c) => p + c))
     );
     return {
-      labels: mealLocations,
+      labels: mealLocations.value,
       datasets: [
         {
           data: priceMap,
@@ -150,7 +175,13 @@ const Results = ({
         }
       ]
     };
-  }, [customMeals.value, userSelectedMeals.value, isDiscount.value]);
+  }, [
+    customMeals.value,
+    userSelectedMeals.value,
+    isDiscount.value,
+    meals.value,
+    mealLocations.value
+  ]);
 
   /** The options for the pie chart:
    *    Adds the title
@@ -164,7 +195,13 @@ const Results = ({
       plugins: {
         title: {
           display: true,
-          text: 'Meals by Weekly Price'
+          text: 'Meals by Weekly Price',
+          color
+        },
+        legend: {
+          labels: {
+            color
+          }
         },
         tooltip: {
           callbacks: {
@@ -188,7 +225,7 @@ const Results = ({
         }
       }
     }),
-    [pieChartData.datasets]
+    [pieChartData.datasets, color]
   );
 
   /**
@@ -205,7 +242,13 @@ const Results = ({
       plugins: {
         title: {
           display: true,
-          text: 'Meals by Weekday'
+          text: 'Meals by Weekday',
+          color
+        },
+        legend: {
+          labels: {
+            color
+          }
         },
         tooltip: {
           callbacks: {
@@ -220,12 +263,16 @@ const Results = ({
       },
       scales: {
         x: {
-          stacked: true
+          stacked: true,
+          ticks: {
+            color
+          }
         },
         y: {
           beginAtZero: true,
           stacked: true,
           ticks: {
+            color,
             callback: function (tickValue: string | number) {
               const value =
                 typeof tickValue === 'string'
@@ -237,8 +284,14 @@ const Results = ({
         }
       }
     }),
-    [barChartData.datasets]
+    [barChartData.datasets, color]
   );
+
+  useEffect(() => {
+    //ChartJS.defaults.color = color;
+    //ChartJS.defaults.plugins.title.color = color;
+    //ChartJS.defaults.plugins.legend.labels.color = color;
+  }, [colorPreference]);
 
   return (
     <SectionContainer
@@ -247,6 +300,13 @@ const Results = ({
       setRef={(ref) => tutorialRefs.setValue(ref, 'Results')}
       order={order}
     >
+      {dataIsInvalid && (
+        <div className='bg-red-100 rounded-lg p-4 my-2 text-messiah-red w-full flex flex-row gap-2'>
+          <MdErrorOutline size={25} className='text-messiah-red' />
+          Your meal plan contains meals that no longer exist. Please update your
+          plan to remove these meals.
+        </div>
+      )}
       <div className='text-gray-400 mt-4 mb-1'>
         (Charts are based on the total for 1 week)
       </div>
@@ -264,17 +324,17 @@ const Results = ({
           {
             title: 'Starting Balance',
             value: formatCurrency(balance.value || 0),
-            resultsStyle: 'text-messiah-green'
+            resultsStyle: 'text-messiah-green dark:text-messiah-green-light'
           },
           {
             title: 'Weekly Total',
             value: `${formatCurrency(weekTotal)}`,
-            resultsStyle: 'text-messiah-red'
+            resultsStyle: 'text-messiah-red dark:text-messiah-red-light'
           },
           {
             title: 'Grand Total',
             value: `${formatCurrency(grandTotal)}`,
-            resultsStyle: 'text-messiah-red'
+            resultsStyle: 'text-messiah-red dark:text-messiah-red-light'
           }
         ].concat(
           !isUnderBalance && dayWhenRunOut !== null
@@ -289,7 +349,7 @@ const Results = ({
                   value: `${
                     dayWhenRunOut.getMonth() + 1
                   }/${dayWhenRunOut.getDate()}/${dayWhenRunOut.getFullYear()}`,
-                  resultsStyle: 'text-black'
+                  resultsStyle: 'text-black dark:text-white'
                 }
               ]
             : []
@@ -297,7 +357,9 @@ const Results = ({
       />
       <div
         className={`${
-          isUnderBalance ? 'text-messiah-green' : 'text-messiah-red'
+          isUnderBalance
+            ? 'text-messiah-green dark:text-messiah-green-light '
+            : 'text-messiah-red dark:text-messiah-red-light'
         } text-xl font-bold mt-4 text-center`}
       >
         {isUnderBalance

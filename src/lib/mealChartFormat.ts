@@ -1,4 +1,3 @@
-import { mealLocations } from '../static/mealsDatabase';
 import MealReference from '../types/MealReference';
 import { UserSelectedMealsObjectType } from '../types/userSelectedMealsObject';
 import dereferenceMeal from './dereferenceMeal';
@@ -11,12 +10,14 @@ import { ALACARTE_DISCOUNT } from '../static/discounts';
  *
  * @param userSelectedMeals The userSelectedMeals object
  * @param meals The list of all meals
+ * @param mealLocations The list of meal locations
  * @param customMeals The list of all custom meals
  * @param isDiscount Whether to apply the student discount to the meals
  * @returns The stacked chart of the total cost of each meal in the userSelectedMeals object
  */
 export function userMealsToStackedChart(
   userSelectedMeals: UserSelectedMealsObjectType,
+  mealLocations: string[],
   meals: Meal[],
   customMeals: Meal[],
   isDiscount: boolean

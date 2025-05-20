@@ -33,6 +33,11 @@ interface TableCellProps {
   isCustom?: boolean;
 
   /**
+   * Whether or not the cell contains invalid data
+   */
+  isInvalid?: boolean;
+
+  /**
    * The click event handler for clicking on a custom meal
    */
   onCustomClick?: () => void;
@@ -53,19 +58,21 @@ const TableCell = ({
   importance = newImportanceIndex(3),
   sortState = SortState.NONE,
   isCustom = false,
+  isInvalid = false,
   onCustomClick
 }: TableCellProps): JSX.Element => {
   const importanceStyle = IMPORTANCE_CLASSES[importance] ?? 'font-normal';
 
   return (
-    <td className={`${importanceStyle} p-2 text-center`}>
+    <td className={`${importanceStyle} p-1 py-2 sm:p-2 text-center`}>
       {onCustomClick !== undefined ? (
         <button
           className={`${
-            isCustom || sortState !== SortState.NONE ? 'text-messiah-blue' : ''
+            isCustom || sortState !== SortState.NONE ? 'text-messiah-blue dark:text-messiah-light-blue' : ''
           } 
           bg-transparent border-none font-inter underline 
-          hover:text-messiah-blue-hover p-0 m-0 text-nowrap inline-flex transition duration-50`}
+          hover:text-messiah-blue-hover p-0 m-0 text-left inline-flex transition duration-50
+          dark:hover:text-messiah-light-blue`}
           type='button'
           onClick={onCustomClick}
         >
@@ -78,7 +85,7 @@ const TableCell = ({
             ''
           )}
         </button>
-      ) : data === 'N/A' ? (
+      ) : data === 'N/A' || isInvalid ? (
         <span className='text-messiah-red'>{data}</span>
       ) : (
         data

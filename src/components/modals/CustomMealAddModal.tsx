@@ -107,6 +107,7 @@ const CustomMealAddModal = ({
         resetState();
       }}
       confirmDisabled={isIncomplete}
+      zIndex={55}
     >
       <div className='flex flex-col mt-4 gap-4'>
         <Select

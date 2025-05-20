@@ -4,7 +4,8 @@ import { useReducer, useContext, useMemo, useState } from 'react';
 import {
   MealQueueCtx,
   TutorialElementsCtx,
-  UserSelectedMealsCtx
+  UserSelectedMealsCtx,
+  MealsCtx
 } from '../../static/context';
 import MealContainer from '../containers/MealContainer';
 import Meal from '../../types/Meal';
@@ -14,7 +15,7 @@ import {
 } from '../../types/userSelectedMealsObject';
 import { v4 as uuid } from 'uuid';
 import Notification from '../other/Notification';
-import meals, { locationClosures } from '../../static/mealsDatabase';
+import { locationClosures } from '../../static/mealsDatabase';
 import { CustomMealsCtx } from '../../static/context';
 import DaySelector from '../form_elements/DaySelector';
 import mapUserMeals from '../../lib/mapUserMeals';
@@ -32,6 +33,7 @@ interface MealQueueProps {
  * Renders the Meal Queue section, where meals in the queue can be added to different days of the week.
  */
 const MealQueue = ({ order }: MealQueueProps) => {
+  const meals = useContext(MealsCtx);
   const mealQueue = useContext(MealQueueCtx);
   const userSelectedMeals = useContext(UserSelectedMealsCtx);
   const customMeals = useContext(CustomMealsCtx);
@@ -48,9 +50,9 @@ const MealQueue = ({ order }: MealQueueProps) => {
   const mealQueueValue = useMemo(
     () =>
       mealQueue.value
-        .map((mr) => dereferenceMeal(mr, meals, customMeals.value))
+        .map((mr) => dereferenceMeal(mr, meals.value, customMeals.value))
         .filter((m) => m !== undefined) as Meal[],
-    [mealQueue, customMeals]
+    [mealQueue, customMeals, meals]
   );
 
   /**
