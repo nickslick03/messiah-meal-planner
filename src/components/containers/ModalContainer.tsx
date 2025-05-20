@@ -1,7 +1,6 @@
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import SectionHeader from './SectionHeader';
 import Button from '../form_elements/Button';
-import { ColorPreferenceCtx } from '../../static/context';
 
 interface ModalContainerProps {
   /**
@@ -77,7 +76,7 @@ const ModalContainer = ({
   centered = true,
   minimalSpace = false,
   onlyCancel = false,
-  zIndex = 50,
+  zIndex = 50
 }: ModalContainerProps): JSX.Element => {
   // Keep track of whether or not the modal is visible
   const [isVisible, setIsVisible] = useState(true);
