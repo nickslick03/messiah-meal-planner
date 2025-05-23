@@ -408,9 +408,9 @@ function App() {
                   <>
                     <AvailableMeals order={2} />
                     {showMealQueue ? <MealQueue order={3} /> : <></>}
-                    <DayEditor order={4} />
+                    <DayEditor order={showMealQueue ? 4 : 3} />
                     <Results
-                      order={5}
+                      order={showMealQueue ? 5 : 4}
                       dataIsInvalid={hasInvalidMeals}
                       grandTotal={grandTotal}
                       isUnderBalance={isUnderBalance}
@@ -418,7 +418,7 @@ function App() {
                       dayWhenRunOut={dayWhenRunOut}
                     />
                     <ResultsBar
-                      order={6}
+                      order={showMealQueue ? 6 : 5}
                       grandTotal={grandTotal}
                       isUnderBalance={isUnderBalance}
                       difference={difference}
