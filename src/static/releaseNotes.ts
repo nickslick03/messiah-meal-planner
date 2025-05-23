@@ -31,6 +31,11 @@ const releaseNotes: ReleaseNoteType[] = [
       'Ability to toggle the meal queue on and off.',
       'Default values in the meal plan info section make setup a breeze!'
     ]
+  },
+  {
+    versionNumber: '1.0.1',
+    bugFixes: ['Fixed tutorial help buttons when the meal queue is off.'],
+    enhancements: []
   }
 ];
 
