@@ -61,31 +61,31 @@ const Menu = () => {
   /**
    * Updates the scroll distance and icon visibility on scroll.
    */
-  useEffect(() => {
-    const handleScroll = () => {
-      const newScrollDistance = Math.max(window.scrollY, 0);
-      const isScrollingDown = scrollDistance > newScrollDistance;
-      const isAtTop = newScrollDistance === 0;
-      const isAtBottom =
-        window.innerHeight + window.scrollY >=
-        document.documentElement.scrollHeight;
-      setIsIconVisible(isScrollingDown || isAtTop || isAtBottom);
-      setScrollDistance(newScrollDistance);
-    };
+  // useEffect(() => {
+  //   const handleScroll = () => {
+  //     const newScrollDistance = Math.max(window.scrollY, 0);
+  //     const isScrollingDown = scrollDistance > newScrollDistance;
+  //     const isAtTop = newScrollDistance === 0;
+  //     const isAtBottom =
+  //       window.innerHeight + window.scrollY >=
+  //       document.documentElement.scrollHeight;
+  //     setIsIconVisible(isScrollingDown || isAtTop || isAtBottom);
+  //     setScrollDistance(newScrollDistance);
+  //   };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [scrollDistance]);
+  //   window.addEventListener('scroll', handleScroll);
+  //   return () => window.removeEventListener('scroll', handleScroll);
+  // }, [scrollDistance]);
 
   /**
    * Sets a timeout to show the menu icon after 5 seconds of inactivity.
    */
-  useEffect(() => {
-    const timeoutID = isIconVisible
-      ? -1
-      : setTimeout(() => setIsIconVisible(true), 5000);
-    return () => clearTimeout(timeoutID);
-  }, [scrollDistance]);
+  // useEffect(() => {
+  //   const timeoutID = isIconVisible
+  //     ? -1
+  //     : setTimeout(() => setIsIconVisible(true), 5000);
+  //   return () => clearTimeout(timeoutID);
+  // }, [scrollDistance]);
 
   return (
     <>
