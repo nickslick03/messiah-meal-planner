@@ -116,7 +116,7 @@ const ButtonCell = ({
                      : 'rounded-full'
                  } text-center transition duration-50`}
             onClick={
-              !isMobileDevice() || icon.type !== IoAdd ? onClick : () => {}
+              (!isMobileDevice() || icon.type !== IoAdd) ? onClick : () => {}
             }
             onMouseEnter={
               icon.type === IoAdd && !isMobileDevice()
