@@ -19,7 +19,7 @@ import {
   Weekday
 } from './types/userSelectedMealsObject';
 import usePersistentState from './hooks/usePersistentState';
-import { getMeals } from './static/mealsDatabase';
+import { getMeals, getSettings } from './static/mealsDatabase';
 import { getMealTotal, calculateDateWhenRunOut } from './lib/calculationEngine';
 import { getWeekdaysBetween } from './lib/dateCalcuation';
 import Tutorial from './components/modals/Tutorial';
@@ -34,9 +34,21 @@ import mapUserMeals from './lib/mapUserMeals';
 
 function App() {
   /**
+   * Stores if the user prefers dark mode.
+   */
+  const [colorPreference, setColorPreference] = usePersistentState<
+    string | null
+  >('colorPreference', null);
+
+  /**
    * Fetch meals
    */
   const mealsState = useAsync<Meal[]>(getMeals);
+
+  /**
+   * Fetch settings
+   */
+  const settings = useAsync<Record<string, string | number>>(getSettings);
 
   /**
    * Stores the list of available meals
@@ -77,7 +89,7 @@ function App() {
    */
   const [startDate, setStartDate] = usePersistentState<Date | null>(
     'startDate',
-    null,
+    new Date(),
     (str) => new Date(str)
   );
 
@@ -120,10 +132,18 @@ function App() {
   const [mealLocations, setMealLocations] = useState<string[]>([]);
 
   /**
+   * Keeps track of whether or not to show the meal queue
+   */
+  const [showMealQueue, setShowMealQueue] = usePersistentState<boolean>(
+    'showMealQueue',
+    false
+  );
+
+  /**
    * An array of refs to the tutorial divs
    */
   const tutorialDivs = useRef<(HTMLElement | null)[]>(
-    Array(tutorialSteps.length).fill(null)
+    Array(tutorialSteps(showMealQueue).length).fill(null)
   );
 
   /**
@@ -161,7 +181,9 @@ function App() {
    */
   const addRef = (ref: HTMLElement | null, title: string) => {
     if (ref === null) return;
-    const index = tutorialSteps.findIndex((step) => step.title === title);
+    const index = tutorialSteps(showMealQueue).findIndex(
+      (step) => step.title === title
+    );
     if (index === -1)
       throw new Error(`Title ${title} is not part of the tutorial`);
     tutorialDivs.current[index] = ref;
@@ -225,6 +247,14 @@ function App() {
       }
     }
   }, [userSelectedMeals, customMeals, setUserSelectedMeals, meals]);
+
+  useEffect(() => {
+    const isFufilled = !settings.isPending && !settings.error;
+    if (isFufilled && settings.data !== null) {
+      setBalance(balance ?? (settings.data['defaultBalance'] as number));
+      setWeeksOff(weeksOff ?? (settings.data['defaultWeeksOff'] as number));
+    }
+  }, [settings]);
 
   /**
    * The grand total cost of all the meals from the start date to the end date.
@@ -303,98 +333,110 @@ function App() {
     ]
   );
 
+  useEffect(() => {
+    const root = document.getElementById('root')!;
+    if (colorPreference === 'dark') root.classList.add('dark');
+    else root.classList.remove('dark');
+  }, [colorPreference]);
+
   return (
-    <ContextProvider
-      meals={meals}
-      mealLocations={mealLocations}
-      setMealLocations={setMealLocations}
-      setShowTutorial={setShowTutorial}
-      setTutorialStep={setTutorialStep}
-      tutorialDivs={tutorialDivs}
-      addRef={addRef}
-      weeksOff={weeksOff}
-      setWeeksOff={setWeeksOff}
-      mealPlan={mealPlan}
-      setMealPlan={setMealPlan}
-      balance={balance}
-      setBalance={setBalance}
-      startDate={startDate}
-      setStartDate={setStartDate}
-      endDate={endDate}
-      setEndDate={setEndDate}
-      userSelectedMeals={userSelectedMeals}
-      setUserSelectedMeals={setUserSelectedMeals}
-      mealQueue={mealQueue}
-      setMealQueue={setMealQueue}
-      customMeals={customMeals}
-      setCustomMeals={setCustomMeals}
-    >
-      <IfFulfilled state={mealsState}>
-        <Menu />
-      </IfFulfilled>
-      <ScreenContainer>
-        {hasInvalidMeals && <InvalidModal invalidMeals={invalidMeals} />}
-        <WhatsNewModal />
-        <header className='bg-messiah-blue rounded-xl border-4 border-white shadow-md w-full mb-4 flex flex-row justify-center items-center gap-4'>
-          <h1 className='font-semibold text-4xl text-white text-center py-8'>
-            Messiah Meal Planner
-          </h1>
-        </header>
-        <div className='flex flex-col relative gap-4'>
-          <Tutorial
-            show={showTutorial}
-            setShow={setShowTutorial}
-            step={tutorialStep}
-            setStep={setTutorialStep}
-            areDetailsEntered={areDetailsEntered}
-          />
-          <MealPlanInfo onEnterDetails={setAreDetailsEntered} order={1} />
-          {areDetailsEntered ? (
-            <>
-              <IfRejected state={mealsState}>
-                <div className='flex flex-col items-center order-1'>
-                  <p className='text-red-500'>
-                    Something went wrong: {error?.message}
-                  </p>
-                </div>
-              </IfRejected>
-              <IfPending state={mealsState}>
-                <div className='flex flex-col items-center order-1'>
-                  <p className='text-gray-400'>Loading Menu...</p>
-                </div>
-              </IfPending>
-              <IfFulfilled state={mealsState}>
-                <>
-                  <AvailableMeals order={2} />
-                  <MealQueue order={3} />
-                  <DayEditor order={4} />
-                  <Results
-                    order={5}
-                    dataIsInvalid={hasInvalidMeals}
-                    grandTotal={grandTotal}
-                    isUnderBalance={isUnderBalance}
-                    difference={difference}
-                    dayWhenRunOut={dayWhenRunOut}
-                  />
-                  <ResultsBar
-                    order={6}
-                    grandTotal={grandTotal}
-                    isUnderBalance={isUnderBalance}
-                    difference={difference}
-                  />
-                </>
-              </IfFulfilled>
-            </>
-          ) : (
-            <div className='flex flex-col items-center order-1'>
-              <p className='text-gray-400'>
-                Enter meal plan info to continue planning.
-              </p>
-            </div>
-          )}
-        </div>
-      </ScreenContainer>
-    </ContextProvider>
+    <div className={`dark:bg-gray-900 dark:text-white min-h-screen py-4`}>
+      <ContextProvider
+        meals={meals}
+        mealLocations={mealLocations}
+        setMealLocations={setMealLocations}
+        setShowTutorial={setShowTutorial}
+        setTutorialStep={setTutorialStep}
+        tutorialDivs={tutorialDivs}
+        addRef={addRef}
+        weeksOff={weeksOff}
+        setWeeksOff={setWeeksOff}
+        mealPlan={mealPlan}
+        setMealPlan={setMealPlan}
+        balance={balance}
+        setBalance={setBalance}
+        startDate={startDate}
+        setStartDate={setStartDate}
+        endDate={endDate}
+        setEndDate={setEndDate}
+        userSelectedMeals={userSelectedMeals}
+        setUserSelectedMeals={setUserSelectedMeals}
+        mealQueue={mealQueue}
+        setMealQueue={setMealQueue}
+        customMeals={customMeals}
+        setCustomMeals={setCustomMeals}
+        colorPreference={colorPreference}
+        setColorPreference={setColorPreference}
+        showMealQueue={showMealQueue}
+        setShowMealQueue={setShowMealQueue}
+      >
+        <IfFulfilled state={mealsState}>
+          <Menu />
+        </IfFulfilled>
+        <ScreenContainer>
+          {hasInvalidMeals && <InvalidModal invalidMeals={invalidMeals} />}
+          <WhatsNewModal />
+          <header className='bg-messiah-blue rounded-xl border-4 border-white dark:border-messiah-light-blue shadow-md w-full mb-4 zflex flex-row justify-center items-center gap-4'>
+            <h1 className='font-semibold text-4xl text-white text-center py-8'>
+              Messiah Meal Planner
+            </h1>
+          </header>
+          <div className='flex flex-col relative gap-4'>
+            <Tutorial
+              show={showTutorial}
+              setShow={setShowTutorial}
+              step={tutorialStep}
+              setStep={setTutorialStep}
+              areDetailsEntered={areDetailsEntered}
+            />
+            <MealPlanInfo onEnterDetails={setAreDetailsEntered} order={1} />
+            {areDetailsEntered ? (
+              <>
+                <IfRejected state={mealsState}>
+                  <div className='flex flex-col items-center order-1'>
+                    <p className='text-red-500'>
+                      Something went wrong: {error?.message}
+                    </p>
+                  </div>
+                </IfRejected>
+                <IfPending state={mealsState}>
+                  <div className='flex flex-col items-center order-1'>
+                    <p className='text-gray-400'>Loading Menu...</p>
+                  </div>
+                </IfPending>
+                <IfFulfilled state={mealsState}>
+                  <>
+                    <AvailableMeals order={2} />
+                    {showMealQueue ? <MealQueue order={3} /> : <></>}
+                    <DayEditor order={showMealQueue ? 4 : 3} />
+                    <Results
+                      order={showMealQueue ? 5 : 4}
+                      dataIsInvalid={hasInvalidMeals}
+                      grandTotal={grandTotal}
+                      isUnderBalance={isUnderBalance}
+                      difference={difference}
+                      dayWhenRunOut={dayWhenRunOut}
+                    />
+                    <ResultsBar
+                      order={showMealQueue ? 6 : 5}
+                      grandTotal={grandTotal}
+                      isUnderBalance={isUnderBalance}
+                      difference={difference}
+                    />
+                  </>
+                </IfFulfilled>
+              </>
+            ) : (
+              <div className='flex flex-col items-center order-1'>
+                <p className='text-gray-400'>
+                  Enter meal plan info to continue planning.
+                </p>
+              </div>
+            )}
+          </div>
+        </ScreenContainer>
+      </ContextProvider>
+    </div>
   );
 }
 

@@ -15,7 +15,7 @@ const releaseNotes: ReleaseNoteType[] = [
     ]
   },
   {
-    versionNumber: '0.0.2',
+    versionNumber: '1.0.0',
     bugFixes: [
       'Fixed initial positioning of switches',
       'Fixed the price of Union Acai bowls',
@@ -26,8 +26,16 @@ const releaseNotes: ReleaseNoteType[] = [
       'Fixed an issue where all meals would trigger the error highlighting in the day editor.'
     ],
     enhancements: [
-      'We can now update the menu without needing to update the app. This should keep it more up-to-date.'
+      'We can now update the menu without needing to update the app. This should keep it more up-to-date.',
+      'Added a dark mode.',
+      'Ability to toggle the meal queue on and off.',
+      'Default values in the meal plan info section make setup a breeze!'
     ]
+  },
+  {
+    versionNumber: '1.0.1',
+    bugFixes: ['Fixed tutorial help buttons when the meal queue is off.'],
+    enhancements: []
   }
 ];
 

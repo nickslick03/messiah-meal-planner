@@ -11,7 +11,9 @@ import {
   EndDateCtx,
   UserSelectedMealsCtx,
   MealQueueCtx,
-  CustomMealsCtx
+  CustomMealsCtx,
+  ShowMealQueueCtx,
+  ColorPreferenceCtx
 } from '../../static/context';
 import Meal from '../../types/Meal';
 import { UserSelectedMealsObjectType } from '../../types/userSelectedMealsObject';
@@ -43,6 +45,10 @@ interface ContextProviderProps {
   setShowTutorial: React.Dispatch<React.SetStateAction<boolean>>;
   setTutorialStep: React.Dispatch<React.SetStateAction<number>>;
   tutorialDivs: React.MutableRefObject<(HTMLElement | null)[]>;
+  showMealQueue: boolean;
+  setShowMealQueue: React.Dispatch<React.SetStateAction<boolean>>;
+  setColorPreference: React.Dispatch<React.SetStateAction<string | null>>;
+  colorPreference: string | null;
   addRef: (ref: HTMLElement | null, title: string) => void;
 }
 
@@ -70,62 +76,77 @@ const ContextProvider = ({
   mealQueue,
   setMealQueue,
   customMeals,
-  setCustomMeals
+  setCustomMeals,
+  showMealQueue,
+  setShowMealQueue,
+  colorPreference,
+  setColorPreference
 }: ContextProviderProps) => {
   return (
-    <MealsCtx.Provider value={{ value: meals, setValue: () => {} }}>
-      <LocationsCtx.Provider
-        value={{ value: mealLocations, setValue: setMealLocations }}
-      >
-        <TutorialControlCtx.Provider
-          value={{ setShowTutorial, setTutorialStep }}
+    <ColorPreferenceCtx.Provider
+      value={{ value: colorPreference, setValue: setColorPreference }}
+    >
+      <MealsCtx.Provider value={{ value: meals, setValue: () => {} }}>
+        <LocationsCtx.Provider
+          value={{ value: mealLocations, setValue: setMealLocations }}
         >
-          <TutorialElementsCtx.Provider
-            value={{ value: tutorialDivs.current, setValue: addRef }}
+          <TutorialControlCtx.Provider
+            value={{ setShowTutorial, setTutorialStep }}
           >
-            <WeeksOffCtx.Provider
-              value={{ value: weeksOff, setValue: setWeeksOff }}
+            <TutorialElementsCtx.Provider
+              value={{ value: tutorialDivs.current, setValue: addRef }}
             >
-              <MealPlanCtx.Provider
-                value={{ value: mealPlan, setValue: setMealPlan }}
+              <WeeksOffCtx.Provider
+                value={{ value: weeksOff, setValue: setWeeksOff }}
               >
-                <BalanceCtx.Provider
-                  value={{ value: balance, setValue: setBalance }}
+                <MealPlanCtx.Provider
+                  value={{ value: mealPlan, setValue: setMealPlan }}
                 >
-                  <StartDateCtx.Provider
-                    value={{ value: startDate, setValue: setStartDate }}
+                  <BalanceCtx.Provider
+                    value={{ value: balance, setValue: setBalance }}
                   >
-                    <EndDateCtx.Provider
-                      value={{ value: endDate, setValue: setEndDate }}
+                    <StartDateCtx.Provider
+                      value={{ value: startDate, setValue: setStartDate }}
                     >
-                      <UserSelectedMealsCtx.Provider
-                        value={{
-                          value: userSelectedMeals,
-                          setValue: setUserSelectedMeals
-                        }}
+                      <EndDateCtx.Provider
+                        value={{ value: endDate, setValue: setEndDate }}
                       >
-                        <MealQueueCtx.Provider
-                          value={{ value: mealQueue, setValue: setMealQueue }}
+                        <UserSelectedMealsCtx.Provider
+                          value={{
+                            value: userSelectedMeals,
+                            setValue: setUserSelectedMeals
+                          }}
                         >
-                          <CustomMealsCtx.Provider
-                            value={{
-                              value: customMeals,
-                              setValue: setCustomMeals
-                            }}
+                          <MealQueueCtx.Provider
+                            value={{ value: mealQueue, setValue: setMealQueue }}
                           >
-                            {children}
-                          </CustomMealsCtx.Provider>
-                        </MealQueueCtx.Provider>
-                      </UserSelectedMealsCtx.Provider>
-                    </EndDateCtx.Provider>
-                  </StartDateCtx.Provider>
-                </BalanceCtx.Provider>
-              </MealPlanCtx.Provider>
-            </WeeksOffCtx.Provider>
-          </TutorialElementsCtx.Provider>
-        </TutorialControlCtx.Provider>
-      </LocationsCtx.Provider>
-    </MealsCtx.Provider>
+                            <CustomMealsCtx.Provider
+                              value={{
+                                value: customMeals,
+                                setValue: setCustomMeals
+                              }}
+                            >
+                              <ShowMealQueueCtx.Provider
+                                value={{
+                                  value: showMealQueue,
+                                  setValue: setShowMealQueue
+                                }}
+                              >
+                                {children}
+                              </ShowMealQueueCtx.Provider>
+                            </CustomMealsCtx.Provider>
+                          </MealQueueCtx.Provider>
+                        </UserSelectedMealsCtx.Provider>
+                      </EndDateCtx.Provider>
+                    </StartDateCtx.Provider>
+                  </BalanceCtx.Provider>
+                </MealPlanCtx.Provider>
+              </WeeksOffCtx.Provider>
+            </TutorialElementsCtx.Provider>
+          </TutorialControlCtx.Provider>
+        </LocationsCtx.Provider>
+      </MealsCtx.Provider>
+    </ColorPreferenceCtx.Provider>
   );
 };
 

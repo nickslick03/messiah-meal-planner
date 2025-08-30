@@ -61,7 +61,7 @@ const DaySelector = ({
           <button
             key={i}
             id={`dayselector-${daySelectorId}-${i}`}
-            className={`w-full p-1 min-h-10 z-10 ${
+            className={`w-full p-1 min-h-10 z-10 text-black ${
               square && 'w-10'
             } rounded-lg flex flex-col items-center justify-center ${
               daysSelected[i]

@@ -65,7 +65,7 @@ const ResultsBar = ({
     <div
       id={'resultsBar'}
       ref={ref}
-      className={`sticky w-full bottom-[-1px] p-2 bg-messiah-light-blue drop-shadow-dark 
+      className={`sticky w-full bottom-[-1px] p-2 bg-messiah-light-blue drop-shadow-dark text-black
       rounded-t-xl flex gap-6 justify-around text-center bg-opacity-80 z-40 backdrop-blur-sm ${
         isAtBottom ? 'rounded-bl-xl rounded-br-xl' : ''
       }`}
@@ -75,20 +75,20 @@ const ResultsBar = ({
     >
       <div className='hidden sm:block'>
         <span className='font-bold'>Starting Balance: </span>
-        <span className='text-messiah-green'>
+        <span className='text-messiah-green dark:text-messiah-green-dark dark:font-bold'>
           {formatCurrency(balance.value ?? 0)}
         </span>
       </div>
       <div>
         <span className='font-bold'>Grand Total: </span>
-        <span className='text-messiah-red'>{formatCurrency(grandTotal)}</span>
+        <span className='text-messiah-red dark:font-bold dark:text-messiah-red-dark'>{formatCurrency(grandTotal)}</span>
       </div>
       <div>
         <span className='font-bold'>
           $ {isUnderBalance ? 'Extra' : 'Short'}:{' '}
         </span>
         <span
-          className={isUnderBalance ? 'text-messiah-green' : 'text-messiah-red'}
+          className={`${isUnderBalance ? 'text-messiah-green dark:text-messiah-green-dark' : 'text-messiah-red dark:text-messiah-red-dark'} dark:font-bold`}
         >
           {formatCurrency(difference)}
         </span>
