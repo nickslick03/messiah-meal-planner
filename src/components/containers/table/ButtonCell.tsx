@@ -105,6 +105,8 @@ const ButtonCell = ({
     }
   }, [isButtonHovered, isTooltipHovered]);
 
+  console.log((!isMobileDevice() || icon.type !== IoAdd) && !openOnClick);
+
   return (
     <td className='text-center text-black'>
       <div className='flex items-center h-full justify-center'>
