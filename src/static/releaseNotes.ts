@@ -36,6 +36,13 @@ const releaseNotes: ReleaseNoteType[] = [
     versionNumber: '1.0.1',
     bugFixes: ['Fixed tutorial help buttons when the meal queue is off.'],
     enhancements: []
+  },
+  {
+    versionNumber: '1.1.0',
+    bugFixes: [
+      'Fixed an issue where deleting meals from days was impossible when the meal queue was off.'
+    ],
+    enhancements: ['Made the menu visible at all times.']
   }
 ];
 

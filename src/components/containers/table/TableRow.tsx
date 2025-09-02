@@ -8,6 +8,7 @@ import { MealPlanCtx, ShowMealQueueCtx } from '../../../static/context';
 import { applyDiscount } from '../../../lib/calculationEngine';
 import { Weekday } from '../../../types/userSelectedMealsObject';
 import { ALACARTE_DISCOUNT } from '../../../static/discounts';
+import { IoRemove } from 'react-icons/io5';
 
 interface TableRowProps {
   /**
@@ -120,7 +121,9 @@ const TableRow = ({
             onClick={buttonOnClick}
             onClickDay={buttonOnClickDay}
             meal={data}
-            openOnClick={!showMealQueue.value}
+            openOnClick={
+              buttonIcon.type === IoRemove ? false : !showMealQueue.value
+            }
           />
         ) : (
           <></>
