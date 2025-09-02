@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { IoMenu, IoMoon, IoSunny } from 'react-icons/io5';
 import SectionHeader from '../containers/SectionHeader';
 import { IoIosDocument, IoMdClose } from 'react-icons/io';
@@ -46,16 +46,6 @@ const Menu = () => {
    */
   const [isPresetModalVisible, setIsPresetModalVisible] = useState(false);
 
-  /**
-   * State for the scroll distance.
-   */
-  const [scrollDistance, setScrollDistance] = useState(0);
-
-  /**
-   * State for whether the menu icon is visible.
-   */
-  const [isIconVisible, setIsIconVisible] = useState(true);
-
   const colorPreference = useContext(ColorPreferenceCtx);
 
   /**
@@ -91,7 +81,7 @@ const Menu = () => {
     <>
       {/* Main menu button */}
       <div
-        className={`${isIconVisible ? 'top-8' : '-top-8'} 
+        className={`top-8
                 fixed z-50 left-4 bg-white p-1 rounded-full shadow shadow-[rgba(0,0,0,.4)]
                 hover:shadow-[rgba(0,0,0,.5)] hover:shadow-md transition-all duration-200 cursor-pointer
                 dark:bg-gray-500`}
